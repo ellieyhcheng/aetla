@@ -7,6 +7,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 
+import {Provider} from 'react-redux'
+import store from './store'
+
 import Toolbar from './components/toolbar/Toolbar';
 import Planner from './pages/Planner';
 
@@ -17,6 +20,7 @@ class App extends Component {
 
   render() {
     return (
+      <Provider store={store}>
       <Router>
         <div>
           <Planner/>
@@ -24,6 +28,7 @@ class App extends Component {
         </div>
         
       </Router>
+      </Provider>
     )
   }
 }
