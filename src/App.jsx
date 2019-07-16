@@ -8,7 +8,7 @@ import {
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 
 import Toolbar from './components/toolbar/Toolbar';
-import Planner from './components/pages/Planner';
+import Planner from './pages/Planner';
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
   faCog, faPowerOff);

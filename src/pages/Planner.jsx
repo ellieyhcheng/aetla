@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 import './Planner.scss';
-import Toolbar from '../toolbar/Toolbar'
+import Toolbar from '../components/toolbar/Toolbar'
 
 class Planner extends Component {
     render() {
