@@ -1,0 +1,53 @@
+@import '../../styles/colors.scss';
+
+.button-text {
+    margin: 0;
+}
+
+.button-icon {
+    color: $secondary;
+    padding: 8px;
+
+    .icon {
+        cursor: pointer;
+    }
+
+    .icon:hover {
+        color: #ebd4bc;
+        filter: drop-shadow(3px 3px 1px #363036);
+    }
+
+    .tooltip {
+        font-size: 0.5em;
+        letter-spacing: 0.1em;
+        width: auto;
+        white-space: nowrap;
+        background-color: #363036;
+        padding: 2px 7px; 
+        border-radius: 1px;
+        position: absolute;
+        margin-top: 8px;
+        margin-left: 8px;
+        box-shadow: 3px 3px 2px #C2B8B4;
+        visibility: hidden;
+        opacity: 0;
+        transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.4s;
+    }
+
+    .tooltip::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 100%;
+        margin-top: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent #363036  transparent transparent;
+    }
+
+    &:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+
+}
