@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Planner.scss';
 import Toolbar from '../components/toolbar/Toolbar'
+import PlanList from '../components/PlanList/PlanList'
 import Button from '../components/button/Button';
 
 class Planner extends Component {
