@@ -3,7 +3,7 @@ import './App.scss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
-  faCog, faPowerOff, faSave
+  faCog, faPowerOff, faSave, faSearch
 } from '@fortawesome/free-solid-svg-icons';
 // import { faEdit } from "@fortawesome/free-regular-svg-icons";
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
@@ -15,7 +15,7 @@ import Toolbar from './components/toolbar/Toolbar';
 import Planner from './pages/Planner';
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
-  faCog, faPowerOff, faSave);
+  faCog, faPowerOff, faSave, faSearch);
 
 class App extends Component {
 
@@ -23,7 +23,7 @@ class App extends Component {
     return (
       <Provider store={store}>
       <Router>
-        <div class="app-wrapper">
+        <div className="app-wrapper">
           <Planner/>
           
         </div>

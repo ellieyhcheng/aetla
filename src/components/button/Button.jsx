@@ -46,6 +46,7 @@ class Button extends Component {
                     tooltip.style.transform = 'translate(0, -50%)';
                     tooltip.classList.add('button-tooltip-right');
                     break;
+                default:
             }
         }
     }

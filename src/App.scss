@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
 
+:root {
+  font-size: 13px;
+}
+
 body {
   margin: 0;
   font-family: 'Muli', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -10,8 +14,6 @@ body {
 }
 
 .app-wrapper {
-  
-
   code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
       monospace;
