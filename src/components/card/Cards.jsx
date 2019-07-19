@@ -18,9 +18,9 @@ class Cards extends Component {
                     <CardTitle tag="h3">{this.props.info.name}</CardTitle>
                     <CardText>{this.props.info.text}</CardText>
                     <ButtonGroup style={{marginTop: "2em", marginBottom:"none"}}>
-                        <Button type="icon" icon="download" tooltip="Export Plan"/>
-                        <Button type="icon" icon="trash-alt" tooltip="Delete"/>
-                        <Button type="icon" icon="sliders-h" tooltip="Plan Settings"/>
+                        <Button type="icon" icon="download" tooltip="Export Plan" direction="bottom"/>
+                        <Button type="icon" icon="trash-alt" tooltip="Delete" direction="bottom"/>
+                        <Button type="icon" icon="sliders-h" tooltip="Plan Settings" direction="bottom"/>
                     </ButtonGroup>
                 </CardBody>
             </Card>

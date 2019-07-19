@@ -23,7 +23,7 @@ class App extends Component {
     return (
       <Provider store={store}>
       <Router>
-        <div>
+        <div class="app-wrapper">
           <Planner/>
           
         </div>
