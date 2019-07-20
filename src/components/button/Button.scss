@@ -30,7 +30,6 @@
         padding: 5px 10px; 
         border-radius: 1px;
         position: absolute;
-        z-index: 10;
         box-shadow: 2px 2px 2px #C2B8B4;
         visibility: hidden;
         opacity: 0;
@@ -76,6 +75,8 @@
     &:hover .button-tooltip {
         visibility: visible;
         opacity: 1;
+        z-index: 100;
+
     }
 
 }
