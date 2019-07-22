@@ -6,28 +6,37 @@
     height: 30px;
     position: relative;
     border: 1.5px solid $primary;
+    background-color: white;
     border-radius: 1px;
     box-sizing: border-box;
     display: flex;
     align-items: center;
     justify-content: center;
     letter-spacing: 0.1rem;
-    font-size: 0.9rem;
-    color: $primary;
-    cursor: grab;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
-                            supported by Chrome and Opera */
+    font-size: 0.8rem;
+    text-align: center;
     margin: 5px 0;
+    transition: background-color ease 0.5s;
     
+    p {
+        padding: 10px 0;
+        transition: color ease 0.5s;
+    }
 }
 
 .course-card.active {
-    cursor: grabbing;
-    opacity: 0.8;
-    color: red;
+    background-color: $primary;
+    color: $secondary;
+}
+
+@media only screen and (max-width: 800px) {
+    .course-card {
+        font-size: 1.3vw;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .course-card {
+        font-size: 1.5vw;
+    }
 }

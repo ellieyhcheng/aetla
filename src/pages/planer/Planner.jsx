@@ -2,18 +2,55 @@ import React, { Component } from 'react';
 import './Planner.scss';
 import Toolbar from '../../components/toolbar/Toolbar'
 import Button from '../../components/button/Button';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import CourseCard from '../../components/courseCard/CourseCard';
-import subjects from '../../utils.js';
+import data from '../../testData';
+import CourseList from '../../components/courseList/CourseList';
+import { DragDropContext } from 'react-beautiful-dnd';
 
 class Planner extends Component {
-
-    onFocusSearch = (e) => {
-       e.currentTarget.classList.add('select');
+    constructor(props) {
+        super(props);
+        this.state = data;
     }
 
-    onFocusOutSearch = (e) => {
-        e.currentTarget.classList.remove('select');
+    onDragStart = (info) => {
+        const actives = document.querySelectorAll('.active');
+        actives.forEach((active) => {
+            active.classList.remove('active')
+        })
+    }
+
+    onDragUpdate = (update) => {
+
+    }
+
+    onDragEnd = (result) => {
+        const { destination, source, draggableId } = result;
+
+        if (!destination) return;
+
+        if(destination.droppableId === source.droppableId &&
+            destination.index === source.index)
+            return;
+        
+        const start = this.state[source.droppableId];
+        const finish = this.state[destination.droppableId];
+        if (start === finish) {
+            const newCourses = Array.from(start.courses);
+            newCourses.splice(source.index, 1);
+            newCourses.splice(destination.index, 0, draggableId);
+
+            const newObj = {
+                courses: newCourses
+            }
+
+            const newState = {
+                ...this.state,
+                [source.droppableId]: newObj,
+            };
+
+            this.setState(newState);
+            return
+        }
     }
 
     render() {
@@ -34,34 +71,23 @@ class Planner extends Component {
                     </div>
 
                     <div className="planner-body">
-                        <div className="curriculum">
-                            <div className="curriculum-header">
-                                <div className="center-text">
-                                    <p>Curriculum</p>
-                                </div>
-                                <div className="line-h" />
-                            </div>
-                            <div className="curriculum-body">
-                                <div className="search-bar" onFocus={this.onFocusSearch} onBlur={this.onFocusOutSearch}>
-                                    <div className="search-icon">
-                                        <FontAwesomeIcon icon="search" fixedWidth/>
-                                    </div>
-                                    <form className="search-form">
-                                        <input type="text" className="search" placeholder="Search"/>
-                                    </form>
-                                </div>
-                                <div className="course-list">
-                                    {/* TODO: Course Title comes from databse */}
-                                    <CourseCard course={subjects[0] + ' 4'}/>
-                                    <CourseCard course={subjects[5] + ' 50'}/>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
+                        <DragDropContext
+                            onDragEnd={this.onDragEnd}
+                            onDragStart={this.onDragStart}
+                            onDragUpdate={this.onDragUpdate}
+                        >
+                            {(
+                                <CourseList courseList={
+                                    this.state.courseList.courses.map(couresId => this.state.courses[couresId])
+                                } />
+                            )}
+                        </DragDropContext>
                     </div>
                 </div>
-                )
-            }
-        }
-        
-        export default Planner;
+
+            </div>
+        )
+    }
+}
+
+export default Planner;

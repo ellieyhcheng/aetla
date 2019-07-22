@@ -1,86 +1,39 @@
 import React, { Component } from 'react';
 import './CourseCard.scss';
+import { Draggable } from "react-beautiful-dnd";
 
 
 class CourseCard extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            course: this.props.course,
-            isDragging: false,
-
-            startX: 0,
-            startY: 0,
-
-            currentX: 0,
-            currentY: 0,
-
-            lastX: 0,
-            lastY: 0
+    onClick = (e) => {
+        if (e.currentTarget.classList.contains('active'))
+            e.currentTarget.classList.toggle('active')
+        else {
+            const actives = document.querySelectorAll('.active');
+            actives.forEach((active) => {
+                active.classList.remove('active')
+            })
+            e.currentTarget.classList.add('active')
         }
     }
 
-    componentDidMount() {
-        document.addEventListener('mousemove', this.onMouseMove);
-        document.addEventListener('mouseup', this.onMouseUp);
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener('mousemove', this.onMouseMove);
-        document.removeEventListener('mouseup', this.onMouseUp);
-    }
-
-    onDragStart = (e) => {
-        e.dataTransfer.setData('text/plain', this.state.course);
-    }
-
-    onMouseDown = (e) => {
-        e.currentTarget.classList.add('active');
-
-        this.setState({
-            startX: e.pageX,
-            startY: e.pageY,
-            isDragging: true
-        });
-    }
-
-    onMouseMove = (e) => {
-        e.preventDefault();
-        if (!this.state.isDragging) return;
-        this.setState(prevState => ({
-            currentX: e.pageX - prevState.startX + prevState.lastX,
-            currentY: e.pageY - prevState.startY + prevState.lastY
-        }))
-    }
-
-    onMouseUp = () => {
-        const dragged = document.querySelectorAll('.active');
-        dragged.forEach(elem => {
-            elem.classList.remove('active');
-        })
-        this.setState({
-            startX: 0,
-            startY: 0,
-            lastX: 0,
-            lastY: 0,
-            currentX: 0,
-            currentY: 0,
-            isDragging: false
-        })
-    }
-
-
     render() {
         return (
-            <div className="course-card"
-                draggable
-                onMouseDown={this.onMouseDown}
-                style={{
-                    transform: `translate(${this.state.currentX}px, ${this.state.currentY}px)`
-                }}>
+            <Draggable
+                draggableId={this.props.course["_id"]}
+                index={this.props.index}
+            >
+                {(provided, snapshot) => (
+                    <div className="course-card"
+                        onClick={this.onClick}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                    >
+                        <p>{`${this.props.course.subject} ${this.props.course.num}`}</p>
+                    </div>
+                )}
 
-                <p>{this.state.course}</p>
-            </div>
+            </Draggable>
         )
     }
 }
