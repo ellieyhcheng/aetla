@@ -12,7 +12,7 @@ import {Provider} from 'react-redux'
 import store from './store'
 
 import Toolbar from './components/toolbar/Toolbar';
-import Planner from './pages/planer/Planner';
+import Planner from './pages/planner/Planner';
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
   faCog, faPowerOff, faSave, faSearch);

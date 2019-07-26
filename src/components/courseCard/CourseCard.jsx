@@ -16,22 +16,41 @@ class CourseCard extends Component {
         }
     }
 
+    getStyle = (style, snapshot) => {
+        if (!snapshot.isDropAnimating)
+            return style;
+        const { moveTo } = snapshot.dropAnimation;
+        // move to the right spot
+        const translate = `translate(${moveTo.x}px, ${moveTo.y}px)`;
+      
+        // patching the existing style
+        return {
+          ...style,
+          transform: `${translate}`,
+        //   marginTop: '4px'
+        };
+      }
+
     render() {
         return (
             <Draggable
                 draggableId={this.props.course["_id"]}
                 index={this.props.index}
             >
-                {(provided, snapshot) => (
-                    <div className="course-card"
+                {(provided, snapshot) => {
+                            // console.log(snapshot.dropAnimation)
+                            // console.log(snapshot)
+                            return (
+                    <div className= {`${snapshot.isDragging ? 'in-plan' : ''} course-card`}
                         onClick={this.onClick}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                         ref={provided.innerRef}
+                        style={this.getStyle(provided.draggableProps.style, snapshot)}
                     >
                         <p>{`${this.props.course.subject} ${this.props.course.num}`}</p>
                     </div>
-                )}
+                )}}
 
             </Draggable>
         )

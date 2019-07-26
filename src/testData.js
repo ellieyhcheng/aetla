@@ -1,4 +1,6 @@
 const data = {
+    title: "My First Plan!",
+    description: "A very short description.",
     courses: {
         '5d2d3eb783d26171f4dfa447':
         {
@@ -244,51 +246,58 @@ const data = {
             "description": "(Formerly numbered Electrical Engineering 3.) Lecture, two hours; laboratory, two hours; outside study, eight hours. Introduction to field of electrical engineering. Basic circuits techniques with application to explanation of electrical engineering inventions such as telecommunications, electrical grid, automatic computing and control, and enabling device technology. Research frontiers of electrical engineering. Introduction to measurement and design of electrical circuits. Letter grading."
         }
     },
-    courseList: {
-        courses: [
-            '5d2d3eb783d26171f4dfa447',
-            '5d2d3eb783d26171f4dfa44a', 
-            '5d2d3eb783d26171f4dfa44b', 
-            '5d2d3eb783d26171f4dfa44c', 
-            '5d2d3eb783d26171f4dfa44d', 
-            '5d2d3eb783d26171f4dfa44e', 
-            '5d2d3eb783d26171f4dfa451', 
-            '5d2d3eb783d26171f4dfa454', 
-            '5d2d3eb783d26171f4dfa45a', 
-            '5d2d3eb783d26171f4dfa464', 
-            '5d2d3eb783d26171f4dfa465', 
-            '5d2d3eb783d26171f4dfa466', 
-            '5d2d3eb783d26171f4dfa467', 
-            '5d2d3eb783d26171f4dfa46f', 
-            '5d2d3eb783d26171f4dfa470', 
-            '5d2d3ebd83d26171f4dfc085', 
-            '5d2d3ebd83d26171f4dfc088', 
-            '5d2d3ebd83d26171f4dfc08c', 
-            '5d2d3ebd83d26171f4dfc08e', 
-            '5d2d3ebd83d26171f4dfc091', 
-            '5d2d3ebd83d26171f4dfc093', 
-            '5d2d3ebd83d26171f4dfc096', 
-            '5d2d3ebf83d26171f4dfc7e3', 
-            '5d2d3ebf83d26171f4dfc7e5', 
-            '5d2d3ebf83d26171f4dfc7e7', 
-            '5d2d3ebf83d26171f4dfc7ea', 
-            '5d2d3eb983d26171f4dfad23'
-        ]
-    },
-    plan: {
-        'year-1': {
-            fall: { courses: [], },
-            winter: { courses: [], },
-            spring: { courses: [], },
-            summer: { courses: [], },
+    courseList1: [
+        '5d2d3eb983d26171f4dfad23', 
+        '5d2d3ebf83d26171f4dfc7ea', 
+        '5d2d3ebd83d26171f4dfc093', 
+        '5d2d3eb783d26171f4dfa467', 
+        '5d2d3eb783d26171f4dfa44a',
+        '5d2d3eb783d26171f4dfa447',
+        '5d2d3eb783d26171f4dfa44b',
+        '5d2d3eb783d26171f4dfa44c',
+        '5d2d3eb783d26171f4dfa44d',
+        '5d2d3eb783d26171f4dfa44e',
+        '5d2d3eb783d26171f4dfa451',
+        '5d2d3eb783d26171f4dfa454',
+        '5d2d3eb783d26171f4dfa45a',
+    ],
+    courseList2: [
+        '5d2d3eb783d26171f4dfa464',
+        '5d2d3eb783d26171f4dfa465',
+        '5d2d3eb783d26171f4dfa466',
+        '5d2d3eb783d26171f4dfa46f',
+        '5d2d3eb783d26171f4dfa470',
+        '5d2d3ebd83d26171f4dfc085',
+        '5d2d3ebd83d26171f4dfc088',
+        '5d2d3ebd83d26171f4dfc08c',
+        '5d2d3ebd83d26171f4dfc08e',
+        '5d2d3ebd83d26171f4dfc091',
+        '5d2d3ebd83d26171f4dfc096',
+        '5d2d3ebf83d26171f4dfc7e3',
+        '5d2d3ebf83d26171f4dfc7e5',
+        '5d2d3ebf83d26171f4dfc7e7',
+    ],
+    coursePlan: {
+        'year1': {  // Defaults to at least year1
+            quarters: ['fall', 'winter'],
+            fall: [],
+            winter: [],
+            spring: [],
+            summer: [],
         },
-        'year-2': {
-            fall: { courses: [], },
-            winter: { courses: [], },
-            spring: { courses: [], },
-            summer: { courses: [], },
+        'year2': {
+            quarters: ['fall'], // Defaults to at least 'fall' quarter
+            fall: [],
+            winter: [],
+            spring: [],
+            summer: [],
         },
     },
+    planLayout: [
+        'year1',
+        'year2',
+    ]
+
 }
 
 export default data;

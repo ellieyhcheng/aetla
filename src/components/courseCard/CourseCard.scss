@@ -2,8 +2,10 @@
 @import '../../styles/vars.scss';
 
 .course-card {
-    width: 90%;
-    height: 30px;
+    width: 7vw;
+    max-width: $course-width;
+    height: $course-height;
+    min-height: $course-height;
     position: relative;
     border: 1.5px solid $primary;
     background-color: white;
@@ -11,27 +13,41 @@
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    overflow: hidden;
     justify-content: center;
     letter-spacing: 0.1rem;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     text-align: center;
-    margin: 5px 0;
-    transition: background-color ease 0.5s;
+    margin: 5px;
+    transition: background-color ease 0.5s, width ease 0.5s;
+    /* Disable text-highlight */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
     
     p {
-        padding: 10px 0;
+        padding: 5px 5px;
         transition: color ease 0.5s;
     }
+}
+
+.course-card.in-plan {
+    margin: 0 5px;
 }
 
 .course-card.active {
     background-color: $primary;
     color: $secondary;
+    transition: background-color ease 0.5s, color ease 0.5s;
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 930px) {
     .course-card {
-        font-size: 1.3vw;
+        font-size: 1.1vw;
     }
 }
 
