@@ -2,20 +2,11 @@ $primary: #544E54;
 $secondary: #D5BDA4;
 $ternary: #3AC6D6;
 $accent:  	#DAA520;
+$highlight: #ebd987;
 $light-grey: #BDBDBD;
 $dark-grey: #868380;
 
-$important: #FF8FB2;
+$important: #ffb7b7;
 
 $com-sci: #F2994A;
 $phyiscs: #2D9CDB;
-
-:export {
-    primary: $primary;
-    secondary: $secondary;
-    ternary: $ternary;
-    accent: $accent;
-    lightGrey: $light-grey;
-    darkGrey: $dark-grey;
-
-}

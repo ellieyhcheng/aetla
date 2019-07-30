@@ -6,11 +6,56 @@ import data from '../../testData';
 import CourseList from '../../components/courseList/CourseList';
 import { DragDropContext } from 'react-beautiful-dnd';
 import PlanLayout from '../../components/planLayout/PlanLayout';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 class Planner extends Component {
     constructor(props) {
         super(props);
-        this.state = data;
+        const splitList = this.splitList(data.courseList, data.courses)
+        this.state = {
+            ...data,
+            courseList1: splitList[0],
+            courseList2: splitList[1],
+        }
+    }
+
+    splitList = (courseList, courses) => {
+        const list = this.sortCourseList(courseList, courses)
+        const list1 = courseList.slice(0, Math.ceil(courseList.length / 2));
+        const list2 = courseList.slice(Math.ceil(courseList.length / 2))
+        return [list1, list2];
+    }
+
+    sortCourseList = (courseList, courses) => {
+        const newList = courseList.sort((courseId1, courseId2) => {
+            const course1 = courses[courseId1];
+            const course2 = courses[courseId2];
+            if (course1.subject > course2.subject)
+                return true;
+            else if (course1.subject < course2.subject)
+                return false;
+            else {
+                const course1Num = parseInt(course1.num.match(/\d+/g));
+                const course2Num = parseInt(course2.num.match(/\d+/g));
+                
+                if (course1Num > course2Num) 
+                    return true;
+                else if (course1Num < course2Num) 
+                    return false;
+                else {
+                    const lastLetter1 = course1.num.substring(course1.num.length - 1);
+                    const lastLetter2 = course2.num.substring(course2.num.length - 1);
+
+                    if (lastLetter1 > lastLetter2)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+        });
+
+        return newList
     }
 
     onDragStart = (info) => {
@@ -18,10 +63,6 @@ class Planner extends Component {
         actives.forEach((active) => {
             active.classList.remove('active')
         })
-    }
-
-    onDragUpdate = (update) => {
-
     }
 
     onDragEnd = (result) => {
@@ -50,8 +91,8 @@ class Planner extends Component {
                 newState = {
                     ...newState,
                     [destination.droppableId]: finishCourseList,
-                };                
-            } else { 
+                };
+            } else {
                 // Dropped into course plan
                 const keys = destination.droppableId.split('-');
                 const year = keys[0];
@@ -59,6 +100,11 @@ class Planner extends Component {
                 const finish = newState.coursePlan[year][quarter];
                 const newQuarterList = Array.from(finish);
                 newQuarterList.splice(destination.index, 0, draggableId);
+
+                const newList = newState.courseList.filter(courseId => {
+                    return courseId !== draggableId
+                })
+
                 const newYear = {
                     ...newState.coursePlan[year],
                     [quarter]: newQuarterList
@@ -70,9 +116,9 @@ class Planner extends Component {
                 newState = {
                     ...newState,
                     coursePlan: newCoursePlan,
+                    courseList: newList,
                 };
             }
-            
 
             this.setState(newState);
             return
@@ -82,7 +128,7 @@ class Planner extends Component {
             const sourceYear = sourceKeys[0];
             const sourceQuarter = sourceKeys[1];
             const start = this.state.coursePlan[sourceYear][sourceQuarter];
-            
+
             const startQuarterList = Array.from(start);
             startQuarterList.splice(source.index, 1);
             const oldYear = {
@@ -93,7 +139,7 @@ class Planner extends Component {
                 ...this.state.coursePlan,
                 [sourceYear]: oldYear
             }
-            
+
             let newState = {
                 ...this.state,
                 coursePlan: oldCoursePlan
@@ -103,10 +149,13 @@ class Planner extends Component {
                 const finish = this.state[destination.droppableId];
                 const finishCourseList = Array.from(finish);
                 finishCourseList.splice(destination.index, 0, draggableId);
+
+                newState.courseList.push(draggableId);
+
                 newState = {
                     ...newState,
                     [destination.droppableId]: finishCourseList,
-                };               
+                };
             } else {
                 // Dropped into course plan
                 const keys = destination.droppableId.split('-');
@@ -128,12 +177,51 @@ class Planner extends Component {
                     coursePlan: newCoursePlan,
                 };
             }
-            
 
             this.setState(newState);
             return
 
         }
+    }
+    
+    onFocusSearch = (e) => {
+        e.currentTarget.classList.add('select');
+    }
+
+    onFocusOutSearch = (e) => {
+        e.currentTarget.classList.remove('select');
+    }
+
+    findMatches = (wordToMatch, courses) => {
+        return courses.filter(courseId => {
+            const course = this.state.courses[courseId];
+            const regex = new RegExp(wordToMatch, 'gi');
+            const course_title = `${course["subject"]} ${course["num"]}`;
+            // console.log(course_title.match(regex))
+            if (course_title.match(regex) !== null)
+                return courseId;
+        })
+    }
+
+    displayMatches = (e) => {
+        // console.log(this.state.courseList)
+        const searchValue = e.currentTarget.value.replace(/[^\w\s]/g, '')
+        if (searchValue === '') {
+            const splitList = this.splitList(this.state.courseList, this.state.courses);
+            this.setState({
+                ...this.state,
+                courseList1: splitList[0],
+                courseList2: splitList[1],
+            })
+            return
+        }
+        const matchArray = this.findMatches(searchValue, this.state.courseList);
+        const splitList = this.splitList(matchArray, this.state.courses);
+        this.setState({
+            ...this.state,
+            courseList1: splitList[0],
+            courseList2: splitList[1],
+        })
     }
 
     render() {
@@ -161,13 +249,33 @@ class Planner extends Component {
                         {(
                             <div className="planner-body">
 
-
-                                <CourseList courseList1={
-                                    this.state.courseList1.map(couresId => this.state.courses[couresId])
-                                } 
-                                courseList2={
-                                    this.state.courseList2.map(couresId => this.state.courses[couresId])
-                                }/>
+                                <div className="course-list">
+                                    <div className="course-list-header">
+                                        <div className="center-text">
+                                            <p>Course List</p>
+                                        </div>
+                                        <div className="line-h" />
+                                    </div>
+                                    <div className="course-list-body">
+                                        <div className="search-bar" onFocus={this.onFocusSearch} onBlur={this.onFocusOutSearch}>
+                                            <div className="search-icon">
+                                                <FontAwesomeIcon icon="search" fixedWidth />
+                                            </div>
+                                            <form className="search-form">
+                                                <input type="text" className="search" placeholder="Search" onChange={this.displayMatches}/>
+                                            </form>
+                                        </div>
+                                        <CourseList courseList1={
+                                                this.state.courseList1.map(couresId => this.state.courses[couresId])
+                                            }
+                                            courseList2={
+                                                this.state.courseList2.map(couresId => this.state.courses[couresId])
+                                            } 
+                                        />
+                                        
+                                    </div>
+                                </div>
+                                
                                 <PlanLayout
                                     planLayout={this.state.planLayout}
                                     coursePlan={this.state.coursePlan}

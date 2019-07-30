@@ -41,7 +41,7 @@ class CourseCard extends Component {
                             // console.log(snapshot.dropAnimation)
                             // console.log(snapshot)
                             return (
-                    <div className= {`${snapshot.isDragging ? 'in-plan' : ''} course-card`}
+                    <div className= 'course-card'
                         onClick={this.onClick}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}

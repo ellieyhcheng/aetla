@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
+@import './styles/colors.scss';
+@import './styles/vars.scss';
 
 :root {
   font-size: 13px;
@@ -23,4 +25,13 @@ body {
   p {
     margin: 0;
   }
+}
+
+::selection {
+  background: $highlight; /* WebKit/Blink Browsers */
+  color: $primary;
+}
+::-moz-selection {
+  background: $highlight; /* Gecko Browsers */
+  color: $primary;
 }
