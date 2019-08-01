@@ -17,13 +17,14 @@ class Planner extends Component {
             ...data,
             courseList1: splitList[0],
             courseList2: splitList[1],
+            homeDroppable: '',
         }
     }
 
     splitList = (courseList, courses) => {
         const list = this.sortCourseList(courseList, courses)
-        const list1 = courseList.slice(0, Math.ceil(courseList.length / 2));
-        const list2 = courseList.slice(Math.ceil(courseList.length / 2))
+        const list1 = list.slice(0, Math.ceil(courseList.length / 2));
+        const list2 = list.slice(Math.ceil(courseList.length / 2))
         return [list1, list2];
     }
 
@@ -63,6 +64,14 @@ class Planner extends Component {
         actives.forEach((active) => {
             active.classList.remove('active')
         })
+        this.setState({
+            ...this.state,
+            homeDroppable: info.source.droppableId,
+        })
+    }
+
+    onDragUpdate = (update) => {
+        // console.log(update)
     }
 
     onDragEnd = (result) => {
@@ -81,7 +90,7 @@ class Planner extends Component {
             let newState = this.state;
             newState = {
                 ...newState,
-                [source.droppableId]: newCourseList,
+                [source.droppableId]: newCourseList
             };
 
             if (destination.droppableId.includes("courseList")) {
@@ -121,7 +130,6 @@ class Planner extends Component {
             }
 
             this.setState(newState);
-            return
         } else {
             // Source is course plan
             const sourceKeys = source.droppableId.split('-');
@@ -179,8 +187,6 @@ class Planner extends Component {
             }
 
             this.setState(newState);
-            return
-
         }
     }
     
@@ -261,7 +267,11 @@ class Planner extends Component {
                                             <div className="search-icon">
                                                 <FontAwesomeIcon icon="search" fixedWidth />
                                             </div>
-                                            <form className="search-form">
+                                            <form className="search-form" onKeyPress={(e) => {
+                                                const key = e.charCode || e.keyCode || 0;
+                                                if (key == 13)
+                                                    e.preventDefault();                                                      
+                                            }}>
                                                 <input type="text" className="search" placeholder="Search" onChange={this.displayMatches}/>
                                             </form>
                                         </div>
@@ -270,7 +280,8 @@ class Planner extends Component {
                                             }
                                             courseList2={
                                                 this.state.courseList2.map(couresId => this.state.courses[couresId])
-                                            } 
+                                            }
+                                            homeDroppable={this.state.homeDroppable}
                                         />
                                         
                                     </div>
@@ -280,6 +291,7 @@ class Planner extends Component {
                                     planLayout={this.state.planLayout}
                                     coursePlan={this.state.coursePlan}
                                     courses={this.state.courses}
+                                    hovered={this.state.hovered}
                                 />
 
 

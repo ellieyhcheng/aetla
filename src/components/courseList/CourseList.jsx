@@ -7,10 +7,8 @@ class CourseList extends Component {
 
     render() {
         return (
-
             <div className="course-cards-scroll">
-                {/* TODO: Button for sort */}
-                <Droppable droppableId="courseList1">
+                <Droppable droppableId="courseList1" isDropDisabled={this.props.homeDroppable.includes("courseList") ? true : false}>
                     {(provided, snapshot) => (
                         <div className="course-cards"
                             ref={provided.innerRef}
@@ -27,7 +25,7 @@ class CourseList extends Component {
                         </div>
                     )}
                 </Droppable>
-                <Droppable droppableId="courseList2">
+                <Droppable droppableId="courseList2" isDropDisabled={this.props.homeDroppable.includes("courseList") ? true : false}>
                     {(provided, snapshot) => (
                         <div className="course-cards"
                             ref={provided.innerRef}

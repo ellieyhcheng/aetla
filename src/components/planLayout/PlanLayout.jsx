@@ -87,12 +87,13 @@ class PlanLayout extends Component {
 
                                     <div className="shadow-bin-wrapper"
                                         style={{
-                                            visibility: this.props.coursePlan[yearId][quarterId].length === 0 ? "visible" : "hidden",
-                                            opacity: this.props.coursePlan[yearId][quarterId].length === 0 ? "1" : "0"
+                                            visibility: this.props.coursePlan[yearId][quarterId].length < this.state.bins.length ? "visible" : "hidden",
+                                            opacity: this.props.coursePlan[yearId][quarterId].length < this.state.bins.length ? "1" : "0"
                                         }}
                                     >
-                                        {}
-                                        {this.state.bins.map(bin => (<div className="shadow-bin" key={bin} />))}
+                                        {this.state.bins.map(bin => (
+                                            <div className="shadow-bin" key={bin} />
+                                        ))}
                                         
                                     </div>
                                 </div>
