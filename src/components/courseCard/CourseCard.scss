@@ -19,7 +19,7 @@
     font-size: 0.85rem;
     text-align: center;
     margin: 5px;
-    transition: background-color ease 0.5s;
+    transition: border-color ease 0.3s, color ease 0.3s;
     /* Disable text-highlight */
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -31,19 +31,20 @@
     
     p {
         padding: 5px 5px;
-        transition: color ease 0.5s;
+        transition: color ease 0.3s;
     }
 
     &:focus {
-        border-color: $accent;
+        // border-color: $accent;
+        // color: $accent;
         outline: none;
     }
-}
 
-.course-card.active {
-    background-color: $primary;
-    color: $secondary;
-    transition: background-color ease 0.5s, color ease 0.5s;
+    &.active {
+        // background-color: $primary;
+        color: $accent;
+        border-color: $accent;
+    }
 }
 
 

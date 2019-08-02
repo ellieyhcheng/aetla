@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './PlanLayout.scss';
 import CourseCard from '../../components/courseCard/CourseCard';
 import { Droppable } from 'react-beautiful-dnd';
+import Button from '../button/Button';
+import colors from '../../styles/colors.scss';
 
 class PlanLayout extends Component {
     constructor(props) {
@@ -56,6 +58,7 @@ class PlanLayout extends Component {
                             {this.props.coursePlan[yearId].quarters.map((quarterId, i) => (
                                 <div className="plan-quarter" key={i}>{quarterId.charAt(0).toUpperCase() + quarterId.slice(1)}</div>
                             ))}
+                            <div className="plan-row"/>
                         </div>
                     ))}
                 </div>
@@ -98,14 +101,28 @@ class PlanLayout extends Component {
                                     </div>
                                 </div>
                             ))}
+
+                            <div className="plan-row">
+                                <Button type="icon" icon="minus-circle" tooltip="Delete Quarter" direction="bottom" 
+                                    onClick={() => this.props.removeQuarter(yearId)}
+                                ></Button>
+                                <Button type="icon" icon="plus-circle" tooltip="Add Quarter" direction="bottom" 
+                                    onClick={() => this.props.addQuarter(yearId)}
+                                ></Button>
+                            </div>
                         </div>
                     ))}
 
+                    <div className="button-section">
+                        <Button type="text" text="Add Year" color={colors.accent} onClick={this.props.addYear} fixedWidth></Button>
+                    </div>
                 </div>
                 <div className="plan-footer">
                     {this.props.planLayout.map((yearId, i) => (
                         <div className="year-section" key={i}>
-                            <div className="plan-row" />
+                            <div className="plan-row">
+                                {/* <Button type="icon" icon="plus-circle" tooltip="Add Quarter" direction="left" onClick={this.props.addQuarter}></Button> */}
+                            </div>
                             {this.props.coursePlan[yearId].quarters.map((quarterId, j) => (
                                 <div className="plan-row" key={j}>
                                     <div className="units">
@@ -117,6 +134,7 @@ class PlanLayout extends Component {
                                     </div>
                                 </div>
                             ))}
+                            <div className="plan-row"/>
                         </div>
                     ))}
                 </div>

@@ -13,7 +13,8 @@ class Button extends Component {
             color: props.color,
             onClick: props.onClick,
             tooltip: props.tooltip || '',
-            direction: props.direction  // { left, top, right, bottom }
+            direction: props.direction,  // { left, top, right, bottom }
+            fixedWidth: props.fixedWidth,
         };
     }
 
@@ -51,6 +52,14 @@ class Button extends Component {
         }
     }
 
+    onMouseDown = (e) => {
+        e.currentTarget.classList.add('click')
+    }
+
+    onMouseUp = (e) => {
+        e.currentTarget.classList.remove('click')
+    }
+
     render() {
         if (this.state.type === 'icon') {
             return (
@@ -63,7 +72,11 @@ class Button extends Component {
             )
         } else { // type === 'text'
             return (
-                <div className="button-text" onClick={this.props.onClick} >
+                <div className={this.state.fixedWidth ? "button-text fixed-width" : "button-text"} 
+                    onClick={this.state.onClick}
+                    onMouseDown={this.onMouseDown}
+                    onMouseUp={this.onMouseUp}
+                >
                     {this.state.text}
                 </div>
             )

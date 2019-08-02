@@ -60,10 +60,10 @@ class Planner extends Component {
     }
 
     onDragStart = (info) => {
-        const actives = document.querySelectorAll('.active');
-        actives.forEach((active) => {
-            active.classList.remove('active')
-        })
+        // const actives = document.querySelectorAll('.active');
+        // actives.forEach((active) => {
+        //     active.classList.remove('active')
+        // })
         this.setState({
             ...this.state,
             homeDroppable: info.source.droppableId,
@@ -230,6 +230,74 @@ class Planner extends Component {
         })
     }
 
+    addQuarter = (yearId) => {
+        console.log(yearId)
+        const newCoursePlan = this.state.coursePlan;
+        const q = ['fall', 'winter', 'spring', 'summer'];
+        const length = newCoursePlan[yearId].quarters.length;
+        if (length >= 4)
+            return;
+        newCoursePlan[yearId].quarters.push(q[length]);
+        
+        const newState = {
+            ...this.state,
+            coursePlan: newCoursePlan,
+        }
+        this.setState(newState);
+    }
+
+    removeQuarter = (yearId) => {
+        const newCoursePlan = this.state.coursePlan;
+        const newCourseList = this.state.courseList;
+        const length = newCoursePlan[yearId].quarters.length;
+        if (length <= 1)
+            return;
+        const quarterId = newCoursePlan[yearId].quarters[length - 1]
+        newCoursePlan[yearId][quarterId].forEach((courseId, i) => {
+            newCourseList.push(courseId);
+        });
+
+        newCoursePlan[yearId][quarterId] = [];
+        
+        newCoursePlan[yearId].quarters.splice(length - 1, 1);
+
+        
+        const lists = this.splitList(newCourseList, this.state.courses);
+        const newList2 = this.state.courseList2;
+        
+        const newState = {
+            ...this.state,
+            courseList: newCourseList,
+            coursePlan: newCoursePlan,
+            courseList1: lists[0],
+            courseList2: lists[1]
+        }
+        this.setState(newState);
+    }
+
+    addYear = (e) => {
+        const newYear = {
+            quarters: ['fall'], // Defaults to at least 'fall' quarter
+            fall: [],
+            winter: [],
+            spring: [],
+            summer: [],
+        }
+        const newCoursePlan = {
+            ...this.state.coursePlan,
+            [`year${this.state.planLayout.length + 1}`]: newYear,
+        }
+        const newPlanLayout = this.state.planLayout;
+        newPlanLayout.push(`year${this.state.planLayout.length + 1}`);
+        
+        const newState = {
+            ...this.state,
+            coursePlan: newCoursePlan,
+            planLayout: newPlanLayout,
+        }
+        this.setState(newState);
+    }
+
     render() {
         return (
             <div className="planner">
@@ -291,7 +359,9 @@ class Planner extends Component {
                                     planLayout={this.state.planLayout}
                                     coursePlan={this.state.coursePlan}
                                     courses={this.state.courses}
-                                    hovered={this.state.hovered}
+                                    addQuarter={this.addQuarter}
+                                    removeQuarter={this.removeQuarter}
+                                    addYear={this.addYear}
                                 />
 
 

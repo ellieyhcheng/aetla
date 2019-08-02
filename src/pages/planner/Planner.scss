@@ -104,7 +104,7 @@
                         left: 50%;
                         right: 50%;
                         bottom: -1px;
-                        border-bottom: 1.5px solid $secondary;
+                        border-bottom: 1.5px solid $accent;
                         box-sizing: border-box;
                         width: 0%;
                         height: 100%;
@@ -117,7 +117,7 @@
                     }
                     
                     &.select {
-                        color: $secondary;
+                        color: $accent;
         
                         &:before {
                             width: 100%;

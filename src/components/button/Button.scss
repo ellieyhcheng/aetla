@@ -1,11 +1,25 @@
 @import '../../styles/colors.scss';
 
 .button-text {
-    margin: 0;
+    margin: 5px;
     border: $primary 1px solid;
-    letter-spacing: 0.08em;
-    font-size: 0.8em;
-    padding: 2px 10px;
+    letter-spacing: 0.09em;
+    font-size: 1em;
+    padding: 0.5em 2em;
+    width: auto;
+    cursor: pointer;
+    color: $primary;
+    transition: ease 0.1s;
+
+    &.click {
+        color: $accent;
+        border-color: $accent;
+        // background: $primary;
+    }
+}
+
+.fixed-width {
+    width: 100px;
 }
 
 .button-icon {
