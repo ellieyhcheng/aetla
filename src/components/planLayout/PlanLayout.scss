@@ -5,9 +5,12 @@
     width: 63%;
     // border: 1px solid $primary;
     display: flex;
+    overflow-y: scroll;
+    // align-items: stretch;
 
     .plan-sidebar {
         width: 12%;
+        height: max-content;
         display: flex;
         flex-direction: column;
         align-items: flex-end;
@@ -16,6 +19,7 @@
         padding: 5px 0;
         color: $primary;
         position: relative;
+        transition: ease 0.5s;
 
         .plan-section {
             position: relative;
@@ -115,7 +119,7 @@
             align-items: center;
             justify-content: center;
             height: $row-height;
-            margin-top: $row-height;
+            // margin-top: $row-height;
         }
     }
 

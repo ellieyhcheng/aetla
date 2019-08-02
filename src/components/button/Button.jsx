@@ -19,6 +19,8 @@ class Button extends Component {
     }
 
     componentDidMount() {
+        if (this.state.tool === '')
+            return;
         const node = ReactDOM.findDOMNode(this);
         if (node instanceof HTMLElement) {
             const tooltip = node.querySelector('.button-tooltip');

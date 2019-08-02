@@ -161,26 +161,7 @@
                     overflow-y: scroll;
                     overflow-x: hidden;
                     position: relative;
-                    /* Scrollbar for Firefox */
-                    // scroll-behavior: smooth;
-                    scrollbar-width: thin;
-                    scrollbar-color: $light-grey white;
-                    // border: 1px solid $primary;
-        
-                    /* Scrollbar for Webkit browsers */
-                    &::-webkit-scrollbar {
-                        width: 5px;
-                    }
-            
-                    &::-webkit-scrollbar-thumb {
-                        background: $light-grey;
-                        border-radius: 20px;
-                    }
-            
-                    &::-webkit-scrollbar-track {
-                        background: white;
-                        border-radius: 20px;
-                    }
+                    
                 
                     
                 }

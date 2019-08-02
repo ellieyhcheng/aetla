@@ -253,7 +253,7 @@ class Planner extends Component {
         if (length <= 1)
             return;
         const quarterId = newCoursePlan[yearId].quarters[length - 1]
-        newCoursePlan[yearId][quarterId].forEach((courseId, i) => {
+        newCoursePlan[yearId][quarterId].forEach(courseId => {
             newCourseList.push(courseId);
         });
 
@@ -263,7 +263,6 @@ class Planner extends Component {
 
         
         const lists = this.splitList(newCourseList, this.state.courses);
-        const newList2 = this.state.courseList2;
         
         const newState = {
             ...this.state,
@@ -294,6 +293,39 @@ class Planner extends Component {
             ...this.state,
             coursePlan: newCoursePlan,
             planLayout: newPlanLayout,
+        }
+        this.setState(newState);
+    }
+
+    removeYear = (e) => {
+        const newCoursePlan = this.state.coursePlan;
+        const newPlanLayout = this.state.planLayout;
+        const newCourseList = this.state.courseList;
+        const length = newPlanLayout.length;
+        
+        if (length <= 1)
+            return;
+
+        const year = newCoursePlan[newPlanLayout[length - 1]];
+        
+        year.quarters.forEach(quarterId => {
+            year[quarterId].forEach(courseId => {
+                newCourseList.push(courseId);
+            })
+        })
+
+        delete newCoursePlan[newPlanLayout[length - 1]];
+        newPlanLayout.splice(length - 1, 1);
+
+        const lists = this.splitList(newCourseList, this.state.courses);
+        
+        const newState = {
+            ...this.state,
+            courseList: newCourseList,
+            coursePlan: newCoursePlan,
+            planLayout: newPlanLayout,
+            courseList1: lists[0],
+            courseList2: lists[1]
         }
         this.setState(newState);
     }
@@ -362,6 +394,7 @@ class Planner extends Component {
                                     addQuarter={this.addQuarter}
                                     removeQuarter={this.removeQuarter}
                                     addYear={this.addYear}
+                                    removeYear={this.removeYear}
                                 />
 
 

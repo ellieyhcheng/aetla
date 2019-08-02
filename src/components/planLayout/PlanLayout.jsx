@@ -32,11 +32,11 @@ class PlanLayout extends Component {
 
     setBins = () => {
         if (window.innerWidth < 700)
-            return [0,1,2,3];
+            return [0, 1, 2, 3];
         else if (window.innerWidth < 1470)
-            return [0,1,2,3,4];
+            return [0, 1, 2, 3, 4];
         else
-            return[0,1,2,3,4,5];
+            return [0, 1, 2, 3, 4, 5];
     }
 
     componentDidMount() {
@@ -48,7 +48,7 @@ class PlanLayout extends Component {
     }
 
     render() {
-        
+
         return (
             <div className="plan-layout">
                 <div className="plan-sidebar">
@@ -58,7 +58,7 @@ class PlanLayout extends Component {
                             {this.props.coursePlan[yearId].quarters.map((quarterId, i) => (
                                 <div className="plan-quarter" key={i}>{quarterId.charAt(0).toUpperCase() + quarterId.slice(1)}</div>
                             ))}
-                            <div className="plan-row"/>
+                            <div className="plan-row" />
                         </div>
                     ))}
                 </div>
@@ -97,16 +97,16 @@ class PlanLayout extends Component {
                                         {this.state.bins.map(bin => (
                                             <div className="shadow-bin" key={bin} />
                                         ))}
-                                        
+
                                     </div>
                                 </div>
                             ))}
 
                             <div className="plan-row">
-                                <Button type="icon" icon="minus-circle" tooltip="Delete Quarter" direction="bottom" 
+                                <Button type="icon" icon="minus-circle" tooltip="Delete Quarter" direction="bottom"
                                     onClick={() => this.props.removeQuarter(yearId)}
                                 ></Button>
-                                <Button type="icon" icon="plus-circle" tooltip="Add Quarter" direction="bottom" 
+                                <Button type="icon" icon="plus-circle" tooltip="Add Quarter" direction="bottom"
                                     onClick={() => this.props.addQuarter(yearId)}
                                 ></Button>
                             </div>
@@ -114,6 +114,7 @@ class PlanLayout extends Component {
                     ))}
 
                     <div className="button-section">
+                        <Button type="text" text="Delete Year" color={colors.accent} onClick={this.props.removeYear} fixedWidth></Button>
                         <Button type="text" text="Add Year" color={colors.accent} onClick={this.props.addYear} fixedWidth></Button>
                     </div>
                 </div>
@@ -134,7 +135,7 @@ class PlanLayout extends Component {
                                     </div>
                                 </div>
                             ))}
-                            <div className="plan-row"/>
+                            <div className="plan-row" />
                         </div>
                     ))}
                 </div>
