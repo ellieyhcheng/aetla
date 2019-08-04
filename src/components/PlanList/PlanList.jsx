@@ -4,7 +4,8 @@ import { Card, CardImg, CardTitle, CardText,
 import Button from '../button/Button';
 import Cards from '../card/Cards'
 
-import "bootstrap/dist/css/bootstrap.css";
+// import "./bootstrap/dist/css/bootstrap.css";
+import "../../../node_modules/bootstrap/dist/css/bootstrap.css"
 
 import {connect} from 'react-redux'
 import {getPlans} from '../../actions/itemActions'

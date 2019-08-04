@@ -1,0 +1,61 @@
+@import '../../styles/colors.scss';
+@import '../../styles/vars.scss';
+
+.course-card {
+    width: 7vw;
+    max-width: $course-width;
+    height: $course-height;
+    min-height: $course-height;
+    position: relative;
+    border: 1.2px solid $primary;
+    background-color: white;
+    border-radius: 1px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    justify-content: center;
+    letter-spacing: 0.1rem;
+    font-size: 0.85rem;
+    text-align: center;
+    margin: 5px;
+    transition: border-color ease 0.3s, color ease 0.3s;
+    /* Disable text-highlight */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+    
+    p {
+        padding: 5px 5px;
+        transition: color ease 0.3s;
+    }
+
+    &:focus {
+        // border-color: $accent;
+        // color: $accent;
+        outline: none;
+    }
+
+    &.active {
+        // background-color: $primary;
+        color: $accent;
+        border-color: $accent;
+    }
+}
+
+
+@media only screen and (max-width: 955px) {
+    .course-card {
+        font-size: 1.1vw;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .course-card {
+        font-size: 1.5vw;
+    }
+}

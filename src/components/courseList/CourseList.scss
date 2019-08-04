@@ -1,0 +1,15 @@
+@import '../../styles/colors.scss';
+@import '../../styles/vars.scss';
+
+
+
+.course-cards {
+    width: 50%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: visible;
+    // border: 1px solid $primary;
+    transition: height ease 0.5s;
+}

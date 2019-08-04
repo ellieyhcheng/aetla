@@ -16,11 +16,12 @@ li {
 
     width: $toolbar-width;
     height: 100vh;
-    font-size: 1.5em;
+    font-size: 1.5rem;
     background-color: $primary;
     position: fixed;
     left: 0;
     top: 0;
+    z-index: 999;
 
     .line-v {
         background-color: $secondary;

@@ -1,33 +1,60 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
+@import './styles/colors.scss';
+@import './styles/vars.scss';
+
+:root {
+  font-size: 13px;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+body {
+  margin: 0;
+  font-family: 'Muli', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+* {
+    /* Scrollbar for Firefox */
+  // scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: $light-grey white;
 }
 
-.App-link {
-  color: #61dafb;
+/* Scrollbar for Webkit browsers */
+::-webkit-scrollbar {
+  width: 5px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+::-webkit-scrollbar-thumb {
+  background: $light-grey;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background: white;
+  border-radius: 20px;
+}
+
+.app-wrapper {
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace;
   }
-  to {
-    transform: rotate(360deg);
+
+  p {
+    margin: 0;
   }
 }
+
+::selection {
+  background: $highlight; /* WebKit/Blink Browsers */
+  color: $primary;
+}
+::-moz-selection {
+  background: $highlight; /* Gecko Browsers */
+  color: $primary;
+}
+
