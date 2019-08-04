@@ -351,25 +351,18 @@ const data = {
         '5d2d3eb483d26171f4df980e'
     ],
     coursePlan: {
+        years: [
+            'year1',
+        ],
         'year1': {  // Defaults to at least year1
-            quarters: ['fall', 'winter'],
-            fall: [],
-            winter: [],
-            spring: [],
-            summer: [],
-        },
-        'year2': {
-            quarters: ['fall'], // Defaults to at least 'fall' quarter
+            quarters: ['fall'],
             fall: [],
             winter: [],
             spring: [],
             summer: [],
         },
     },
-    planLayout: [
-        'year1',
-        'year2',
-    ]
+    
 
 }
 

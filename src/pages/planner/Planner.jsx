@@ -282,31 +282,33 @@ class Planner extends Component {
             spring: [],
             summer: [],
         }
+        const index = this.state.coursePlan.years.length + 1;
+        const newYears = this.state.coursePlan.years;
+        newYears.push(`year${index}`);
+
         const newCoursePlan = {
             ...this.state.coursePlan,
-            [`year${this.state.planLayout.length + 1}`]: newYear,
+            [`year${index}`]: newYear,
+            years: newYears,
         }
-        const newPlanLayout = this.state.planLayout;
-        newPlanLayout.push(`year${this.state.planLayout.length + 1}`);
         
         const newState = {
             ...this.state,
             coursePlan: newCoursePlan,
-            planLayout: newPlanLayout,
         }
         this.setState(newState);
+        console.log(newState)
     }
 
     removeYear = (e) => {
         const newCoursePlan = this.state.coursePlan;
-        const newPlanLayout = this.state.planLayout;
         const newCourseList = this.state.courseList;
-        const length = newPlanLayout.length;
+        const length = newCoursePlan.years.length;
         
         if (length <= 1)
             return;
 
-        const year = newCoursePlan[newPlanLayout[length - 1]];
+        const year = newCoursePlan[newCoursePlan.years[length - 1]];
         
         year.quarters.forEach(quarterId => {
             year[quarterId].forEach(courseId => {
@@ -314,8 +316,8 @@ class Planner extends Component {
             })
         })
 
-        delete newCoursePlan[newPlanLayout[length - 1]];
-        newPlanLayout.splice(length - 1, 1);
+        delete newCoursePlan[newCoursePlan.years[length - 1]];
+        newCoursePlan.years.splice(length - 1, 1);
 
         const lists = this.splitList(newCourseList, this.state.courses);
         
@@ -323,7 +325,6 @@ class Planner extends Component {
             ...this.state,
             courseList: newCourseList,
             coursePlan: newCoursePlan,
-            planLayout: newPlanLayout,
             courseList1: lists[0],
             courseList2: lists[1]
         }
@@ -388,7 +389,6 @@ class Planner extends Component {
                                 </div>
                                 
                                 <PlanLayout
-                                    planLayout={this.state.planLayout}
                                     coursePlan={this.state.coursePlan}
                                     courses={this.state.courses}
                                     addQuarter={this.addQuarter}
