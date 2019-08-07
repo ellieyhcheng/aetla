@@ -7,18 +7,47 @@ import CourseList from '../../components/courseList/CourseList';
 import { DragDropContext } from 'react-beautiful-dnd';
 import PlanLayout from '../../components/planLayout/PlanLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
 
 
 class Planner extends Component {
     constructor(props) {
         super(props);
-        const splitList = this.splitList(data.courseList, data.courses)
+        // const splitList = this.splitList(data.courseList, data.courses)
         this.state = {
-            ...data,
-            courseList1: splitList[0],
-            courseList2: splitList[1],
+            title: '',
+            description: '',
+            courseList: [],
+            courses: {},
+            coursePlan: [],
+            courseList1: [],
+            courseList2: [],
             homeDroppable: '',
         }
+    }
+
+    componentDidMount() {
+        axios.get("http://localhost:8080/api/plan/5d4a3ee7dd7e804488be402e")
+            .then(res => {
+                // console.log(res.data.courses)
+                const splitList = this.splitList(res.data.courseList, res.data.courses);
+                var newState = {
+                    title: res.data.title,
+                    description: res.data.description,
+                    courseList: res.data.courseList,
+                    courses: res.data.courses,
+                    coursePlan: res.data.coursePlan,
+                    courseList1: splitList[0],
+                    courseList2: splitList[1],
+                    homeDroppable: '',
+                }
+                this.setState(newState);
+                console.log("state: ", this.state);
+            })
+            .catch(e => {
+                console.log(e)
+            });
+        
     }
 
     splitList = (courseList, courses) => {
@@ -75,6 +104,7 @@ class Planner extends Component {
     }
 
     onDragEnd = (result) => {
+        console.log(result)
         const { destination, source, draggableId } = result;
 
         if (!destination) return;
@@ -92,42 +122,34 @@ class Planner extends Component {
                 ...newState,
                 [source.droppableId]: newCourseList
             };
+            
+            // Dropped into course plan
+            const keys = destination.droppableId.split('-'); // { year.name, quarter }
+            const year = keys[0];
+            const quarter = keys[1];
+            const finishYearIndex = newState.coursePlan.findIndex(yearObj => yearObj.name === year);
+            const finish = newState.coursePlan[finishYearIndex][quarter];
+            // const finish = newState.coursePlan[year][quarter];
+            const newQuarterList = Array.from(finish);
+            newQuarterList.splice(destination.index, 0, draggableId);
 
-            if (destination.droppableId.includes("courseList")) {
-                const finish = newState[destination.droppableId];
-                const finishCourseList = Array.from(finish);
-                finishCourseList.splice(destination.index, 0, draggableId);
-                newState = {
-                    ...newState,
-                    [destination.droppableId]: finishCourseList,
-                };
-            } else {
-                // Dropped into course plan
-                const keys = destination.droppableId.split('-');
-                const year = keys[0];
-                const quarter = keys[1];
-                const finish = newState.coursePlan[year][quarter];
-                const newQuarterList = Array.from(finish);
-                newQuarterList.splice(destination.index, 0, draggableId);
+            const newList = newState.courseList.filter(courseId => {
+                return courseId !== draggableId
+            })
 
-                const newList = newState.courseList.filter(courseId => {
-                    return courseId !== draggableId
-                })
-
-                const newYear = {
-                    ...newState.coursePlan[year],
-                    [quarter]: newQuarterList
-                }
-                const newCoursePlan = {
-                    ...newState.coursePlan,
-                    [year]: newYear
-                }
-                newState = {
-                    ...newState,
-                    coursePlan: newCoursePlan,
-                    courseList: newList,
-                };
+            const newYear = {
+                ...newState.coursePlan[finishYearIndex],
+                [quarter]: newQuarterList
             }
+            const newCoursePlan = newState.coursePlan;
+            newCoursePlan[finishYearIndex] = newYear;
+            
+            newState = {
+                ...newState,
+                coursePlan: newCoursePlan,
+                courseList: newList,
+            };
+        
 
             this.setState(newState);
         } else {
@@ -135,18 +157,17 @@ class Planner extends Component {
             const sourceKeys = source.droppableId.split('-');
             const sourceYear = sourceKeys[0];
             const sourceQuarter = sourceKeys[1];
-            const start = this.state.coursePlan[sourceYear][sourceQuarter];
+            const startYearIndex = this.state.coursePlan.findIndex(year => year.name === sourceYear);
+            const start = this.state.coursePlan[startYearIndex][sourceQuarter];
 
             const startQuarterList = Array.from(start);
             startQuarterList.splice(source.index, 1);
             const oldYear = {
-                ...this.state.coursePlan[sourceYear],
+                ...this.state.coursePlan[startYearIndex],
                 [sourceQuarter]: startQuarterList
             }
-            const oldCoursePlan = {
-                ...this.state.coursePlan,
-                [sourceYear]: oldYear
-            }
+            const oldCoursePlan = this.state.coursePlan;
+            oldCoursePlan[startYearIndex] = oldYear;
 
             let newState = {
                 ...this.state,
@@ -169,20 +190,27 @@ class Planner extends Component {
                 const keys = destination.droppableId.split('-');
                 const year = keys[0];
                 const quarter = keys[1];
-                const finish = newState.coursePlan[year][quarter];
-                const finishQuarterList = Array.from(finish);
-                finishQuarterList.splice(destination.index, 0, draggableId);
+                const finishYearIndex = newState.coursePlan.findIndex(yearObj => yearObj.name === year);
+                const finish = newState.coursePlan[finishYearIndex][quarter];
+                // const finish = newState.coursePlan[year][quarter];
+                const newQuarterList = Array.from(finish);
+                newQuarterList.splice(destination.index, 0, draggableId);
+
+                const newList = newState.courseList.filter(courseId => {
+                    return courseId !== draggableId
+                })
+
                 const newYear = {
-                    ...newState.coursePlan[year],
-                    [quarter]: finishQuarterList
+                    ...newState.coursePlan[finishYearIndex],
+                    [quarter]: newQuarterList
                 }
-                const newCoursePlan = {
-                    ...newState.coursePlan,
-                    [year]: newYear
-                }
+                const newCoursePlan = newState.coursePlan;
+                newCoursePlan[finishYearIndex] = newYear;
+                
                 newState = {
                     ...newState,
                     coursePlan: newCoursePlan,
+                    courseList: newList,
                 };
             }
 
@@ -230,14 +258,13 @@ class Planner extends Component {
         })
     }
 
-    addQuarter = (yearId) => {
-        console.log(yearId)
+    addQuarter = (index) => {
         const newCoursePlan = this.state.coursePlan;
         const q = ['fall', 'winter', 'spring', 'summer'];
-        const length = newCoursePlan[yearId].quarters.length;
+        const length = newCoursePlan[index].quarters.length;
         if (length >= 4)
             return;
-        newCoursePlan[yearId].quarters.push(q[length]);
+        newCoursePlan[index].quarters.push(q[length]);
         
         const newState = {
             ...this.state,
@@ -246,20 +273,20 @@ class Planner extends Component {
         this.setState(newState);
     }
 
-    removeQuarter = (yearId) => {
+    removeQuarter = (index) => {
         const newCoursePlan = this.state.coursePlan;
         const newCourseList = this.state.courseList;
-        const length = newCoursePlan[yearId].quarters.length;
+        const length = newCoursePlan[index].quarters.length;
         if (length <= 1)
             return;
-        const quarterId = newCoursePlan[yearId].quarters[length - 1]
-        newCoursePlan[yearId][quarterId].forEach(courseId => {
+        const quarterId = newCoursePlan[index].quarters[length - 1]
+        newCoursePlan[index][quarterId].forEach(courseId => {
             newCourseList.push(courseId);
         });
 
-        newCoursePlan[yearId][quarterId] = [];
+        newCoursePlan[index][quarterId] = [];
         
-        newCoursePlan[yearId].quarters.splice(length - 1, 1);
+        newCoursePlan[index].quarters.splice(length - 1, 1);
 
         
         const lists = this.splitList(newCourseList, this.state.courses);
@@ -275,22 +302,18 @@ class Planner extends Component {
     }
 
     addYear = (e) => {
+        const length = this.state.coursePlan.length;
         const newYear = {
+            name: `year${length + 1}`,
             quarters: ['fall'], // Defaults to at least 'fall' quarter
             fall: [],
             winter: [],
             spring: [],
             summer: [],
         }
-        const index = this.state.coursePlan.years.length + 1;
-        const newYears = this.state.coursePlan.years;
-        newYears.push(`year${index}`);
 
-        const newCoursePlan = {
-            ...this.state.coursePlan,
-            [`year${index}`]: newYear,
-            years: newYears,
-        }
+        const newCoursePlan = this.state.coursePlan;
+        newCoursePlan.push(newYear);
         
         const newState = {
             ...this.state,
@@ -303,12 +326,12 @@ class Planner extends Component {
     removeYear = (e) => {
         const newCoursePlan = this.state.coursePlan;
         const newCourseList = this.state.courseList;
-        const length = newCoursePlan.years.length;
+        const length = newCoursePlan.length;
         
         if (length <= 1)
             return;
 
-        const year = newCoursePlan[newCoursePlan.years[length - 1]];
+        const year = newCoursePlan[length - 1];
         
         year.quarters.forEach(quarterId => {
             year[quarterId].forEach(courseId => {
@@ -316,8 +339,7 @@ class Planner extends Component {
             })
         })
 
-        delete newCoursePlan[newCoursePlan.years[length - 1]];
-        newCoursePlan.years.splice(length - 1, 1);
+        newCoursePlan.pop();
 
         const lists = this.splitList(newCourseList, this.state.courses);
         
@@ -331,6 +353,10 @@ class Planner extends Component {
         this.setState(newState);
     }
 
+    onClickSave = (e) => {
+        // Make post request to update plan
+    }
+
     render() {
         return (
             <div className="planner">
@@ -342,7 +368,7 @@ class Planner extends Component {
                             {/* TODO: Name should come from database */}
                             <p>{this.state.title}</p>
                             <div className="save-button">
-                                <Button type="icon" icon="save" tooltip="Save" direction="right" />
+                                <Button type="icon" icon="save" tooltip="Save" direction="right" onClick={this.onClickSave}/>
                             </div>
                         </div>
                         <div className="line-h" />
@@ -377,10 +403,10 @@ class Planner extends Component {
                                             </form>
                                         </div>
                                         <CourseList courseList1={
-                                                this.state.courseList1.map(couresId => this.state.courses[couresId])
+                                                this.state.courseList1.map(courseId => this.state.courses[courseId])
                                             }
                                             courseList2={
-                                                this.state.courseList2.map(couresId => this.state.courses[couresId])
+                                                this.state.courseList2.map(courseId => this.state.courses[courseId])
                                             }
                                             homeDroppable={this.state.homeDroppable}
                                         />
