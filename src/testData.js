@@ -362,8 +362,6 @@ const data = {
             summer: [],
         },
     },
-    
-
 }
 
 export default data;
