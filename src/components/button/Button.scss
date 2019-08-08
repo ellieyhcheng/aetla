@@ -36,7 +36,7 @@
     }
 
     .button-tooltip {
-        font-size: 0.5em;
+        font-size: 11px;
         letter-spacing: 0.1em;
         width: auto;
         white-space: nowrap;
@@ -44,7 +44,6 @@
         padding: 5px 10px; 
         border-radius: 1px;
         position: absolute;
-        box-shadow: 2px 2px 2px #C2B8B4;
         visibility: hidden;
         opacity: 0;
         transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.4s;
@@ -93,4 +92,16 @@
 
     }
 
+}
+
+@media only screen and (max-width: 970px) {
+    .button-text {
+        font-size: 1.2vw;
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    .button-text {
+        font-size: 1.2vw;
+    }
 }

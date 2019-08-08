@@ -64,6 +64,7 @@
         .course-list {    
             width: 300px;
             max-width: 16vw;
+            text-align: center;
         
             .course-list-header {
                 height: 6%;
@@ -171,3 +172,14 @@
     }
 }
 
+@media only screen and (max-width: 970px) {
+    .search {
+        font-size: 1.25vw !important;
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    .search {
+        font-size: 1.5vw !important;
+    }
+}
