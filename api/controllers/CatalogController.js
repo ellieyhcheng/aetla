@@ -18,7 +18,7 @@ function catalog_all(req, res, next) {
 // Display details of a catalog
 function catalog_detail(req, res, next) {
     Catalog.findById(req.params.id)
-    .populate('courses')
+    // .populate('courses')
     .exec((err, catalog) => {
         if (err)
             return next(err);

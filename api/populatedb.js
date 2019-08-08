@@ -132,6 +132,35 @@ const cs = [
     'ENGR 185EW',
 ]
 
+const ee = [
+    'MATH 31A',
+    'MATH 31B',
+    'MATH 32A',
+    'MATH 32B',
+    'MATH 33A',
+    'MATH 33B',
+    'CHEM 20A',
+    'PHYSICS 1A',
+    'PHYSICS 1B',
+    'PHYSICS 1C',
+    'PHYSICS 4AL',
+    'PHYSICS 4BL',
+    'EC ENGR 2',
+    'EC ENGR 3',
+    'EC ENGR 10',
+    'EC ENGR 11L',
+    'EC ENGR M16',
+    'COM SCI 31',
+    'COM SCI 32',
+    'EC ENGR 101A',
+    'EC ENGR 102',
+    'EC ENGR 110',
+    'EC ENGR 111L',
+    'EC ENGR 113',
+    'EC ENGR 131A',
+    'ENGR 183EW',
+]
+
 function courseCreate(name, cb) {
         var filter = name.split(' ');
         var subject = filter[0];
@@ -196,54 +225,54 @@ function planCreate(title, description, courses, courselist, coursePlan, cb) {
 
 function createCourses(cb) {
     async.series([
-        function (callback) {
-            courseCreate('COM SCI 1', callback);
-        },
-        function (callback) {
-            courseCreate('COM SCI 31', callback);
-        },
-        function (callback) {
-            courseCreate('COM SCI 32', callback);
-        },
-        function (callback) {
-            courseCreate('COM SCI 33', callback);
-        },
-        function (callback) {
-            courseCreate('COM SCI 35L', callback);
-        },
-        function (callback) {
-            courseCreate('COM SCI M51A', callback);
-        },
-        function (callback) {
-            courseCreate('COM SCI 111', callback);
-        },
-        function (callback) {
-            courseCreate('COM SCI 131', callback);
-        },
-        function (callback) {
-            courseCreate('COM SCI M151B', callback);
-        },
-        function (callback) {
-            courseCreate('COM SCI 180', callback);
-        },
-        function (callback) {
-            courseCreate('COM SCI 181', callback);
-        },
-        function (callback) {
-            courseCreate('COM SCI M152A', callback);
-        },
-        function (callback) {
-            courseCreate('COM SCI 152B', callback);
-        },
-        function (callback) {
-            courseCreate('EC ENGR 100', callback);
-        },
-        function (callback) {
-            courseCreate('EC ENGR 102', callback);
-        },
-        function (callback) {
-            courseCreate('EC ENGR 115C', callback);
-        },
+        // function (callback) {
+        //     courseCreate('COM SCI 1', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('COM SCI 31', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('COM SCI 32', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('COM SCI 33', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('COM SCI 35L', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('COM SCI M51A', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('COM SCI 111', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('COM SCI 131', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('COM SCI M151B', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('COM SCI 180', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('COM SCI 181', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('COM SCI M152A', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('COM SCI 152B', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('EC ENGR 100', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('EC ENGR 102', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('EC ENGR 115C', callback);
+        // },
         function (callback) {
             courseCreate('EC ENGR 3', callback);
         },
@@ -262,9 +291,9 @@ function createCourses(cb) {
         function (callback) {
             courseCreate('MATH 33B', callback);
         },
-        function (callback) {
-            courseCreate('MATH 61', callback);
-        },
+        // function (callback) {
+        //     courseCreate('MATH 61', callback);
+        // },
         function (callback) {
             courseCreate('PHYSICS 1A', callback);
         },
@@ -277,11 +306,56 @@ function createCourses(cb) {
         function (callback) {
             courseCreate('PHYSICS 4AL', callback);
         },
+        // function (callback) {
+        //     courseCreate('STATS 100A', callback);
+        // },
+        // function (callback) {
+        //     courseCreate('ENGR 185EW', callback);
+        // },
         function (callback) {
-            courseCreate('STATS 100A', callback);
+            courseCreate('CHEM 20A', callback);
         },
         function (callback) {
-            courseCreate('ENGR 185EW', callback);
+            courseCreate('PHYSICS 4BL', callback);
+        },
+        function (callback) {
+            courseCreate('EC ENGR 2', callback);
+        },
+        function (callback) {
+            courseCreate('EC ENGR 10', callback);
+        },
+        function (callback) {
+            courseCreate('EC ENGR 11L', callback);
+        },
+        function (callback) {
+            courseCreate('EC ENGR M16', callback);
+        },
+        function (callback) {
+            courseCreate('COM SCI 31', callback);
+        },
+        function (callback) {
+            courseCreate('COM SCI 32', callback);
+        },
+        function (callback) {
+            courseCreate('EC ENGR 101A', callback);
+        },
+        function (callback) {
+            courseCreate('EC ENGR 102', callback);
+        },
+        function (callback) {
+            courseCreate('EC ENGR 110', callback);
+        },
+        function (callback) {
+            courseCreate('EC ENGR 111L', callback);
+        },
+        function (callback) {
+            courseCreate('EC ENGR 113', callback);
+        },
+        function (callback) {
+            courseCreate('EC ENGR 131A', callback);
+        },
+        function (callback) {
+            courseCreate('ENGR 183EW', callback);
         },
     ],
     cb)
@@ -289,12 +363,12 @@ function createCourses(cb) {
 
 function createCatalogs(cb) {
     async.parallel([
-        function (callback) {
-            catalogCreate("CSE", courses, callback);
-        },
         // function (callback) {
-        //     courseListCreate("CSE", courses.slice(3), callback);
-        // }
+        //     catalogCreate("CSE", courses, callback);
+        // },
+        function (callback) {
+            catalogCreate("EE", courses, callback);
+        }
     ],
     cb);
 }
@@ -303,17 +377,17 @@ function createPlans(cb) {
     async.parallel([
         function (callback) {
             planCreate(
-                "My Second Plan", 
-                "Four year plan for CSE",
+                "My First Plan", 
+                "Four year plan for EE",
                 [catalogs[0]], 
                 courses.slice(6),
                 [
                     {
                         name: "year1",
                         quarters: ['fall', 'winter'],
-                        fall: [courses[1], courses[2]],
-                        winter: [courses[0], courses[3]],
-                        spring: [courses[4], courses[5]],
+                        fall: [courses[0], courses[1], courses[2]],
+                        winter: [courses[3], courses[4], courses[5]],
+                        spring: [],
                         summer: [],
                     },
             ], callback);

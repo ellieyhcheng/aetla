@@ -74,44 +74,45 @@ function plan_update_get(req, res, next) {
 
 // Handle plan update on POST
 function plan_update_post(req, res, next) {
-	var plan = new Plan(
-		{
-			title: req.body.title,
-			description: req.body.description,
-			courseLists: req.body.courseLists,
-			coursePlan: req.body.coursePlan,
-			_id: req.params.id,
-		}
-	)
+	
+	// var plan = new Plan(
+	// 	{
+	// 		title: req.body.title,
+	// 		description: req.body.description,
+	// 		courseLists: req.body.courseLists,
+	// 		coursePlan: req.body.coursePlan,
+	// 		_id: req.params.id,
+	// 	}
+	// )
 
-	Plan.findByIdAndUpdate(req.params.id, plan, {}, (err, thePlan) => {
-		if (err)
-			return next(err);
-		res.send('Plan ' + thePlan.id + ' update succeeded!');
-	})
-
-	// Plan.findById(req.params.id)
-	// .exec((err, plan) => {
+	// Plan.findByIdAndUpdate(req.params.id, plan, {}, (err, thePlan) => {
 	// 	if (err)
 	// 		return next(err);
-	// 	if (plan === null) {
-	// 		const error = new Error('Plan not found');
-	// 		error.status = 404;
-	// 		return next(error);
-	// 	}
-	// 	plan.title = req.body.title;
-	// 	plan.description = req.body.description;
-	// 	plan.courseLists = req.body.courseLists;
-	// 	plan.coursePlan = req.body.coursePlan;
-
-	// 	plan.save()
-	// 	.then(plan => {
-	// 		res.json('Plan updated!');
-	// 	})
-	// 	.catch(err => {
-	// 		return next(err);
-	// 	})
+	// 	res.send('Plan ' + thePlan.id + ' update succeeded!');
 	// })
+
+	Plan.findById(req.params.id)
+	.exec((err, plan) => {
+		if (err)
+			return next(err);
+		if (plan === null) {
+			const error = new Error('Plan not found');
+			error.status = 404;
+			return next(error);
+		}
+		plan.title = req.body.title;
+		plan.description = req.body.description;
+		plan.courseList = req.body.courseList;
+		plan.coursePlan = req.body.coursePlan;
+
+		plan.save()
+		.then(plan => {
+			res.json('Plan updated!');
+		})
+		.catch(err => {
+			return next(err);
+		})
+	})
 	// res.send('NOT IMPLEMENTED: Plan update POST')
 }
 

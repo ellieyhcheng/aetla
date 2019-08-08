@@ -15,6 +15,7 @@ class Planner extends Component {
         super(props);
         // const splitList = this.splitList(data.courseList, data.courses)
         this.state = {
+            id: '5d4b6ab60b02bad390633798',
             title: '',
             description: '',
             courseList: [],
@@ -27,7 +28,7 @@ class Planner extends Component {
     }
 
     componentDidMount() {
-        axios.get("http://localhost:8080/api/plan/5d4a3ee7dd7e804488be402e")
+        axios.get(`http://localhost:8080/api/plan/${this.state.id}`)
             .then(res => {
                 // console.log(res.data.courses)
                 const splitList = this.splitList(res.data.courseList, res.data.courses);
@@ -42,7 +43,7 @@ class Planner extends Component {
                     homeDroppable: '',
                 }
                 this.setState(newState);
-                console.log("state: ", this.state);
+                // console.log("state: ", this.state);
             })
             .catch(e => {
                 console.log(e)
@@ -104,7 +105,7 @@ class Planner extends Component {
     }
 
     onDragEnd = (result) => {
-        console.log(result)
+        // console.log(result)
         const { destination, source, draggableId } = result;
 
         if (!destination) return;
@@ -320,7 +321,7 @@ class Planner extends Component {
             coursePlan: newCoursePlan,
         }
         this.setState(newState);
-        console.log(newState)
+        // console.log(newState)
     }
 
     removeYear = (e) => {
@@ -355,6 +356,21 @@ class Planner extends Component {
 
     onClickSave = (e) => {
         // Make post request to update plan
+        const newPlan = {
+            title: this.state.title,
+            description: this.state.description,
+            courseList: this.state.courseList,
+            coursePlan: this.state.coursePlan,
+            courses: this.state.courses,
+        }
+        // console.log(newPlan)
+
+        axios.post(`http://localhost:8080/api/plan/${this.state.id}/update`, newPlan)
+        .then(res => {
+            console.log(res.data)
+        })
+
+       
     }
 
     render() {

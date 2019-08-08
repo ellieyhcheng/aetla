@@ -22,8 +22,8 @@ app.get('/', (req, res) => {
     res.send('Courselists')
 })
 
-const dataRouter = require('./routes/data');
-app.use('/api', dataRouter)
+const apiRouter = require('./routes/api');
+app.use('/api', apiRouter)
 
 // Set up router endpoints
 const userRouter = require('./routes/user');

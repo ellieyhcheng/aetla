@@ -10,7 +10,7 @@ const courseController = require('../controllers/CourseController');
 router.get('/courses', courseController.course_all);
 router.get('/course/:id', courseController.course_detail);
 
-router.get('/catalog', catalogController.catalog_all);
+router.get('/catalogs', catalogController.catalog_all);
 router.get('/catalog/:id', catalogController.catalog_detail);
 
 router.get('/plans', planController.plan_all);
