@@ -8,6 +8,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import PlanLayout from '../../components/planLayout/PlanLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import CourseDetail from '../../components/courseDetail/CourseDetail';
 
 
 class Planner extends Component {
@@ -24,6 +25,7 @@ class Planner extends Component {
             courseList1: [],
             courseList2: [],
             homeDroppable: '',
+            activeCourse: null,
         }
     }
 
@@ -41,6 +43,7 @@ class Planner extends Component {
                     courseList1: splitList[0],
                     courseList2: splitList[1],
                     homeDroppable: '',
+                    activeCourse: null,
                 }
                 this.setState(newState);
                 // console.log("state: ", this.state);
@@ -98,10 +101,6 @@ class Planner extends Component {
             ...this.state,
             homeDroppable: info.source.droppableId,
         })
-    }
-
-    onDragUpdate = (update) => {
-        // console.log(update)
     }
 
     onDragEnd = (result) => {
@@ -369,8 +368,13 @@ class Planner extends Component {
         .then(res => {
             console.log(res.data)
         })
+    }
 
-       
+    captureActiveCourse = (course) => {
+        this.setState({
+            ...this.state,
+            activeCourse: course,
+        })
     }
 
     render() {
@@ -381,7 +385,6 @@ class Planner extends Component {
                 <div className="planner-content">
                     <div className="planner-header">
                         <div className="center-text">
-                            {/* TODO: Name should come from database */}
                             <p>{this.state.title}</p>
                             <div className="save-button">
                                 <Button type="icon" icon="save" tooltip="Save" direction="right" onClick={this.onClickSave}/>
@@ -397,7 +400,6 @@ class Planner extends Component {
                     >
                         {(
                             <div className="planner-body">
-
                                 <div className="course-list">
                                     <div className="course-list-header">
                                         <div className="center-text">
@@ -425,10 +427,13 @@ class Planner extends Component {
                                                 this.state.courseList2.map(courseId => this.state.courses[courseId])
                                             }
                                             homeDroppable={this.state.homeDroppable}
+                                            captureActiveCourse={this.captureActiveCourse}
                                         />
                                         
                                     </div>
                                 </div>
+
+                                <CourseDetail course={this.state.activeCourse} />
                                 
                                 <PlanLayout
                                     coursePlan={this.state.coursePlan}
@@ -437,6 +442,7 @@ class Planner extends Component {
                                     removeQuarter={this.removeQuarter}
                                     addYear={this.addYear}
                                     removeYear={this.removeYear}
+                                    captureActiveCourse={this.captureActiveCourse}
                                 />
 
 

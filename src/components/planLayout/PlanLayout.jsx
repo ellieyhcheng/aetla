@@ -82,7 +82,9 @@ class PlanLayout extends Component {
                                                     {...provided.droppableProps}
                                                 >
                                                     {year[quarterId].map((courseId, k) => (
-                                                        <CourseCard course={this.props.courses[courseId]} index={k} key={this.props.courses[courseId]["_id"]} />
+                                                        <CourseCard course={this.props.courses[courseId]} index={k} key={this.props.courses[courseId]["_id"]} 
+                                                            captureActiveCourse={this.props.captureActiveCourse}
+                                                        />
                                                     ))}
                                                     {provided.placeholder}
                                                 </div>
