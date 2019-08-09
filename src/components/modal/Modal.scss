@@ -1,0 +1,49 @@
+@import '../../styles/colors.scss';
+@import '../../styles/vars.scss';
+
+.modal-overlay {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    visibility: visible;
+    opacity: 1;
+    transition: ease 1s;
+
+    .modal {
+        background: white;
+        border: 1px solid $primary;
+        border-radius: 2px;
+        width: max-content;
+        height: max-content;
+        padding: 4vh 4vw;
+        box-sizing: border-box;
+        max-width: 40%;
+        max-height: 50%;
+        z-index: 1000;
+        position: relative;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+        color: $primary;
+        font-size: 1.3rem;
+        transition: ease 1s;
+
+
+        .modal-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+    }
+}

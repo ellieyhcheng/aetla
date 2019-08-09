@@ -9,12 +9,12 @@ import PlanLayout from '../../components/planLayout/PlanLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import CourseDetail from '../../components/courseDetail/CourseDetail';
+import Modal from '../../components/modal/Modal';
 
 
 class Planner extends Component {
     constructor(props) {
         super(props);
-        // const splitList = this.splitList(data.courseList, data.courses)
         this.state = {
             id: '5d4b6ab60b02bad390633798',
             title: '',
@@ -26,11 +26,13 @@ class Planner extends Component {
             courseList2: [],
             homeDroppable: '',
             activeCourse: null,
+            saving: false
         }
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:8080/api/plan/${this.state.id}`)
+        setTimeout(() => {
+            axios.get(`http://localhost:8080/api/plan/${this.state.id}`)
             .then(res => {
                 // console.log(res.data.courses)
                 const splitList = this.splitList(res.data.courseList, res.data.courses);
@@ -44,6 +46,7 @@ class Planner extends Component {
                     courseList2: splitList[1],
                     homeDroppable: '',
                     activeCourse: null,
+                    saving: false
                 }
                 this.setState(newState);
                 // console.log("state: ", this.state);
@@ -51,6 +54,8 @@ class Planner extends Component {
             .catch(e => {
                 console.log(e)
             });
+        }, 3000);
+        
         
     }
 
@@ -93,13 +98,14 @@ class Planner extends Component {
     }
 
     onDragStart = (info) => {
-        // const actives = document.querySelectorAll('.active');
-        // actives.forEach((active) => {
-        //     active.classList.remove('active')
-        // })
+        const actives = document.querySelectorAll('.active');
+        actives.forEach((active) => {
+            active.classList.remove('active')
+        })
         this.setState({
             ...this.state,
             homeDroppable: info.source.droppableId,
+            activeCourse: null,
         })
     }
 
@@ -354,6 +360,10 @@ class Planner extends Component {
     }
 
     onClickSave = (e) => {
+        this.setState({
+            ...this.state,
+            saving: true,
+        })
         // Make post request to update plan
         const newPlan = {
             title: this.state.title,
@@ -367,6 +377,13 @@ class Planner extends Component {
         axios.post(`http://localhost:8080/api/plan/${this.state.id}/update`, newPlan)
         .then(res => {
             console.log(res.data)
+            setTimeout(() => {
+                this.setState({
+                    ...this.state,
+                    saving: false,
+                })
+            }, 1000)
+            
         })
     }
 
@@ -450,7 +467,14 @@ class Planner extends Component {
                         )}
                     </DragDropContext>
                 </div>
-
+                {this.state.saving &&
+                    <Modal forced>
+                        Saving your plan... Please wait...
+                        <div className="load-icon">
+                            <FontAwesomeIcon icon="spinner" pulse/>
+                        </div>
+                    </Modal>
+                }
             </div>
         )
     }

@@ -10,7 +10,6 @@ class Button extends Component {
             type: props.type || 'text', // { icon, text }
             icon: props.icon || null,
             text: props.text || '',
-            color: props.color,
             onClick: props.onClick,
             tooltip: props.tooltip || '',
             direction: props.direction,  // { left, top, right, bottom }

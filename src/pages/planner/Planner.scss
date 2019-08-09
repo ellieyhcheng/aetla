@@ -18,6 +18,12 @@
         background-color: $primary;
     }
 
+    .load-icon {
+        margin: 2vh 1vw 0;
+        color: $secondary;
+        font-size: 1.8rem;
+    }
+
     .planner-content {
         overflow: visible;
         margin-left: $toolbar-width;

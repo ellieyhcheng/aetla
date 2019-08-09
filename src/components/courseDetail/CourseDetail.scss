@@ -2,27 +2,21 @@
 @import '../../styles/vars.scss';
 
 
-.course-detail {
+.body {
     margin-left: 1vw;
     width: 16%;
-    height: 70%;
+    height: max-content;
+    max-height: 100%;
     border: 1px $accent solid;
     box-sizing: border-box;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     letter-spacing: 0.1em;
-    transition: ease 0.5s;
-
-    .body {
-        height: 100%;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        position: relative;
-        right: 0;
-        padding-left: 10px;
-        box-sizing: border-box;
-    }
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-left: 10px;
 
     .title {
         font-size: 1rem;
@@ -47,18 +41,24 @@
         margin: 0 0.6vw 4vh 0.5vw;
         
         .description {
-            margin-bottom: 1vh;
+            margin-bottom: 2vh;
         }
     }
 
-    .empty {
-        height: 100%;
-        width: 80%;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-    }
     
+}
+
+.empty {
+    height: 100%;
+    width: 80%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-left: 1vw;
+    width: 16%;
+    border: 1px $accent solid;
+    letter-spacing: 0.1em;
+    padding: 0 0.5vw;
 }

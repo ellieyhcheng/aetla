@@ -39,12 +39,12 @@
         // color: $accent;
         outline: none;
     }
+}
 
-    &.active {
-        // background-color: $primary;
-        color: $accent;
-        border-color: $accent;
-    }
+.course-card.active {
+    // background-color: $primary;
+    color: $accent;
+    border-color: $accent;
 }
 
 
