@@ -44,11 +44,18 @@
         justify-content: flex-end;
         align-items: center;
         font-size: 1.2rem;
+        position: relative;
 
         p {
             font-size: 1.4rem;
             margin-right: 5px;
             text-transform: capitalize;
+        }
+
+        .title-loader {
+            width: 20vw;
+            height: 45%;
+            position: relative;
         }
 
         .save-button {
@@ -158,7 +165,31 @@
         
                         
                     }
-                }       
+                } 
+                
+                .courselist-loader {
+                    width: 100%;
+                    height: 92%;
+                    position: relative;
+                    display: flex;
+                    justify-content: space-around;
+                    overflow: scroll;
+
+                    .column {
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+
+                        .course-loader {
+                            width: 7vw;
+                            max-width: $course-width;
+                            height: $course-height;
+                            min-height: $course-height;
+                            margin: 5px;
+                        }
+                    }
+                }
+
                 .course-cards-scroll {
                     width: 100%;
                     height: 90%;
@@ -167,10 +198,7 @@
                     align-content: space-around;
                     overflow-y: scroll;
                     overflow-x: hidden;
-                    position: relative;
-                    
-                
-                    
+                    position: relative;  
                 }
                 
             }

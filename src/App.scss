@@ -58,3 +58,27 @@ body {
   color: $primary;
 }
 
+// @-webkit-keyframes loading {
+//   0% { background-position:  ; }
+//   50% { background-position: 150% 0; }
+//   100% { background-position: 150% 0; }
+// }
+// @-moz-keyframes loading {
+//   0% { background-position: -50% 0; }
+//   50% { background-position: 150% 0; }
+//   100% { background-position: 150% 0; }
+// }
+@keyframes loading {
+  0% { background: $base }
+  50% { background: $shine; }
+  100% { background: $base }
+}
+
+.loader {
+  border-radius: 3px;
+  background: $base;
+  background-size: 460px 100%;
+  -webkit-animation: loading 1.5s infinite ease reverse;
+  -moz-animation: loading 1.5s infinite ease reverse;
+  animation: loading 2s infinite ease;
+}

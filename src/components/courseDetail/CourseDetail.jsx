@@ -16,7 +16,9 @@ class CourseDetail extends Component {
             </div>
         ) : (
             <div className="empty">
-                Select a course to see details
+                {/* {this.props.loading ? <div className="loader"/> :  */}
+                    <p>Select a course to see details</p>
+                {/* } */}
             </div>
         )
         return content;

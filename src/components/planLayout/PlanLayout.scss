@@ -39,6 +39,7 @@
 
             div {
                 height: $row-height;
+                width: 100%;
                 display: flex;
                 align-items: center;
                 font-size: 0.95rem;
@@ -54,6 +55,11 @@
                 color: $primary;
                 font-weight: 100;
                 // font-size: 0.90rem;
+            }
+
+            .strip {
+                height: 15px;
+                width: 100%;
             }
         }
     }
@@ -93,6 +99,14 @@
                         display: flex;
                         align-items: center;
                     }
+                }
+
+                .course-loader {
+                    width: 7vw;
+                    max-width: $course-width;
+                    height: $course-height;
+                    min-height: $course-height;
+                    margin: 5px;
                 }
 
                 .shadow-bin-wrapper{
@@ -148,6 +162,7 @@
             position: absolute;
             left: 43%;
         }
+
         .plan-row {
             justify-content: center;
             font-size: 1.2rem;
@@ -157,6 +172,12 @@
             padding: 0px;
             margin: 0.3vw;
         }
+    }
+
+    .units-loader {
+        width: 5vw;
+        height: 15px;
+        margin: 5px;
     }
 
     .plan-row {
