@@ -1,0 +1,64 @@
+@import '../../styles/colors.scss';
+@import '../../styles/vars.scss';
+
+
+.body {
+    // margin-left: 1vw;
+    width: 16%;
+    height: max-content;
+    max-height: 100%;
+    border: 1px $accent solid;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 0.1em;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-left: 10px;
+
+    .title {
+        font-size: 1rem;
+        text-align: center;
+        margin-bottom: 1vh;
+        margin-top: 3vh;
+    }
+
+    .subtitle {
+        font-size: 0.8rem;
+        text-align: center;
+        margin: 0vh 0 3vh;
+    }
+    
+    .content {
+        font-size: 0.8rem;
+        // text-align: justify;
+        // text-justify: auto;
+        letter-spacing: 0.05em;
+        line-height: 1.2rem;
+        overflow: hidden;
+        margin: 0 0.6vw 4vh 0.5vw;
+        
+        .description {
+            margin-bottom: 2vh;
+        }
+    }
+
+    
+}
+
+.empty {
+    height: 70%;
+    width: 80%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    // margin-left: 1vw;
+    width: 16%;
+    border: 1px $accent solid;
+    letter-spacing: 0.1em;
+    padding: 0 0.5vw;
+}

@@ -39,23 +39,23 @@
         // color: $accent;
         outline: none;
     }
+}
 
-    &.active {
-        // background-color: $primary;
-        color: $accent;
-        border-color: $accent;
-    }
+.course-card.active {
+    // background-color: $primary;
+    color: $accent;
+    border-color: $accent;
 }
 
 
-@media only screen and (max-width: 955px) {
+@media only screen and (max-width: 970px) {
+    .course-card {
+        font-size: 1vw;
+    }
+}
+
+@media only screen and (max-width: 650px) {
     .course-card {
         font-size: 1.1vw;
-    }
-}
-
-@media only screen and (max-width: 600px) {
-    .course-card {
-        font-size: 1.5vw;
     }
 }

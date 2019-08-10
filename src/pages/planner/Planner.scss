@@ -18,6 +18,12 @@
         background-color: $primary;
     }
 
+    .load-icon {
+        margin: 2vh 1vw 0;
+        color: $secondary;
+        font-size: 1.8rem;
+    }
+
     .planner-content {
         overflow: visible;
         margin-left: $toolbar-width;
@@ -38,11 +44,18 @@
         justify-content: flex-end;
         align-items: center;
         font-size: 1.2rem;
+        position: relative;
 
         p {
             font-size: 1.4rem;
             margin-right: 5px;
             text-transform: capitalize;
+        }
+
+        .title-loader {
+            width: 20vw;
+            height: 45%;
+            position: relative;
         }
 
         .save-button {
@@ -63,7 +76,8 @@
 
         .course-list {    
             width: 300px;
-            max-width: 16vw;
+            max-width: 18%;
+            text-align: center;
         
             .course-list-header {
                 height: 6%;
@@ -151,7 +165,31 @@
         
                         
                     }
-                }       
+                } 
+                
+                .courselist-loader {
+                    width: 100%;
+                    height: 92%;
+                    position: relative;
+                    display: flex;
+                    justify-content: space-around;
+                    overflow: scroll;
+
+                    .column {
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+
+                        .course-loader {
+                            width: 7vw;
+                            max-width: $course-width;
+                            height: $course-height;
+                            min-height: $course-height;
+                            margin: 5px;
+                        }
+                    }
+                }
+
                 .course-cards-scroll {
                     width: 100%;
                     height: 90%;
@@ -160,10 +198,7 @@
                     align-content: space-around;
                     overflow-y: scroll;
                     overflow-x: hidden;
-                    position: relative;
-                    
-                
-                    
+                    position: relative;  
                 }
                 
             }
@@ -171,3 +206,14 @@
     }
 }
 
+@media only screen and (max-width: 970px) {
+    .search {
+        font-size: 1.25vw !important;
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    .search {
+        font-size: 1.5vw !important;
+    }
+}

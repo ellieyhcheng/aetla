@@ -5,14 +5,19 @@ import { Draggable } from "react-beautiful-dnd";
 
 class CourseCard extends Component {
     onClick = (e) => {
-        if (e.currentTarget.classList.contains('active'))
+        if (e.currentTarget.classList.contains('active')) {
             e.currentTarget.classList.toggle('active')
+            this.props.captureActiveCourse(null);
+        }
         else {
             const actives = document.querySelectorAll('.active');
             actives.forEach((active) => {
                 active.classList.remove('active')
             })
             e.currentTarget.classList.add('active')
+            
+            if (this.props.captureActiveCourse)
+                this.props.captureActiveCourse(this.props.course);
         }
     }
 

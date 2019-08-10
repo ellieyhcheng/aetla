@@ -10,10 +10,14 @@
     transition: height ease 0.5s;
     // align-items: stretch;
 
+    // * {
+    //     border: 1px solid $primary;
+    // }
+
     .plan-sidebar {
-        width: 12%;
+        width: 9%;
         height: max-content;
-        min-height: 95%;
+        min-height: 98%;
         display: flex;
         flex-direction: column;
         align-items: flex-end;
@@ -29,12 +33,13 @@
             display: flex;
             width: 100%;
             flex-direction: column;
-            padding-right: 10px;
+            padding-right: 0.8vw;
             box-sizing: border-box;
             align-items: flex-end;
 
             div {
                 height: $row-height;
+                width: 100%;
                 display: flex;
                 align-items: center;
                 font-size: 0.95rem;
@@ -50,6 +55,11 @@
                 color: $primary;
                 font-weight: 100;
                 // font-size: 0.90rem;
+            }
+
+            .strip {
+                height: 15px;
+                width: 100%;
             }
         }
     }
@@ -91,6 +101,14 @@
                     }
                 }
 
+                .course-loader {
+                    width: 7vw;
+                    max-width: $course-width;
+                    height: $course-height;
+                    min-height: $course-height;
+                    margin: 5px;
+                }
+
                 .shadow-bin-wrapper{
                     width: 100%;
                     height: $course-height;
@@ -129,7 +147,7 @@
     }
 
     .plan-footer {
-        width: 8%;
+        width: 10%;
         padding: 5px 0;
         overflow: visible;
         // border: 1px solid $primary;
@@ -137,16 +155,29 @@
         .units-num {
             text-align: right;
             position: absolute;
-            right: 70%;
+            right: 62%;
         }
 
         .units-suffix {
             position: absolute;
-            left: 35%;
+            left: 43%;
         }
+
         .plan-row {
             justify-content: center;
+            font-size: 1.2rem;
         }
+
+        .button-icon {
+            padding: 0px;
+            margin: 0.3vw;
+        }
+    }
+
+    .units-loader {
+        width: 5vw;
+        height: 15px;
+        margin: 5px;
     }
 
     .plan-row {
@@ -177,26 +208,40 @@
     }
 }
 
-@media only screen and (max-width: 860px) {
+@media only screen and (max-width: 970px) {
     .plan-layout {
         .plan-sidebar {
-            .plan-section {
+            .year-section {
                 div {
-                    font-size: 1.5vw;
+                    font-size: 1.2vw;
                 }
             }
         }
         .units {
-            font-size: 1.5vw;
+            font-size: 1.1vw;
+        }
+        .plan-row {
+            font-size: 1.2vw;
+
+            .button-icon {
+                margin: 0.1vw;
+            }
         }
 
     }
     
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 650px) {
     .plan-layout {
+        .plan-body {
+            width: 70%;
+        }
+        .plan-footer {
+            width: 15%;
+        }
         .plan-sidebar {
+            width: 15%;
             .plan-section {
                 div {
                     font-size: 1.8vw;

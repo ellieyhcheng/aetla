@@ -2,18 +2,17 @@ import React, { Component } from 'react';
 import './Planner.scss';
 import Toolbar from '../../components/toolbar/Toolbar'
 import Button from '../../components/button/Button';
-import data from '../../testData';
 import CourseList from '../../components/courseList/CourseList';
 import { DragDropContext } from 'react-beautiful-dnd';
 import PlanLayout from '../../components/planLayout/PlanLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
-
+import CourseDetail from '../../components/courseDetail/CourseDetail';
+import Modal from '../../components/modal/Modal';
 
 class Planner extends Component {
     constructor(props) {
         super(props);
-        // const splitList = this.splitList(data.courseList, data.courses)
         this.state = {
             id: '5d4b6ab60b02bad390633798',
             title: '',
@@ -24,31 +23,40 @@ class Planner extends Component {
             courseList1: [],
             courseList2: [],
             homeDroppable: '',
+            activeCourse: null,
+            saving: false,
+            loading: true,
         }
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:8080/api/plan/${this.state.id}`)
-            .then(res => {
-                // console.log(res.data.courses)
-                const splitList = this.splitList(res.data.courseList, res.data.courses);
-                var newState = {
-                    title: res.data.title,
-                    description: res.data.description,
-                    courseList: res.data.courseList,
-                    courses: res.data.courses,
-                    coursePlan: res.data.coursePlan,
-                    courseList1: splitList[0],
-                    courseList2: splitList[1],
-                    homeDroppable: '',
-                }
-                this.setState(newState);
-                // console.log("state: ", this.state);
-            })
-            .catch(e => {
-                console.log(e)
-            });
-        
+        setTimeout(() => {
+            axios.get(`http://localhost:8080/api/plan/${this.state.id}`)
+                .then(res => {
+                    // console.log(res.data.courses)
+                    const splitList = this.splitList(res.data.courseList, res.data.courses);
+                    var newState = {
+                        title: res.data.title,
+                        description: res.data.description,
+                        courseList: res.data.courseList,
+                        courses: res.data.courses,
+                        coursePlan: res.data.coursePlan,
+                        courseList1: splitList[0],
+                        courseList2: splitList[1],
+                        homeDroppable: '',
+                        activeCourse: null,
+                        saving: false,
+                        loading: false,
+                    }
+                    this.setState(newState);
+                    // console.log("state: ", this.state);
+                })
+                .catch(e => {
+                    console.log(e)
+                });
+        }, 3000);
+
+
     }
 
     splitList = (courseList, courses) => {
@@ -69,10 +77,10 @@ class Planner extends Component {
             else {
                 const course1Num = parseInt(course1.num.match(/\d+/g));
                 const course2Num = parseInt(course2.num.match(/\d+/g));
-                
-                if (course1Num > course2Num) 
+
+                if (course1Num > course2Num)
                     return true;
-                else if (course1Num < course2Num) 
+                else if (course1Num < course2Num)
                     return false;
                 else {
                     const lastLetter1 = course1.num.substring(course1.num.length - 1);
@@ -90,18 +98,15 @@ class Planner extends Component {
     }
 
     onDragStart = (info) => {
-        // const actives = document.querySelectorAll('.active');
-        // actives.forEach((active) => {
-        //     active.classList.remove('active')
-        // })
+        const actives = document.querySelectorAll('.active');
+        actives.forEach((active) => {
+            active.classList.remove('active')
+        })
         this.setState({
             ...this.state,
             homeDroppable: info.source.droppableId,
+            activeCourse: null,
         })
-    }
-
-    onDragUpdate = (update) => {
-        // console.log(update)
     }
 
     onDragEnd = (result) => {
@@ -123,7 +128,7 @@ class Planner extends Component {
                 ...newState,
                 [source.droppableId]: newCourseList
             };
-            
+
             // Dropped into course plan
             const keys = destination.droppableId.split('-'); // { year.name, quarter }
             const year = keys[0];
@@ -144,13 +149,13 @@ class Planner extends Component {
             }
             const newCoursePlan = newState.coursePlan;
             newCoursePlan[finishYearIndex] = newYear;
-            
+
             newState = {
                 ...newState,
                 coursePlan: newCoursePlan,
                 courseList: newList,
             };
-        
+
 
             this.setState(newState);
         } else {
@@ -207,7 +212,7 @@ class Planner extends Component {
                 }
                 const newCoursePlan = newState.coursePlan;
                 newCoursePlan[finishYearIndex] = newYear;
-                
+
                 newState = {
                     ...newState,
                     coursePlan: newCoursePlan,
@@ -218,7 +223,7 @@ class Planner extends Component {
             this.setState(newState);
         }
     }
-    
+
     onFocusSearch = (e) => {
         e.currentTarget.classList.add('select');
     }
@@ -266,7 +271,7 @@ class Planner extends Component {
         if (length >= 4)
             return;
         newCoursePlan[index].quarters.push(q[length]);
-        
+
         const newState = {
             ...this.state,
             coursePlan: newCoursePlan,
@@ -286,12 +291,12 @@ class Planner extends Component {
         });
 
         newCoursePlan[index][quarterId] = [];
-        
+
         newCoursePlan[index].quarters.splice(length - 1, 1);
 
-        
+
         const lists = this.splitList(newCourseList, this.state.courses);
-        
+
         const newState = {
             ...this.state,
             courseList: newCourseList,
@@ -303,6 +308,7 @@ class Planner extends Component {
     }
 
     addYear = (e) => {
+        if (this.state.loading) return;
         const length = this.state.coursePlan.length;
         const newYear = {
             name: `year${length + 1}`,
@@ -315,7 +321,7 @@ class Planner extends Component {
 
         const newCoursePlan = this.state.coursePlan;
         newCoursePlan.push(newYear);
-        
+
         const newState = {
             ...this.state,
             coursePlan: newCoursePlan,
@@ -325,15 +331,16 @@ class Planner extends Component {
     }
 
     removeYear = (e) => {
+        if (this.state.loading) return;
         const newCoursePlan = this.state.coursePlan;
         const newCourseList = this.state.courseList;
         const length = newCoursePlan.length;
-        
+
         if (length <= 1)
             return;
 
         const year = newCoursePlan[length - 1];
-        
+
         year.quarters.forEach(quarterId => {
             year[quarterId].forEach(courseId => {
                 newCourseList.push(courseId);
@@ -343,7 +350,7 @@ class Planner extends Component {
         newCoursePlan.pop();
 
         const lists = this.splitList(newCourseList, this.state.courses);
-        
+
         const newState = {
             ...this.state,
             courseList: newCourseList,
@@ -355,6 +362,11 @@ class Planner extends Component {
     }
 
     onClickSave = (e) => {
+        if (this.state.loading) return;
+        this.setState({
+            ...this.state,
+            saving: true,
+        })
         // Make post request to update plan
         const newPlan = {
             title: this.state.title,
@@ -366,14 +378,29 @@ class Planner extends Component {
         // console.log(newPlan)
 
         axios.post(`http://localhost:8080/api/plan/${this.state.id}/update`, newPlan)
-        .then(res => {
-            console.log(res.data)
-        })
+            .then(res => {
+                console.log(res.data)
+                setTimeout(() => {
+                    this.setState({
+                        ...this.state,
+                        saving: false,
+                    })
+                }, 1000)
 
-       
+            })
+    }
+
+    captureActiveCourse = (course) => {
+        this.setState({
+            ...this.state,
+            activeCourse: course,
+        })
     }
 
     render() {
+        const courseBins = new Array(Math.round(window.innerHeight * 0.75 / 45));
+        courseBins.fill(0);
+
         return (
             <div className="planner">
                 <Toolbar />
@@ -381,10 +408,14 @@ class Planner extends Component {
                 <div className="planner-content">
                     <div className="planner-header">
                         <div className="center-text">
-                            {/* TODO: Name should come from database */}
-                            <p>{this.state.title}</p>
+                            { this.state.loading ?
+                                <div className="title-loader loader"/>
+                                : 
+                                <p>{this.state.title}</p>
+                            }
+                            
                             <div className="save-button">
-                                <Button type="icon" icon="save" tooltip="Save" direction="right" onClick={this.onClickSave}/>
+                                <Button type="icon" icon="save" tooltip="Save" direction="right" onClick={this.onClickSave} />
                             </div>
                         </div>
                         <div className="line-h" />
@@ -397,7 +428,6 @@ class Planner extends Component {
                     >
                         {(
                             <div className="planner-body">
-
                                 <div className="course-list">
                                     <div className="course-list-header">
                                         <div className="center-text">
@@ -413,23 +443,36 @@ class Planner extends Component {
                                             <form className="search-form" onKeyPress={(e) => {
                                                 const key = e.charCode || e.keyCode || 0;
                                                 if (key == 13)
-                                                    e.preventDefault();                                                      
+                                                    e.preventDefault();
                                             }}>
-                                                <input type="text" className="search" placeholder="Search" onChange={this.displayMatches}/>
+                                                <input type="text" className="search" placeholder="Search" onChange={this.displayMatches} />
                                             </form>
                                         </div>
-                                        <CourseList courseList1={
+
+                                        { this.state.loading ?
+                                            <div className="courselist-loader">
+                                                {courseBins.slice(0,2).map((bin, i) => (
+                                                    <div className="column" key={i}>
+                                                        {courseBins.map((bin, i) => (<div className="course-loader loader" key={i}/>))}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            : 
+                                            <CourseList courseList1={
                                                 this.state.courseList1.map(courseId => this.state.courses[courseId])
                                             }
-                                            courseList2={
-                                                this.state.courseList2.map(courseId => this.state.courses[courseId])
-                                            }
-                                            homeDroppable={this.state.homeDroppable}
-                                        />
-                                        
+                                                courseList2={
+                                                    this.state.courseList2.map(courseId => this.state.courses[courseId])
+                                                }
+                                                homeDroppable={this.state.homeDroppable}
+                                                captureActiveCourse={this.captureActiveCourse}
+                                            />
+                                        }
                                     </div>
                                 </div>
-                                
+                                            
+                                <CourseDetail course={this.state.activeCourse} loading={this.state.loading} />
+
                                 <PlanLayout
                                     coursePlan={this.state.coursePlan}
                                     courses={this.state.courses}
@@ -437,6 +480,8 @@ class Planner extends Component {
                                     removeQuarter={this.removeQuarter}
                                     addYear={this.addYear}
                                     removeYear={this.removeYear}
+                                    captureActiveCourse={this.captureActiveCourse}
+                                    loading={this.state.loading}
                                 />
 
 
@@ -444,7 +489,14 @@ class Planner extends Component {
                         )}
                     </DragDropContext>
                 </div>
-
+                {this.state.saving &&
+                    <Modal forced>
+                        Saving your plan... Please wait...
+                        <div className="load-icon">
+                            <FontAwesomeIcon icon="spinner" pulse />
+                        </div>
+                    </Modal>
+                }
             </div>
         )
     }
