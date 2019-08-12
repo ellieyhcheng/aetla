@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 var CatalogSchema = new Schema({
     name: String,
-    courses: [{type: Schema.Types.ObjectId, ref: 'Course'}]
+    courses: [{type: Schema.Types.ObjectId, ref: 'Requirement'}]
 })
 
 

@@ -19,7 +19,10 @@ function plan_detail(req, res, next) {
 	.populate({
 		path: 'courses',
 		populate: {
-			path: 'courses'
+			path: 'courses',
+			// populate: {
+			// 	path: 'content'
+			// }
 		}
 	})
     .exec((err, plan) => {

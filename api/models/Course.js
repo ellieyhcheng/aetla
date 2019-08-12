@@ -16,7 +16,7 @@ CourseSchema.virtual('courseRef').get(() => {
 })
 
 CourseSchema.virtual('url').get(() => {
-    return '/api/courses/' + this._id;
+    return '/api/course/' + this._id;
 })
 
 module.exports = mongoose.model('Course', CourseSchema);
