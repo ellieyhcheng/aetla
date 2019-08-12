@@ -14,7 +14,7 @@ class Planner extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: '5d50a61c8f9f3e1405303b43',
+            id: '5d51f37fe229082f280332cb',
             title: '',
             description: '',
             courseList: [],
@@ -78,52 +78,86 @@ class Planner extends Component {
             const course1 = courses[courseId1];
             const course2 = courses[courseId2];
             if ('options' in course1) {
-                if ('options' in course2)
-                    return true;
+                if ('options' in course2) {
+                    if (course1.name.includes('GE')) {
+                        if (course2.name.includes('GE')) {
+                            if (course1.name < course2.name)
+                                return -1;
+                            else if (course1.name > course2.name)
+                                return 1;
+                            else
+                                return 0;
+                        }
+                        else 
+                            return 1;
+                    }
+                    else {
+                        if (course2.name.includes('GE'))
+                            return -1;
+                        else {
+                            if (course1.name < course2.name)
+                                return -1;
+                            else if (course1.name > course2.name)
+                                return 1;
+                            else
+                                return 0;
+                        }
+                    }
+                }
                 else {
-                    return true;
+                    if (course1.name.includes('GE'))
+                        return 1;
+                    else {
+                        if (course2.subject === 'GE')
+                            return -1;
+                        else
+                            return 1;
+                    }
                 }
             }
             else if ('options' in course2) {
-                if ('options' in course1)
-                    return false;
+                if (course2.name.includes('GE'))
+                    return -1;
                 else {
-                    return false;
+                    if (course1.subject === 'GE')
+                        return 1;
+                    else
+                        return -1;
                 }
             }
             else {
                 if (course1.subject === "GE" && course2.subject !== "GE") {
-                    return true
+                    return 1
                 }
                 else if (course2.subject === "GE" && course1.subject !== "GE") {
-                    return false
+                    return -1
                 }
                 else if (course2.subject === "GE" && course1.subject === "GE") {
                     if (course1.num > course2.num)
-                        return true;
+                        return 1;
                     else
-                        return false;
+                        return -1;
                 }
                 if (course1.subject > course2.subject)
-                    return true;
+                    return 1;
                 else if (course1.subject < course2.subject)
-                    return false;
+                    return -1;
                 else {
                     const course1Num = parseInt(course1.num.match(/\d+/g));
                     const course2Num = parseInt(course2.num.match(/\d+/g));
 
                     if (course1Num > course2Num)
-                        return true;
+                        return 1;
                     else if (course1Num < course2Num)
-                        return false;
+                        return -1;
                     else {
                         const lastLetter1 = course1.num.substring(course1.num.length - 1);
                         const lastLetter2 = course2.num.substring(course2.num.length - 1);
 
                         if (lastLetter1 > lastLetter2)
-                            return true;
+                            return 1;
                         else
-                            return false;
+                            return -1;
                     }
                 }
             }
@@ -269,10 +303,10 @@ class Planner extends Component {
 
     findMatches = (wordToMatch, courses) => {
         return courses.filter(courseId => {
-            const course = this.state.courses[courseId];
+            const req = this.state.courses[courseId];
+            const course = 'options' in req ? req.options[req.selected] : req;
             const regex = new RegExp(wordToMatch, 'gi');
             const course_title = `${course["subject"]} ${course["num"]}`;
-            // console.log(course_title.match(regex))
             if (course_title.match(regex) !== null)
                 return courseId;
         })
@@ -321,6 +355,18 @@ class Planner extends Component {
         if (length <= 1)
             return;
         const quarterId = newCoursePlan[index].quarters[length - 1]
+        if (newCoursePlan[index][quarterId].length === 0) {
+            newCoursePlan[index].quarters.splice(length - 1, 1);
+
+            const newState = {
+                ...this.state,
+                courseList: newCourseList,
+                coursePlan: newCoursePlan,
+            }
+            this.setState(newState);
+            return;
+        }
+            
         newCoursePlan[index][quarterId].forEach(courseId => {
             newCourseList.push(courseId);
         });
@@ -376,7 +422,10 @@ class Planner extends Component {
 
         const year = newCoursePlan[length - 1];
 
+        var noCourses = true;
         year.quarters.forEach(quarterId => {
+            if (year[quarterId].length !== 0)
+                noCourses = false;
             year[quarterId].forEach(courseId => {
                 newCourseList.push(courseId);
             })
@@ -384,6 +433,15 @@ class Planner extends Component {
 
         newCoursePlan.pop();
 
+        if (noCourses) {
+            const newState = {
+                ...this.state,
+                courseList: newCourseList,
+                coursePlan: newCoursePlan,
+            }
+            this.setState(newState);
+            return;
+        }
         const lists = this.splitList(newCourseList, this.state.courses);
 
         const newState = {
@@ -429,6 +487,17 @@ class Planner extends Component {
         this.setState({
             ...this.state,
             activeCourse: course,
+        })
+    }
+
+    captureSelectedIndex = (course) => {
+        const newCourses = {
+            ...this.state.courses,
+            [course["_id"]]: course,
+        }
+        this.setState({
+            ...this.state,
+            courses: newCourses,
         })
     }
 
@@ -501,6 +570,7 @@ class Planner extends Component {
                                                 }
                                                 homeDroppable={this.state.homeDroppable}
                                                 captureActiveCourse={this.captureActiveCourse}
+                                                captureSelectedIndex={this.captureSelectedIndex}
                                             />
                                         }
                                     </div>
@@ -516,6 +586,7 @@ class Planner extends Component {
                                     addYear={this.addYear}
                                     removeYear={this.removeYear}
                                     captureActiveCourse={this.captureActiveCourse}
+                                    captureSelectedIndex={this.captureSelectedIndex}
                                     loading={this.state.loading}
                                 />
 

@@ -21,6 +21,7 @@ class CourseList extends Component {
                             {this.props.courseList1.map((course, i) =>
                                 <CourseCard course={course} key={course["_id"]} index={i} 
                                 captureActiveCourse={this.props.captureActiveCourse}
+                                captureSelectedIndex={this.props.captureSelectedIndex}
                                 />
                             )}
                             {provided.placeholder}
@@ -40,6 +41,8 @@ class CourseList extends Component {
                             {this.props.courseList2.map((course, i) =>
                                 <CourseCard course={course} key={course["_id"]} index={i} 
                                 captureActiveCourse={this.props.captureActiveCourse}
+                                captureSelectedIndex={this.props.captureSelectedIndex}
+
                                 />
                             )}
                             {provided.placeholder}

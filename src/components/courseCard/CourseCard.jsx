@@ -7,7 +7,7 @@ class CourseCard extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            value: ('options' in props.course) ? props.course.options[props.course.selected] : "none",
+            value: ('options' in props.course) ? `${props.course.options[props.course.selected].subject} ${props.course.options[props.course.selected].num}` : "none",
             index: ('options' in props.course) ? props.course.selected : 0,
             active: false,
         }
@@ -59,7 +59,7 @@ class CourseCard extends Component {
     }
 
     handleChange = (event) => {
-        console.log(event)
+        // console.log(event)
         this.setState({
             value: event.target.value,
             index: event.target.selectedIndex - 1,
@@ -68,6 +68,12 @@ class CourseCard extends Component {
             if (this.props.captureActiveCourse) {
                 this.props.captureActiveCourse(this.props.course.options[event.target.selectedIndex - 1]);
             }
+        
+        if (this.props.captureSelectedIndex)
+            this.props.captureSelectedIndex({
+                ...this.props.course,
+                selected: event.target.selectedIndex - 1,
+            })
     }
 
     render() {

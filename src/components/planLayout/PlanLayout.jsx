@@ -16,6 +16,9 @@ class PlanLayout extends Component {
     calculateQuarterUnits = (quarter) => {
         // console.log(quarter)
         const sum = quarter.reduce((prev, courseId) => {
+            const course = this.props.courses[courseId];
+            if ('options' in course)
+                return prev + course.options[course.selected]['units']
             return prev + this.props.courses[courseId]['units']
         }, 0)
 
@@ -121,6 +124,7 @@ class PlanLayout extends Component {
                                                         {year[quarterId].map((courseId, k) => (
                                                             <CourseCard course={this.props.courses[courseId]} index={k} key={this.props.courses[courseId]["_id"]}
                                                                 captureActiveCourse={this.props.captureActiveCourse}
+                                                                captureSelectedIndex={this.props.captureSelectedIndex}
                                                             />
                                                         ))}
                                                         {provided.placeholder}

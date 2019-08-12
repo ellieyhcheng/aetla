@@ -40,7 +40,7 @@ function plan_detail(req, res, next) {
 		plan.courses.forEach(catalog => {
 			// console.log(catalog)
 			newCourses = catalog.courses.reduce((prev, requirement) => {
-				prev[requirement.id] = requirement.content;
+				prev[requirement.content.id] = requirement.content;
 				return prev;
 			}, newCourses);
 		})

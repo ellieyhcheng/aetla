@@ -423,7 +423,9 @@ function createPlans(cb) {
                 "My First Plan", 
                 "Four year plan for CSE",
                 [catalogs[0]],
-                requirements,
+                requirements.map(req => {
+                    return req.content
+                }),
                 false, callback);
         },
     ],
