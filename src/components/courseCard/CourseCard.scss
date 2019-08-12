@@ -19,7 +19,7 @@
     font-size: 0.85rem;
     text-align: center;
     margin: 5px;
-    transition: border-color ease 0.3s, color ease 0.3s;
+    transition: border-color ease 0.2s, color ease 0.2s;
     /* Disable text-highlight */
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -39,6 +39,22 @@
         // color: $accent;
         outline: none;
     }
+
+    select {
+        font-family: 'Muli', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+        font-size: 0.7rem;
+        width: 100%;
+        // display: none;
+        // border: none;
+        // height: 100%;
+        text-align: center;
+    }
+
+    .select-selected {
+        border-left: $primary 2px solid;
+    }
+    
 }
 
 .course-card.active {

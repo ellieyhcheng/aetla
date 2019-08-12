@@ -14,7 +14,7 @@ class Planner extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: '5d4b6ab60b02bad390633798',
+            id: '5d50a61c8f9f3e1405303b43',
             title: '',
             description: '',
             courseList: [],
@@ -30,7 +30,7 @@ class Planner extends Component {
     }
 
     componentDidMount() {
-        setTimeout(() => {
+        // setTimeout(() => {
             axios.get(`http://localhost:8080/api/plan/${this.state.id}`)
                 .then(res => {
                     // console.log(res.data.courses)
@@ -54,15 +54,22 @@ class Planner extends Component {
                 .catch(e => {
                     console.log(e)
                 });
-        }, 3000);
+        // }, 3000);
 
 
     }
 
     splitList = (courseList, courses) => {
         const list = this.sortCourseList(courseList, courses)
-        const list1 = list.slice(0, Math.ceil(courseList.length / 2));
-        const list2 = list.slice(Math.ceil(courseList.length / 2))
+        let list1 = [];
+        let list2 = [];
+        list.forEach((item, i) => {
+            if (i % 2) {
+                list2.push(item)
+            }
+            else
+                list1.push(item)
+        })
         return [list1, list2];
     }
 
@@ -70,26 +77,54 @@ class Planner extends Component {
         const newList = courseList.sort((courseId1, courseId2) => {
             const course1 = courses[courseId1];
             const course2 = courses[courseId2];
-            if (course1.subject > course2.subject)
-                return true;
-            else if (course1.subject < course2.subject)
-                return false;
-            else {
-                const course1Num = parseInt(course1.num.match(/\d+/g));
-                const course2Num = parseInt(course2.num.match(/\d+/g));
-
-                if (course1Num > course2Num)
+            if ('options' in course1) {
+                if ('options' in course2)
                     return true;
-                else if (course1Num < course2Num)
+                else {
+                    return true;
+                }
+            }
+            else if ('options' in course2) {
+                if ('options' in course1)
                     return false;
                 else {
-                    const lastLetter1 = course1.num.substring(course1.num.length - 1);
-                    const lastLetter2 = course2.num.substring(course2.num.length - 1);
-
-                    if (lastLetter1 > lastLetter2)
+                    return false;
+                }
+            }
+            else {
+                if (course1.subject === "GE" && course2.subject !== "GE") {
+                    return true
+                }
+                else if (course2.subject === "GE" && course1.subject !== "GE") {
+                    return false
+                }
+                else if (course2.subject === "GE" && course1.subject === "GE") {
+                    if (course1.num > course2.num)
                         return true;
                     else
                         return false;
+                }
+                if (course1.subject > course2.subject)
+                    return true;
+                else if (course1.subject < course2.subject)
+                    return false;
+                else {
+                    const course1Num = parseInt(course1.num.match(/\d+/g));
+                    const course2Num = parseInt(course2.num.match(/\d+/g));
+
+                    if (course1Num > course2Num)
+                        return true;
+                    else if (course1Num < course2Num)
+                        return false;
+                    else {
+                        const lastLetter1 = course1.num.substring(course1.num.length - 1);
+                        const lastLetter2 = course2.num.substring(course2.num.length - 1);
+
+                        if (lastLetter1 > lastLetter2)
+                            return true;
+                        else
+                            return false;
+                    }
                 }
             }
         });
@@ -442,7 +477,7 @@ class Planner extends Component {
                                             </div>
                                             <form className="search-form" onKeyPress={(e) => {
                                                 const key = e.charCode || e.keyCode || 0;
-                                                if (key == 13)
+                                                if (key === 13)
                                                     e.preventDefault();
                                             }}>
                                                 <input type="text" className="search" placeholder="Search" onChange={this.displayMatches} />

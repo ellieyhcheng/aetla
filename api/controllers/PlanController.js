@@ -20,9 +20,12 @@ function plan_detail(req, res, next) {
 		path: 'courses',
 		populate: {
 			path: 'courses',
-			// populate: {
-			// 	path: 'content'
-			// }
+			populate: {
+				path: 'content',
+				populate: {
+					path: 'options'
+				}
+			}
 		}
 	})
     .exec((err, plan) => {
@@ -36,8 +39,8 @@ function plan_detail(req, res, next) {
 		var newCourses = {};
 		plan.courses.forEach(catalog => {
 			// console.log(catalog)
-			newCourses = catalog.courses.reduce((prev, course) => {
-				prev[course.id] = course;
+			newCourses = catalog.courses.reduce((prev, requirement) => {
+				prev[requirement.id] = requirement.content;
 				return prev;
 			}, newCourses);
 		})

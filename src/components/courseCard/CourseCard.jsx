@@ -4,9 +4,21 @@ import { Draggable } from "react-beautiful-dnd";
 
 
 class CourseCard extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            value: ('options' in props.course) ? props.course.options[props.course.selected] : "none",
+            index: ('options' in props.course) ? props.course.selected : 0,
+            active: false,
+        }
+    }
     onClick = (e) => {
         if (e.currentTarget.classList.contains('active')) {
             e.currentTarget.classList.toggle('active')
+            this.setState({
+                ...this.state,
+                active: false,
+            })
             this.props.captureActiveCourse(null);
         }
         else {
@@ -15,9 +27,19 @@ class CourseCard extends Component {
                 active.classList.remove('active')
             })
             e.currentTarget.classList.add('active')
+
+            this.setState({
+                ...this.state,
+                active: true,
+            })
             
-            if (this.props.captureActiveCourse)
-                this.props.captureActiveCourse(this.props.course);
+            if (this.props.captureActiveCourse) {
+                if ('options' in this.props.course)
+                    this.props.captureActiveCourse(this.props.course.options[this.state.index]);
+                else
+                    this.props.captureActiveCourse(this.props.course);
+            }
+                
         }
     }
 
@@ -34,7 +56,19 @@ class CourseCard extends Component {
           transform: `${translate}`,
         //   marginTop: '4px'
         };
-      }
+    }
+
+    handleChange = (event) => {
+        console.log(event)
+        this.setState({
+            value: event.target.value,
+            index: event.target.selectedIndex - 1,
+        });
+        if (this.state.active)
+            if (this.props.captureActiveCourse) {
+                this.props.captureActiveCourse(this.props.course.options[event.target.selectedIndex - 1]);
+            }
+    }
 
     render() {
         return (
@@ -43,8 +77,6 @@ class CourseCard extends Component {
                 index={this.props.index}
             >
                 {(provided, snapshot) => {
-                            // console.log(snapshot.dropAnimation)
-                            // console.log(snapshot)
                             return (
                     <div className= 'course-card'
                         onClick={this.onClick}
@@ -53,7 +85,21 @@ class CourseCard extends Component {
                         ref={provided.innerRef}
                         style={this.getStyle(provided.draggableProps.style, snapshot)}
                     >
-                        <p>{`${this.props.course.subject} ${this.props.course.num}`}</p>
+                        { 'options' in this.props.course ? (
+                            <select value={this.state.value} onChange={this.handleChange} onClick={e => e.stopPropagation()}>
+                                <option value="none" disabled hidden>Select a Course</option>
+                                {
+                                    this.props.course.options.map((option, i) => (
+                                        <option value={`${option.subject} ${option.num}`} key={i}>
+                                            {`${option.subject} ${option.num}`}
+                                        </option>
+                                    ))
+                                }
+                            </select>
+                        ) : (
+                            <p>{`${this.props.course.subject} ${this.props.course.num}`}</p>
+                        )}
+
                     </div>
                 )}}
 

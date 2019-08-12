@@ -15,12 +15,10 @@ class CourseDetail extends Component {
                 </div>
             </div>
         ) : (
-            <div className="empty">
-                {/* {this.props.loading ? <div className="loader"/> :  */}
+                <div className="empty">
                     <p>Select a course to see details</p>
-                {/* } */}
-            </div>
-        )
+                </div>
+            )
         return content;
     }
 }

@@ -33,12 +33,12 @@
     
     .content {
         font-size: 0.8rem;
-        // text-align: justify;
-        // text-justify: auto;
+        width: 100%;
         letter-spacing: 0.05em;
         line-height: 1.2rem;
         overflow: hidden;
         margin: 0 0.6vw 4vh 0.5vw;
+        text-align: left;
         
         .description {
             margin-bottom: 2vh;

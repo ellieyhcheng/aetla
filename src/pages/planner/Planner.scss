@@ -173,7 +173,8 @@
                     position: relative;
                     display: flex;
                     justify-content: space-around;
-                    overflow: scroll;
+                    overflow-y: scroll;
+                    overflow-x: hidden;
 
                     .column {
                         height: 100%;

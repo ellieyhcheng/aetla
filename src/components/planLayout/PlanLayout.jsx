@@ -83,21 +83,21 @@ class PlanLayout extends Component {
                             <div className="plan-row">
                                 <div className="course-bin-wrapper">
                                     {this.state.bins.map((bin, i) => (
-                                        <div class="course-loader loader" key={i} />
+                                        <div className="course-loader loader" key={i} />
                                     ))}
                                 </div>
                             </div>
                             <div className="plan-row">
                                 <div className="course-bin-wrapper">
                                     {this.state.bins.map((bin, i) => (
-                                        <div class="course-loader loader" key={i} />
+                                        <div className="course-loader loader" key={i} />
                                     ))}
                                 </div>
                             </div>
                             <div className="plan-row">
                                 <div className="course-bin-wrapper">
                                     {this.state.bins.map((bin, i) => (
-                                        <div class="course-loader loader" key={i} />
+                                        <div className="course-loader loader" key={i} />
                                     ))}
                                 </div>
                             </div>
