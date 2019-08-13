@@ -2,9 +2,16 @@
 @import '../../styles/vars.scss';
 
 
+.course-detail {
+    width: 21%;
+    // border: 1px $primary solid;
+    display: flex;
+    justify-content: center;
+}
+
 .body {
-    // margin-left: 1vw;
-    width: 16%;
+    margin-left: 2vw;
+    width: 95%;
     height: max-content;
     max-height: 100%;
     border: 1px $accent solid;
@@ -50,14 +57,13 @@
 
 .empty {
     height: 70%;
-    width: 80%;
+    width: 95%;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    // margin-left: 1vw;
-    width: 16%;
+    margin-left: 2vw;
     border: 1px $accent solid;
     letter-spacing: 0.1em;
     padding: 0 0.5vw;

@@ -19,7 +19,11 @@ class CourseDetail extends Component {
                     <p>Select a course to see details</p>
                 </div>
             )
-        return content;
+        return (
+            <div className="course-detail">
+                {content}
+            </div>
+        )
     }
 }
 
