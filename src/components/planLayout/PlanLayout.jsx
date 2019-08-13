@@ -57,10 +57,19 @@ class PlanLayout extends Component {
                 <div className="plan-sidebar">
                     {this.props.loading ? (
                         <div className="year-section">
-                            <div><div className="strip loader" /></div>
-                            <div><div className="strip loader" /></div>
-                            <div><div className="strip loader" /></div>
-                            <div><div className="strip loader" /></div>
+                            <div className="sidebar-loader">
+                                <div className="strip loader" />
+                            </div>
+                            <div className="sidebar-loader">
+                                <div className="strip loader" />
+                            </div>
+                            <div className="sidebar-loader">
+                                <div className="strip loader" />
+                            </div>
+                            <div className="sidebar-loader">
+                                <div className="strip loader" />
+                            </div>
+                            
                         </div>
                     ) :
                         this.props.coursePlan.map((year, i) => (

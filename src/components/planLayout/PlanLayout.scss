@@ -2,7 +2,7 @@
 @import '../../styles/vars.scss';
 
 .plan-layout {
-    width: 61%;
+    width: 63%;
     // border: 1px solid $primary;
     display: flex;
     overflow-y: scroll;
@@ -15,7 +15,7 @@
     // }
 
     .plan-sidebar {
-        width: 11%;
+        width: 10%;
         height: max-content;
         min-height: 98%;
         display: flex;
@@ -62,15 +62,24 @@
                 // font-size: 0.90rem;
             }
 
-            .strip {
-                height: 15px;
-                width: 100%;
+            .sidebar-loader {
+                display: flex;
+                justify-content: flex-end;
+
+                .strip {
+                    height: 15px;
+                    width: 80%;
+                    position: relative;
+                    right: 0;
+                }
             }
+
+            
         }
     }
 
     .plan-body {
-        width: 76%;
+        width: 80%;
         padding: 5px 0;
         position: relative;
 
@@ -152,7 +161,7 @@
     }
 
     .plan-footer {
-        width: 10%;
+        width: 9%;
         padding: 5px 0;
         overflow: visible;
         // border: 1px solid $primary;
