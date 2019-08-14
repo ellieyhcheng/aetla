@@ -24,7 +24,11 @@ var PlanSchema = new Schema({
             summer: [],
         }
     }],
-    courses: [{ type: Schema.Types.ObjectId, ref: 'Catalog', required: true }] // Array of catalogs, total of courses in courseList and coursePlan
+    courses: [{ type: Schema.Types.ObjectId, ref: 'Catalog', required: true }], // Array of catalogs, total of courses in courseList and coursePlan
+    selections: [{
+        _id: { type: Schema.Types.ObjectId, ref: 'Elective', required: true },
+        index: { type: Number, required: true, default: 0 },
+    }]
 });
 
 // Virtual for bookinstance's URL

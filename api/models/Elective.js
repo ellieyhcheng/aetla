@@ -5,7 +5,6 @@ const Schema = mongoose.Schema;
 
 var Elective = new Schema({
     options: [{type: Schema.Types.ObjectId, ref: 'Course', required: true }],
-    selected: {type: Number, default: 0},
     name: {type: String, default: ''}
 })
 

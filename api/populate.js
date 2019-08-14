@@ -31,12 +31,11 @@ var requirements = []
 var catalogs = []
 var plans = []
 
-function electiveCreate(options, selected, name, cb) {
+function electiveCreate(options, name, cb) {
     electivedetail = {
         options: options,
         name: name,
     }
-    if (selected) electivedetail.selected = selected;
 
     var elective = new Elective(electivedetail);
     elective.save(err => {
@@ -87,7 +86,7 @@ function catalogCreate(name, courses, cb) {
     });
 }
 
-function planCreate(title, description, courses, courselist, coursePlan, cb) {
+function planCreate(title, description, courses, courselist, coursePlan, selections, cb) {
     plandetail = {
         title: title,
         courses: courses,
@@ -99,7 +98,8 @@ function planCreate(title, description, courses, courselist, coursePlan, cb) {
             winter: [],
             spring: [],
             summer: [],
-        }
+        },
+        selections: selections,
     }
     if (description != false) plandetail.description = description;
     if (coursePlan != false) plandetail.coursePlan = coursePlan;
@@ -226,62 +226,28 @@ function getCourses(arr, cb) {
 function createElectives(cb) {
     async.parallel([
         function(callback) {
-            electiveCreate([courses['PHYSICS 4AL'], courses['PHYSICS 4BL']], 0, '', callback);
+            electiveCreate([courses['PHYSICS 4AL'], courses['PHYSICS 4BL']], '', callback);
         },
         function(callback) {
-            electiveCreate([courses['COM SCI M51A'], courses['EC ENGR M16']], 0, '', callback);
+            electiveCreate([courses['COM SCI M51A'], courses['EC ENGR M16']], '', callback);
         },
         function(callback) {
-            electiveCreate([courses['COM SCI M151B'], courses['EC ENGR M116C']], 0, '', callback);
+            electiveCreate([courses['COM SCI M151B'], courses['EC ENGR M116C']], '', callback);
         },
         function(callback) {
-            electiveCreate([courses['COM SCI M152A'], courses['EC ENGR M116L']], 0, '', callback);
+            electiveCreate([courses['COM SCI M152A'], courses['EC ENGR M116L']], '', callback);
         },
         function(callback) {
-            electiveCreate([courses['STATS 100A'], courses['C&EE 110'], courses['EC ENGR 131A'], courses['MATH 170A']], 0, '', callback);
+            electiveCreate([courses['STATS 100A'], courses['C&EE 110'], courses['EC ENGR 131A'], courses['MATH 170A']], '', callback);
         },
         function(callback) {
-            electiveCreate([courses['ENGR 185EW'],courses['ENGR 183EW']], 0, 'Ethics', callback);
+            electiveCreate([courses['ENGR 185EW'],courses['ENGR 183EW']], 'Ethics', callback);
         },
         function(callback) {
-            electiveCreate([courses['GE LCA'],courses['GE PLA'],courses['GE VPA'],], 0, 'GE FAH', callback);
+            electiveCreate([courses['GE LCA'],courses['GE PLA'],courses['GE VPA'],], 'GE FAH', callback);
         },
         function(callback) {
-            electiveCreate([courses['GE LCA'],courses['GE PLA'],courses['GE VPA'],], 0, 'GE FAH', callback);
-        },
-        function(callback) {
-            electiveCreate([
-                courses['COM SCI 112'],
-                courses['COM SCI 117'],
-                courses['COM SCI M119'],
-                courses['COM SCI CM121'],
-                courses['COM SCI CM122'],
-                courses['COM SCI CM124'],
-                courses['COM SCI 130'],
-                courses['COM SCI 132'],
-                courses['COM SCI 133'],
-                courses['COM SCI 136'],
-                courses['COM SCI C137A'],
-                courses['COM SCI C137B'],
-                courses['COM SCI 143'],
-                courses['COM SCI 144'],
-                courses['COM SCI 145'],
-                courses['COM SCI M146'],
-                courses['COM SCI 161'],
-                courses['COM SCI 168'],
-                courses['COM SCI 170A'],
-                courses['COM SCI M171L'],
-                courses['COM SCI 172'],
-                courses['COM SCI 174A'],
-                courses['COM SCI 174B'],
-                courses['COM SCI C174C'],
-                courses['COM SCI M182'],
-                courses['COM SCI 183'],
-                courses['COM SCI M184'],
-                courses['COM SCI M185'],
-                courses['COM SCI CM186'],
-                courses['COM SCI CM187'],
-            ], 0, 'COM SCI Elective 1', callback);
+            electiveCreate([courses['GE LCA'],courses['GE PLA'],courses['GE VPA'],], 'GE FAH', callback);
         },
         function(callback) {
             electiveCreate([
@@ -315,7 +281,7 @@ function createElectives(cb) {
                 courses['COM SCI M185'],
                 courses['COM SCI CM186'],
                 courses['COM SCI CM187'],
-            ], 0, 'COM SCI Elective 2', callback);
+            ], 'CS Elective 1', callback);
         },
         function(callback) {
             electiveCreate([
@@ -349,7 +315,41 @@ function createElectives(cb) {
                 courses['COM SCI M185'],
                 courses['COM SCI CM186'],
                 courses['COM SCI CM187'],
-            ], 0, 'COM SCI Elective 3', callback);
+            ], 'CS Elective 2', callback);
+        },
+        function(callback) {
+            electiveCreate([
+                courses['COM SCI 112'],
+                courses['COM SCI 117'],
+                courses['COM SCI M119'],
+                courses['COM SCI CM121'],
+                courses['COM SCI CM122'],
+                courses['COM SCI CM124'],
+                courses['COM SCI 130'],
+                courses['COM SCI 132'],
+                courses['COM SCI 133'],
+                courses['COM SCI 136'],
+                courses['COM SCI C137A'],
+                courses['COM SCI C137B'],
+                courses['COM SCI 143'],
+                courses['COM SCI 144'],
+                courses['COM SCI 145'],
+                courses['COM SCI M146'],
+                courses['COM SCI 161'],
+                courses['COM SCI 168'],
+                courses['COM SCI 170A'],
+                courses['COM SCI M171L'],
+                courses['COM SCI 172'],
+                courses['COM SCI 174A'],
+                courses['COM SCI 174B'],
+                courses['COM SCI C174C'],
+                courses['COM SCI M182'],
+                courses['COM SCI 183'],
+                courses['COM SCI M184'],
+                courses['COM SCI M185'],
+                courses['COM SCI CM186'],
+                courses['COM SCI CM187'],
+            ], 'CS Elective 3', callback);
         },
     ], cb)
 }
@@ -426,7 +426,14 @@ function createPlans(cb) {
                 requirements.map(req => {
                     return req.content
                 }),
-                false, callback);
+                false,
+                electives.map(elective => {
+                    return {
+                        _id: elective["_id"],
+                        index: 0,
+                    }
+                }),
+                callback);
         },
     ],
     cb);

@@ -14,11 +14,12 @@ class Planner extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: '5d51f37fe229082f280332cb',
+            id: '5d5451933fc74615a4d7f961',
             title: '',
             description: '',
             courseList: [],
             courses: {},
+            selections: {},
             coursePlan: [],
             courseList1: [],
             courseList2: [],
@@ -40,6 +41,7 @@ class Planner extends Component {
                     description: res.data.description,
                     courseList: res.data.courseList,
                     courses: res.data.courses,
+                    selections: res.data.selections,
                     coursePlan: res.data.coursePlan,
                     courseList1: splitList[0],
                     courseList2: splitList[1],
@@ -465,6 +467,7 @@ class Planner extends Component {
             courseList: this.state.courseList,
             coursePlan: this.state.coursePlan,
             courses: this.state.courses,
+            selections: this.state.selections,            
         }
         // console.log(newPlan)
 
@@ -490,21 +493,26 @@ class Planner extends Component {
         })
     }
 
-    captureSelectedIndex = (course, isActive) => {
-        const newCourses = {
-            ...this.state.courses,
-            [course["_id"]]: course,
+    captureSelectedIndex = (elective, index, isActive) => {
+        const newSelection = {
+            _id: elective["_id"],
+            index: index,
         }
+        const newSelections = {
+            ...this.state.selections,
+            [elective["_id"]]: newSelection,
+        }
+
         if (isActive)
             this.setState({
                 ...this.state,
-                courses: newCourses,
-                activeCourse: course.options[course.selected],
+                selections: newSelections,                
+                activeCourse: elective.options[index],
             })
         else 
             this.setState({
                 ...this.state,
-                courses: newCourses,
+                selections: newSelections,
             })
     }
 
@@ -570,11 +578,12 @@ class Planner extends Component {
                                             </div>
                                             :
                                             <CourseList courseList1={
-                                                this.state.courseList1.map(courseId => this.state.courses[courseId])
-                                            }
+                                                    this.state.courseList1.map(courseId => this.state.courses[courseId])
+                                                }
                                                 courseList2={
                                                     this.state.courseList2.map(courseId => this.state.courses[courseId])
                                                 }
+                                                selections={this.state.selections}
                                                 homeDroppable={this.state.homeDroppable}
                                                 captureActiveCourse={this.captureActiveCourse}
                                                 captureSelectedIndex={this.captureSelectedIndex}
@@ -588,6 +597,7 @@ class Planner extends Component {
                                 <PlanLayout
                                     coursePlan={this.state.coursePlan}
                                     courses={this.state.courses}
+                                    selections={this.state.selections}
                                     addQuarter={this.addQuarter}
                                     removeQuarter={this.removeQuarter}
                                     addYear={this.addYear}

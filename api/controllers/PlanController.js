@@ -44,8 +44,14 @@ function plan_detail(req, res, next) {
 				return prev;
 			}, newCourses);
 		})
+		var newSelections = plan.selections.reduce((prev, obj) => {
+			prev[obj["_id"]] = obj;
+			return prev;
+		}, {});
+		
 		const result = plan.toObject();
 		result.courses = newCourses;
+		result.selections = newSelections;
 		// result['courses'] = newCourses;
 		// console.log(result)
         res.json(result);
@@ -95,6 +101,10 @@ function plan_update_post(req, res, next) {
 		plan.description = req.body.description;
 		plan.courseList = req.body.courseList;
 		plan.coursePlan = req.body.coursePlan;
+		plan.selections.forEach(obj => {
+			obj.index = req.body.selections[obj["_id"]].index
+		})
+		// console.log(plan.selections)
 
 		plan.save()
 		.then(plan => {

@@ -18,7 +18,7 @@ class PlanLayout extends Component {
         const sum = quarter.reduce((prev, courseId) => {
             const course = this.props.courses[courseId];
             if ('options' in course)
-                return prev + course.options[course.selected]['units']
+                return prev + course.options[this.props.selections[courseId].index]['units']
             return prev + this.props.courses[courseId]['units']
         }, 0)
 
@@ -69,7 +69,7 @@ class PlanLayout extends Component {
                             <div className="sidebar-loader">
                                 <div className="strip loader" />
                             </div>
-                            
+
                         </div>
                     ) :
                         this.props.coursePlan.map((year, i) => (
@@ -134,6 +134,7 @@ class PlanLayout extends Component {
                                                             <CourseCard course={this.props.courses[courseId]} index={k} key={this.props.courses[courseId]["_id"]}
                                                                 captureActiveCourse={this.props.captureActiveCourse}
                                                                 captureSelectedIndex={this.props.captureSelectedIndex}
+                                                                selected={this.props.selections[courseId]}
                                                             />
                                                         ))}
                                                         {provided.placeholder}
@@ -172,13 +173,13 @@ class PlanLayout extends Component {
                                 <Button type="icon" icon="plus-circle"></Button>
                             </div>
                             <div className="plan-row">
-                                <div className="units-loader loader"/>
+                                <div className="units-loader loader" />
                             </div>
                             <div className="plan-row">
-                                <div className="units-loader loader"/>
+                                <div className="units-loader loader" />
                             </div>
                             <div className="plan-row">
-                                <div className="units-loader loader"/>
+                                <div className="units-loader loader" />
                             </div>
                         </div>
                     ) :

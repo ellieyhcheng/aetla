@@ -7,7 +7,7 @@ class CourseCard extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            selected: ('options' in props.course) ? props.course.selected : 0,
+            selected: props.selected ? props.selected.index : 0,
             active: false,
         }
     }
@@ -63,10 +63,7 @@ class CourseCard extends Component {
         })
 
         if (this.props.captureSelectedIndex)
-            this.props.captureSelectedIndex({
-                ...this.props.course,
-                selected: index,
-            }, this.state.active)       
+            this.props.captureSelectedIndex(this.props.course, index, this.state.active)       
     }
 
     render() {
@@ -89,7 +86,7 @@ class CourseCard extends Component {
                                     <div className="name">{this.props.course.name || "Options"}</div>
                                     <Dropdown 
                                         onSelect={this.onSelect}
-                                        index={this.props.course.selected}
+                                        index={this.state.selected}
                                         list={
                                             this.props.course.options.map((option, i) => {
                                                 return {
