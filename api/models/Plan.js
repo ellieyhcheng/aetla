@@ -12,7 +12,7 @@ const Schema = mongoose.Schema;
 var PlanSchema = new Schema({
     title: { type: String, required: true, maxlength: 100 },
     description: { type: String, maxlength: 500 },
-    courseList:  [{ type: Schema.Types.ObjectId, ref: 'Courses', required: true }], // Array of courses in the courselist panel
+    courseList:  [{ type: Schema.Types.ObjectId, ref: 'Requirement', required: true }], // Array of courses in the courselist panel
     coursePlan: [{
         type: Schema.Types.Mixed,
         default: {
@@ -24,7 +24,11 @@ var PlanSchema = new Schema({
             summer: [],
         }
     }],
-    courses: [{ type: Schema.Types.ObjectId, ref: 'Catalog', required: true }] // Array of catalogs, total of courses in courseList and coursePlan
+    courses: [{ type: Schema.Types.ObjectId, ref: 'Catalog', required: true }], // Array of catalogs, total of courses in courseList and coursePlan
+    selections: [{
+        _id: { type: Schema.Types.ObjectId, ref: 'Elective', required: true },
+        index: { type: Number, required: true, default: 0 },
+    }]
 });
 
 // Virtual for bookinstance's URL

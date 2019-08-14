@@ -19,7 +19,13 @@ function plan_detail(req, res, next) {
 	.populate({
 		path: 'courses',
 		populate: {
-			path: 'courses'
+			path: 'courses',
+			populate: {
+				path: 'content',
+				populate: {
+					path: 'options'
+				}
+			}
 		}
 	})
     .exec((err, plan) => {
@@ -33,13 +39,19 @@ function plan_detail(req, res, next) {
 		var newCourses = {};
 		plan.courses.forEach(catalog => {
 			// console.log(catalog)
-			newCourses = catalog.courses.reduce((prev, course) => {
-				prev[course.id] = course;
+			newCourses = catalog.courses.reduce((prev, requirement) => {
+				prev[requirement.content.id] = requirement.content;
 				return prev;
 			}, newCourses);
 		})
+		var newSelections = plan.selections.reduce((prev, obj) => {
+			prev[obj["_id"]] = obj;
+			return prev;
+		}, {});
+		
 		const result = plan.toObject();
 		result.courses = newCourses;
+		result.selections = newSelections;
 		// result['courses'] = newCourses;
 		// console.log(result)
         res.json(result);
@@ -74,22 +86,6 @@ function plan_update_get(req, res, next) {
 
 // Handle plan update on POST
 function plan_update_post(req, res, next) {
-	
-	// var plan = new Plan(
-	// 	{
-	// 		title: req.body.title,
-	// 		description: req.body.description,
-	// 		courseLists: req.body.courseLists,
-	// 		coursePlan: req.body.coursePlan,
-	// 		_id: req.params.id,
-	// 	}
-	// )
-
-	// Plan.findByIdAndUpdate(req.params.id, plan, {}, (err, thePlan) => {
-	// 	if (err)
-	// 		return next(err);
-	// 	res.send('Plan ' + thePlan.id + ' update succeeded!');
-	// })
 
 	Plan.findById(req.params.id)
 	.exec((err, plan) => {
@@ -100,16 +96,22 @@ function plan_update_post(req, res, next) {
 			error.status = 404;
 			return next(error);
 		}
+		// console.log(plan.courses)
 		plan.title = req.body.title;
 		plan.description = req.body.description;
 		plan.courseList = req.body.courseList;
 		plan.coursePlan = req.body.coursePlan;
+		plan.selections.forEach(obj => {
+			obj.index = req.body.selections[obj["_id"]].index
+		})
+		// console.log(plan.selections)
 
 		plan.save()
 		.then(plan => {
 			res.json('Plan updated!');
 		})
 		.catch(err => {
+			console.log(err)
 			return next(err);
 		})
 	})

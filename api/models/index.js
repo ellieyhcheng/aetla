@@ -8,7 +8,7 @@ const config = require('../config');
 const dbURI = config.database.uri;
 
 // Create the database connection 
-mongoose.connect(dbURI, { useNewUrlParser: true });
+mongoose.connect(dbURI, { useNewUrlParser: true })
 
 // CONNECTION EVENTS
 // When successfully connected

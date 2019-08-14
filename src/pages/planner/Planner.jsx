@@ -14,11 +14,12 @@ class Planner extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: '5d4b6ab60b02bad390633798',
+            id: '5d5451933fc74615a4d7f961',
             title: '',
             description: '',
             courseList: [],
             courses: {},
+            selections: {},
             coursePlan: [],
             courseList1: [],
             courseList2: [],
@@ -30,39 +31,45 @@ class Planner extends Component {
     }
 
     componentDidMount() {
-        setTimeout(() => {
-            axios.get(`http://localhost:8080/api/plan/${this.state.id}`)
-                .then(res => {
-                    // console.log(res.data.courses)
-                    const splitList = this.splitList(res.data.courseList, res.data.courses);
-                    var newState = {
-                        title: res.data.title,
-                        description: res.data.description,
-                        courseList: res.data.courseList,
-                        courses: res.data.courses,
-                        coursePlan: res.data.coursePlan,
-                        courseList1: splitList[0],
-                        courseList2: splitList[1],
-                        homeDroppable: '',
-                        activeCourse: null,
-                        saving: false,
-                        loading: false,
-                    }
-                    this.setState(newState);
-                    // console.log("state: ", this.state);
-                })
-                .catch(e => {
-                    console.log(e)
-                });
-        }, 3000);
-
-
+        // setTimeout(() => {
+        axios.get(`http://localhost:8080/api/plan/${this.state.id}`)
+            .then(res => {
+                // console.log(res.data.courses)
+                const splitList = this.splitList(res.data.courseList, res.data.courses);
+                var newState = {
+                    title: res.data.title,
+                    description: res.data.description,
+                    courseList: res.data.courseList,
+                    courses: res.data.courses,
+                    selections: res.data.selections,
+                    coursePlan: res.data.coursePlan,
+                    courseList1: splitList[0],
+                    courseList2: splitList[1],
+                    homeDroppable: '',
+                    activeCourse: null,
+                    saving: false,
+                    loading: false,
+                }
+                this.setState(newState);
+                // console.log("state: ", this.state);
+            })
+            .catch(e => {
+                console.log(e)
+            });
+        // }, 3000);
     }
 
     splitList = (courseList, courses) => {
         const list = this.sortCourseList(courseList, courses)
-        const list1 = list.slice(0, Math.ceil(courseList.length / 2));
-        const list2 = list.slice(Math.ceil(courseList.length / 2))
+        let list1 = [];
+        let list2 = [];
+        list.forEach((item, i) => {
+            if (i % 2) {
+                list2.push(item)
+            }
+            else
+                list1.push(item)
+        })
         return [list1, list2];
     }
 
@@ -70,26 +77,88 @@ class Planner extends Component {
         const newList = courseList.sort((courseId1, courseId2) => {
             const course1 = courses[courseId1];
             const course2 = courses[courseId2];
-            if (course1.subject > course2.subject)
-                return true;
-            else if (course1.subject < course2.subject)
-                return false;
-            else {
-                const course1Num = parseInt(course1.num.match(/\d+/g));
-                const course2Num = parseInt(course2.num.match(/\d+/g));
-
-                if (course1Num > course2Num)
-                    return true;
-                else if (course1Num < course2Num)
-                    return false;
+            if ('options' in course1) {
+                if ('options' in course2) {
+                    if (course1.name.includes('GE')) {
+                        if (course2.name.includes('GE')) {
+                            if (course1.name < course2.name)
+                                return -1;
+                            else if (course1.name > course2.name)
+                                return 1;
+                            else
+                                return 0;
+                        }
+                        else
+                            return 1;
+                    }
+                    else {
+                        if (course2.name.includes('GE'))
+                            return -1;
+                        else {
+                            if (course1.name < course2.name)
+                                return -1;
+                            else if (course1.name > course2.name)
+                                return 1;
+                            else
+                                return 0;
+                        }
+                    }
+                }
                 else {
-                    const lastLetter1 = course1.num.substring(course1.num.length - 1);
-                    const lastLetter2 = course2.num.substring(course2.num.length - 1);
-
-                    if (lastLetter1 > lastLetter2)
-                        return true;
+                    if (course1.name.includes('GE'))
+                        return 1;
+                    else {
+                        if (course2.subject === 'GE')
+                            return -1;
+                        else
+                            return 1;
+                    }
+                }
+            }
+            else if ('options' in course2) {
+                if (course2.name.includes('GE'))
+                    return -1;
+                else {
+                    if (course1.subject === 'GE')
+                        return 1;
                     else
-                        return false;
+                        return -1;
+                }
+            }
+            else {
+                if (course1.subject === "GE" && course2.subject !== "GE") {
+                    return 1
+                }
+                else if (course2.subject === "GE" && course1.subject !== "GE") {
+                    return -1
+                }
+                else if (course2.subject === "GE" && course1.subject === "GE") {
+                    if (course1.num > course2.num)
+                        return 1;
+                    else
+                        return -1;
+                }
+                if (course1.subject > course2.subject)
+                    return 1;
+                else if (course1.subject < course2.subject)
+                    return -1;
+                else {
+                    const course1Num = parseInt(course1.num.match(/\d+/g));
+                    const course2Num = parseInt(course2.num.match(/\d+/g));
+
+                    if (course1Num > course2Num)
+                        return 1;
+                    else if (course1Num < course2Num)
+                        return -1;
+                    else {
+                        const lastLetter1 = course1.num.substring(course1.num.length - 1);
+                        const lastLetter2 = course2.num.substring(course2.num.length - 1);
+
+                        if (lastLetter1 > lastLetter2)
+                            return 1;
+                        else
+                            return -1;
+                    }
                 }
             }
         });
@@ -234,10 +303,10 @@ class Planner extends Component {
 
     findMatches = (wordToMatch, courses) => {
         return courses.filter(courseId => {
-            const course = this.state.courses[courseId];
+            const req = this.state.courses[courseId];
+            const course = 'options' in req ? req.options[req.selected] : req;
             const regex = new RegExp(wordToMatch, 'gi');
             const course_title = `${course["subject"]} ${course["num"]}`;
-            // console.log(course_title.match(regex))
             if (course_title.match(regex) !== null)
                 return courseId;
         })
@@ -286,6 +355,18 @@ class Planner extends Component {
         if (length <= 1)
             return;
         const quarterId = newCoursePlan[index].quarters[length - 1]
+        if (newCoursePlan[index][quarterId].length === 0) {
+            newCoursePlan[index].quarters.splice(length - 1, 1);
+
+            const newState = {
+                ...this.state,
+                courseList: newCourseList,
+                coursePlan: newCoursePlan,
+            }
+            this.setState(newState);
+            return;
+        }
+
         newCoursePlan[index][quarterId].forEach(courseId => {
             newCourseList.push(courseId);
         });
@@ -341,7 +422,10 @@ class Planner extends Component {
 
         const year = newCoursePlan[length - 1];
 
+        var noCourses = true;
         year.quarters.forEach(quarterId => {
+            if (year[quarterId].length !== 0)
+                noCourses = false;
             year[quarterId].forEach(courseId => {
                 newCourseList.push(courseId);
             })
@@ -349,6 +433,15 @@ class Planner extends Component {
 
         newCoursePlan.pop();
 
+        if (noCourses) {
+            const newState = {
+                ...this.state,
+                courseList: newCourseList,
+                coursePlan: newCoursePlan,
+            }
+            this.setState(newState);
+            return;
+        }
         const lists = this.splitList(newCourseList, this.state.courses);
 
         const newState = {
@@ -374,6 +467,7 @@ class Planner extends Component {
             courseList: this.state.courseList,
             coursePlan: this.state.coursePlan,
             courses: this.state.courses,
+            selections: this.state.selections,            
         }
         // console.log(newPlan)
 
@@ -391,10 +485,35 @@ class Planner extends Component {
     }
 
     captureActiveCourse = (course) => {
-        this.setState({
-            ...this.state,
-            activeCourse: course,
+        this.setState(prevState => {
+            return {
+                ...prevState,
+                activeCourse: course,
+            }
         })
+    }
+
+    captureSelectedIndex = (elective, index, isActive) => {
+        const newSelection = {
+            _id: elective["_id"],
+            index: index,
+        }
+        const newSelections = {
+            ...this.state.selections,
+            [elective["_id"]]: newSelection,
+        }
+
+        if (isActive)
+            this.setState({
+                ...this.state,
+                selections: newSelections,                
+                activeCourse: elective.options[index],
+            })
+        else 
+            this.setState({
+                ...this.state,
+                selections: newSelections,
+            })
     }
 
     render() {
@@ -408,12 +527,12 @@ class Planner extends Component {
                 <div className="planner-content">
                     <div className="planner-header">
                         <div className="center-text">
-                            { this.state.loading ?
-                                <div className="title-loader loader"/>
-                                : 
+                            {this.state.loading ?
+                                <div className="title-loader loader" />
+                                :
                                 <p>{this.state.title}</p>
                             }
-                            
+
                             <div className="save-button">
                                 <Button type="icon" icon="save" tooltip="Save" direction="right" onClick={this.onClickSave} />
                             </div>
@@ -442,45 +561,49 @@ class Planner extends Component {
                                             </div>
                                             <form className="search-form" onKeyPress={(e) => {
                                                 const key = e.charCode || e.keyCode || 0;
-                                                if (key == 13)
+                                                if (key === 13)
                                                     e.preventDefault();
                                             }}>
                                                 <input type="text" className="search" placeholder="Search" onChange={this.displayMatches} />
                                             </form>
                                         </div>
 
-                                        { this.state.loading ?
+                                        {this.state.loading ?
                                             <div className="courselist-loader">
-                                                {courseBins.slice(0,2).map((bin, i) => (
+                                                {courseBins.slice(0, 2).map((bin, i) => (
                                                     <div className="column" key={i}>
-                                                        {courseBins.map((bin, i) => (<div className="course-loader loader" key={i}/>))}
+                                                        {courseBins.map((bin, i) => (<div className="course-loader loader" key={i} />))}
                                                     </div>
                                                 ))}
                                             </div>
-                                            : 
+                                            :
                                             <CourseList courseList1={
-                                                this.state.courseList1.map(courseId => this.state.courses[courseId])
-                                            }
+                                                    this.state.courseList1.map(courseId => this.state.courses[courseId])
+                                                }
                                                 courseList2={
                                                     this.state.courseList2.map(courseId => this.state.courses[courseId])
                                                 }
+                                                selections={this.state.selections}
                                                 homeDroppable={this.state.homeDroppable}
                                                 captureActiveCourse={this.captureActiveCourse}
+                                                captureSelectedIndex={this.captureSelectedIndex}
                                             />
                                         }
                                     </div>
                                 </div>
-                                            
+
                                 <CourseDetail course={this.state.activeCourse} loading={this.state.loading} />
 
                                 <PlanLayout
                                     coursePlan={this.state.coursePlan}
                                     courses={this.state.courses}
+                                    selections={this.state.selections}
                                     addQuarter={this.addQuarter}
                                     removeQuarter={this.removeQuarter}
                                     addYear={this.addYear}
                                     removeYear={this.removeYear}
                                     captureActiveCourse={this.captureActiveCourse}
+                                    captureSelectedIndex={this.captureSelectedIndex}
                                     loading={this.state.loading}
                                 />
 

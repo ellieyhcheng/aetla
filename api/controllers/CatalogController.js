@@ -6,7 +6,9 @@ var Catalog = require('../models/Catalog');
 // Display all catalogs
 function catalog_all(req, res, next) {
     Catalog.find()
-    .populate('courses')
+    .populate({
+        path: 'courses',
+    })
     .exec((err, catalogs) => {
         if (err)
             return next(err);
@@ -18,7 +20,7 @@ function catalog_all(req, res, next) {
 // Display details of a catalog
 function catalog_detail(req, res, next) {
     Catalog.findById(req.params.id)
-    // .populate('courses')
+    .populate('courses')
     .exec((err, catalog) => {
         if (err)
             return next(err);

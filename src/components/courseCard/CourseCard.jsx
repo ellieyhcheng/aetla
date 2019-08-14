@@ -1,12 +1,23 @@
 import React, { Component } from 'react';
 import './CourseCard.scss';
 import { Draggable } from "react-beautiful-dnd";
-
+import Dropdown from '../dropdown/Dropdown';
 
 class CourseCard extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            selected: props.selected ? props.selected.index : 0,
+            active: false,
+        }
+    }
     onClick = (e) => {
         if (e.currentTarget.classList.contains('active')) {
             e.currentTarget.classList.toggle('active')
+            this.setState({
+                ...this.state,
+                active: false,
+            })
             this.props.captureActiveCourse(null);
         }
         else {
@@ -15,9 +26,19 @@ class CourseCard extends Component {
                 active.classList.remove('active')
             })
             e.currentTarget.classList.add('active')
-            
-            if (this.props.captureActiveCourse)
-                this.props.captureActiveCourse(this.props.course);
+
+            this.setState({
+                ...this.state,
+                active: true,
+            })
+
+            if (this.props.captureActiveCourse) {
+                if ('options' in this.props.course)
+                    this.props.captureActiveCourse(this.props.course.options[this.state.selected]);
+                else
+                    this.props.captureActiveCourse(this.props.course);
+            }
+
         }
     }
 
@@ -27,14 +48,23 @@ class CourseCard extends Component {
         const { moveTo } = snapshot.dropAnimation;
         // move to the right spot
         const translate = `translate(${moveTo.x}px, ${moveTo.y}px)`;
-      
+
         // patching the existing style
         return {
-          ...style,
-          transform: `${translate}`,
-        //   marginTop: '4px'
+            ...style,
+            transform: `${translate}`,
+            //   marginTop: '4px'
         };
-      }
+    }
+
+    onSelect = (index) => {
+        this.setState({
+            selected: index,
+        })
+
+        if (this.props.captureSelectedIndex)
+            this.props.captureSelectedIndex(this.props.course, index, this.state.active)       
+    }
 
     render() {
         return (
@@ -43,19 +73,36 @@ class CourseCard extends Component {
                 index={this.props.index}
             >
                 {(provided, snapshot) => {
-                            // console.log(snapshot.dropAnimation)
-                            // console.log(snapshot)
-                            return (
-                    <div className= 'course-card'
-                        onClick={this.onClick}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}
-                        style={this.getStyle(provided.draggableProps.style, snapshot)}
-                    >
-                        <p>{`${this.props.course.subject} ${this.props.course.num}`}</p>
-                    </div>
-                )}}
+                    return (
+                        <div className='course-card'
+                            onClick={this.onClick}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            ref={provided.innerRef}
+                            style={this.getStyle(provided.draggableProps.style, snapshot)}
+                        >
+                            {'options' in this.props.course ? (
+                                <div className="options" >
+                                    <div className="name">{this.props.course.name || "Options"}</div>
+                                    <Dropdown 
+                                        onSelect={this.onSelect}
+                                        index={this.state.selected}
+                                        list={
+                                            this.props.course.options.map((option, i) => {
+                                                return {
+                                                    id: i,
+                                                    value: `${option.subject} ${option.num}`,
+                                                }
+                                            })}
+                                    />
+                                </div>
+
+                            ) : (
+                                    <p>{`${this.props.course.subject} ${this.props.course.num}`}</p>
+                                )}
+                        </div>
+                    )
+                }}
 
             </Draggable>
         )

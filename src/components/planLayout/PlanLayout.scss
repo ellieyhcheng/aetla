@@ -15,7 +15,7 @@
     // }
 
     .plan-sidebar {
-        width: 9%;
+        width: 10%;
         height: max-content;
         min-height: 98%;
         display: flex;
@@ -33,7 +33,7 @@
             display: flex;
             width: 100%;
             flex-direction: column;
-            padding-right: 0.8vw;
+            padding-right: 0.5vw;
             box-sizing: border-box;
             align-items: flex-end;
 
@@ -49,18 +49,32 @@
             .plan-year {
                 color: $ternary;
                 font-weight: bold;
+                justify-content: right;
+
             }
 
             .plan-quarter {
                 color: $primary;
                 font-weight: 100;
+                font-size: 0.9em;
+                text-align: right;
+                justify-content: right;
                 // font-size: 0.90rem;
             }
 
-            .strip {
-                height: 15px;
-                width: 100%;
+            .sidebar-loader {
+                display: flex;
+                justify-content: flex-end;
+
+                .strip {
+                    height: 15px;
+                    width: 80%;
+                    position: relative;
+                    right: 0;
+                }
             }
+
+            
         }
     }
 
@@ -118,7 +132,7 @@
                     opacity: 1;
                     visibility: visible;
                     z-index: -1;
-                    transition: ease 0.2s;
+                    // transition: ease 0.2s;
 
                     .shadow-bin {
                         width: 7vw;
@@ -128,7 +142,7 @@
                         border: 1px dashed $light-grey;
                         margin: 5px;
                         padding: 5px;
-                        transition: ease 0.1s;
+                        // transition: ease 0.1s;
                     }
                 }
             }   
@@ -147,7 +161,7 @@
     }
 
     .plan-footer {
-        width: 10%;
+        width: 9%;
         padding: 5px 0;
         overflow: visible;
         // border: 1px solid $primary;
@@ -212,8 +226,13 @@
     .plan-layout {
         .plan-sidebar {
             .year-section {
+                padding-right: 0.2vw;
                 div {
                     font-size: 1.2vw;
+                }
+                .plan-quarter {
+                    font-size: 0.75em;
+
                 }
             }
         }
@@ -227,7 +246,6 @@
                 margin: 0.1vw;
             }
         }
-
     }
     
 }

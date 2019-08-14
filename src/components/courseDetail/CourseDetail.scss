@@ -2,9 +2,16 @@
 @import '../../styles/vars.scss';
 
 
+.course-detail {
+    width: 19%;
+    // border: 1px $primary solid;
+    display: flex;
+    justify-content: center;
+}
+
 .body {
-    // margin-left: 1vw;
-    width: 16%;
+    margin-left: 1.5vw;
+    width: 95%;
     height: max-content;
     max-height: 100%;
     border: 1px $accent solid;
@@ -33,12 +40,12 @@
     
     .content {
         font-size: 0.8rem;
-        // text-align: justify;
-        // text-justify: auto;
+        width: 90%;
         letter-spacing: 0.05em;
         line-height: 1.2rem;
         overflow: hidden;
-        margin: 0 0.6vw 4vh 0.5vw;
+        margin-bottom: 4vh;
+        text-align: left;
         
         .description {
             margin-bottom: 2vh;
@@ -50,14 +57,13 @@
 
 .empty {
     height: 70%;
-    width: 80%;
+    width: 95%;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    // margin-left: 1vw;
-    width: 16%;
+    margin-left: 1.5vw;
     border: 1px $accent solid;
     letter-spacing: 0.1em;
     padding: 0 0.5vw;
