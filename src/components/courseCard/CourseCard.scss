@@ -13,7 +13,7 @@
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    overflow: hidden;
+    overflow: visible;
     justify-content: center;
     letter-spacing: 0.1rem;
     font-size: 0.85rem;
@@ -53,6 +53,21 @@
 
     .select-selected {
         border-left: $primary 2px solid;
+    }
+
+    .options {
+        width: 100%;
+        height: 100%;
+        bottom: 0px;
+        position: absolute;
+        letter-spacing: 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-direction: column;
+        box-sizing: border-box;
+        white-space: nowrap;
+        // border: 1px solid $primary;
     }
     
 }

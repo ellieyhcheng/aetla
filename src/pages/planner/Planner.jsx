@@ -31,32 +31,30 @@ class Planner extends Component {
 
     componentDidMount() {
         // setTimeout(() => {
-            axios.get(`http://localhost:8080/api/plan/${this.state.id}`)
-                .then(res => {
-                    // console.log(res.data.courses)
-                    const splitList = this.splitList(res.data.courseList, res.data.courses);
-                    var newState = {
-                        title: res.data.title,
-                        description: res.data.description,
-                        courseList: res.data.courseList,
-                        courses: res.data.courses,
-                        coursePlan: res.data.coursePlan,
-                        courseList1: splitList[0],
-                        courseList2: splitList[1],
-                        homeDroppable: '',
-                        activeCourse: null,
-                        saving: false,
-                        loading: false,
-                    }
-                    this.setState(newState);
-                    // console.log("state: ", this.state);
-                })
-                .catch(e => {
-                    console.log(e)
-                });
+        axios.get(`http://localhost:8080/api/plan/${this.state.id}`)
+            .then(res => {
+                // console.log(res.data.courses)
+                const splitList = this.splitList(res.data.courseList, res.data.courses);
+                var newState = {
+                    title: res.data.title,
+                    description: res.data.description,
+                    courseList: res.data.courseList,
+                    courses: res.data.courses,
+                    coursePlan: res.data.coursePlan,
+                    courseList1: splitList[0],
+                    courseList2: splitList[1],
+                    homeDroppable: '',
+                    activeCourse: null,
+                    saving: false,
+                    loading: false,
+                }
+                this.setState(newState);
+                // console.log("state: ", this.state);
+            })
+            .catch(e => {
+                console.log(e)
+            });
         // }, 3000);
-
-
     }
 
     splitList = (courseList, courses) => {
@@ -88,7 +86,7 @@ class Planner extends Component {
                             else
                                 return 0;
                         }
-                        else 
+                        else
                             return 1;
                     }
                     else {
@@ -366,7 +364,7 @@ class Planner extends Component {
             this.setState(newState);
             return;
         }
-            
+
         newCoursePlan[index][quarterId].forEach(courseId => {
             newCourseList.push(courseId);
         });
@@ -484,21 +482,30 @@ class Planner extends Component {
     }
 
     captureActiveCourse = (course) => {
-        this.setState({
-            ...this.state,
-            activeCourse: course,
+        this.setState(prevState => {
+            return {
+                ...prevState,
+                activeCourse: course,
+            }
         })
     }
 
-    captureSelectedIndex = (course) => {
+    captureSelectedIndex = (course, isActive) => {
         const newCourses = {
             ...this.state.courses,
             [course["_id"]]: course,
         }
-        this.setState({
-            ...this.state,
-            courses: newCourses,
-        })
+        if (isActive)
+            this.setState({
+                ...this.state,
+                courses: newCourses,
+                activeCourse: course.options[course.selected],
+            })
+        else 
+            this.setState({
+                ...this.state,
+                courses: newCourses,
+            })
     }
 
     render() {
@@ -512,12 +519,12 @@ class Planner extends Component {
                 <div className="planner-content">
                     <div className="planner-header">
                         <div className="center-text">
-                            { this.state.loading ?
-                                <div className="title-loader loader"/>
-                                : 
+                            {this.state.loading ?
+                                <div className="title-loader loader" />
+                                :
                                 <p>{this.state.title}</p>
                             }
-                            
+
                             <div className="save-button">
                                 <Button type="icon" icon="save" tooltip="Save" direction="right" onClick={this.onClickSave} />
                             </div>
@@ -553,15 +560,15 @@ class Planner extends Component {
                                             </form>
                                         </div>
 
-                                        { this.state.loading ?
+                                        {this.state.loading ?
                                             <div className="courselist-loader">
-                                                {courseBins.slice(0,2).map((bin, i) => (
+                                                {courseBins.slice(0, 2).map((bin, i) => (
                                                     <div className="column" key={i}>
-                                                        {courseBins.map((bin, i) => (<div className="course-loader loader" key={i}/>))}
+                                                        {courseBins.map((bin, i) => (<div className="course-loader loader" key={i} />))}
                                                     </div>
                                                 ))}
                                             </div>
-                                            : 
+                                            :
                                             <CourseList courseList1={
                                                 this.state.courseList1.map(courseId => this.state.courses[courseId])
                                             }
@@ -575,7 +582,7 @@ class Planner extends Component {
                                         }
                                     </div>
                                 </div>
-                                            
+
                                 <CourseDetail course={this.state.activeCourse} loading={this.state.loading} />
 
                                 <PlanLayout

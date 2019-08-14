@@ -80,22 +80,6 @@ function plan_update_get(req, res, next) {
 
 // Handle plan update on POST
 function plan_update_post(req, res, next) {
-	
-	// var plan = new Plan(
-	// 	{
-	// 		title: req.body.title,
-	// 		description: req.body.description,
-	// 		courseLists: req.body.courseLists,
-	// 		coursePlan: req.body.coursePlan,
-	// 		_id: req.params.id,
-	// 	}
-	// )
-
-	// Plan.findByIdAndUpdate(req.params.id, plan, {}, (err, thePlan) => {
-	// 	if (err)
-	// 		return next(err);
-	// 	res.send('Plan ' + thePlan.id + ' update succeeded!');
-	// })
 
 	Plan.findById(req.params.id)
 	.exec((err, plan) => {
@@ -106,6 +90,7 @@ function plan_update_post(req, res, next) {
 			error.status = 404;
 			return next(error);
 		}
+		// console.log(plan.courses)
 		plan.title = req.body.title;
 		plan.description = req.body.description;
 		plan.courseList = req.body.courseList;
@@ -116,6 +101,7 @@ function plan_update_post(req, res, next) {
 			res.json('Plan updated!');
 		})
 		.catch(err => {
+			console.log(err)
 			return next(err);
 		})
 	})
