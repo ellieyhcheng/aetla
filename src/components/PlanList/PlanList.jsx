@@ -11,6 +11,7 @@ import {connect} from 'react-redux'
 import {getPlans} from '../../actions/itemActions'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { BrowserRouter as Route, Link } from 'react-router-dom';
 
 
 
@@ -25,11 +26,11 @@ class PlanList extends Component {
         console.log(this.props)
         const { plans } = this.props.plan;
         return(
-        <div class="ml-5 mt-5">
+        <div className="ml-5 mt-5">
         <Container fluid style={{screenLeft: "5em"}}>
         <Row>
         <Col xs="2">
-            <Card class="planCard" body style ={{backgroundColor: '#F5DEB3', borderColor: '#F5DEB3'}}>
+            <Card className="planCard" body style ={{backgroundColor: '#F5DEB3', borderColor: '#F5DEB3'}}>
                 <CardBody>
                 <div className="button-icon">
                     <FontAwesomeIcon icon="copy" fixedWidth className="icon"/>
@@ -38,8 +39,8 @@ class PlanList extends Component {
                 </CardBody>
             </Card>
             </Col>
-            {plans.map(({id, name, text}) => (
-                <Cards info={{id, name, text}}/>
+            {plans.map(({id, name, text}, index) => (
+                <Cards info={{id, name, text}} key={index}/>
             ))}
         </Row>
         </Container>

@@ -1,4 +1,4 @@
-import { STORE_PLAN_DETAILS, SET_ACTIVE_COURSE, SET_HOME_DROPPABLE, SET_COURSELIST, SET_COURSEPLAN, SET_SEARCH_WORD, SET_SELECTIONS, TOGGLE_SAVING } from "../actions/types"
+import { STORE_PLAN_DETAILS, SET_ACTIVE_COURSE, SET_HOME_DROPPABLE, SET_COURSELIST, SET_COURSEPLAN, SET_SEARCH_WORD, SET_SELECTIONS } from "../actions/types"
 //Add and Delete plan available for later
 
 const initialState = {
@@ -67,11 +67,6 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 selections: action.selections
-            }
-        case TOGGLE_SAVING:
-            return {
-                ...state,
-                saving: !state.saving,
             }
         default:
             return state;

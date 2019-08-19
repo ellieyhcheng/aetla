@@ -10,30 +10,19 @@ import axios from 'axios';
 import CourseDetail from '../../components/courseDetail/CourseDetail';
 import Modal from '../../components/modal/Modal';
 import { connect } from 'react-redux';
-import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan, toggleSaving } from '../../actions/itemActions';
+import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan } from '../../actions/itemActions';
+import { Redirect } from 'react-router-dom';
 
 class Planner extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         id: '5d5451933fc74615a4d7f961',
-    //         title: '',
-    //         description: '',
-    //         courseList: [],
-    //         courses: {},
-    //         selections: {},
-    //         coursePlan: [],
-    //         courseList1: [],
-    //         courseList2: [],
-    //         homeDroppable: '',
-    //         activeCourse: null,
-    //         saving: false,
-    //         loading: true,
-    //     }
-    // }
+    constructor(props) {
+        super(props)
+        this.state = {
+            error: false,
+            saving: false,
+        }
+    }
 
     componentDidMount() {
-        // setTimeout(() => {
         axios.get(`http://localhost:8080/api/plan/${this.props.id}`)
             .then(res => {
                 // console.log(res.data.courses)
@@ -55,8 +44,10 @@ class Planner extends Component {
             })
             .catch(e => {
                 console.log(e)
+                this.setState({
+                    error: true,
+                })
             });
-        // }, 3000);
     }
 
     onDragStart = (info) => {
@@ -163,7 +154,10 @@ class Planner extends Component {
     onClickSave = () => {
         if (this.props.loading) return;
         
-        this.props.toggleSaving()
+        this.setState({
+            ...this.state,
+            saving: true,
+        })
         // Make post request to update plan
         const newPlan = {
             title: this.props.title,
@@ -177,10 +171,19 @@ class Planner extends Component {
             .then(res => {
                 console.log(res.data)
                 setTimeout(() => {
-                    this.props.toggleSaving()
+                    this.setState({
+                        ...this.state,
+                        saving: false,
+                    })
                 }, 1000)
 
             })
+    }
+
+    redirectDashboard = () => {
+        setTimeout(() => {
+            this.props.history.replace('/')
+        }, 4000);
     }
 
     render() {
@@ -221,12 +224,22 @@ class Planner extends Component {
                     </DragDropContext>
                 </div>
                 
-                {this.props.saving &&
+                {this.state.saving &&
                     <Modal forced>
                         Saving your plan... Please wait...
                         <div className="load-icon">
                             <FontAwesomeIcon icon="spinner" pulse />
                         </div>
+                    </Modal>
+                }
+
+                {this.state.error && 
+                    <Modal forced>
+                        Something went wrong... Redirecting you to Dashboard.
+                        <div className="load-icon">
+                            <FontAwesomeIcon icon="spinner" pulse />
+                        </div>
+                        {this.redirectDashboard()}
                     </Modal>
                 }
             </div>
@@ -237,7 +250,6 @@ class Planner extends Component {
 const mapStateToProps = (state) => {
     return {
         title: state.planner.title,
-        saving: state.planner.saving,
         loading: state.planner.loading,
         courseList: state.planner.courseList,
         coursePlan: state.planner.coursePlan,
@@ -252,7 +264,6 @@ const actionCreators = {
     setHomeDroppable,
     setCourseList,
     setCoursePlan,
-    toggleSaving
 }
 
 export default connect(mapStateToProps, actionCreators)(Planner);
