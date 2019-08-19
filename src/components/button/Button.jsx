@@ -53,8 +53,18 @@ class Button extends Component {
         }
     }
 
+    removeClick = () => {
+        document.querySelectorAll('.button-text').forEach((button) => {
+            button.classList.remove('click')
+        })
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mouseup', this.removeClick)
+    }
     onMouseDown = (e) => {
         e.currentTarget.classList.add('click')
+        document.addEventListener('mouseup', this.removeClick)
     }
 
     onMouseUp = (e) => {

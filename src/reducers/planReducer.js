@@ -4,7 +4,7 @@ import {GET_PLANS, ADD_PLAN, DELETE_PLAN} from "../actions/types"
 
 const initialState = {
     plans: [
-        {id: uuid(), name: "Plan1", text: "My first plan"},
+        {id: '5d5451933fc74615a4d7f961', name: "Plan1", text: "My first plan"},
         {id: uuid(), name: "Plan2", text: "My second plan"},
         {id: uuid(), name: "Plan3", text: "My third plan"}
     ]

@@ -5,7 +5,7 @@ import {
 	faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
 	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes, faAngleDown, faAngleUp
 } from '@fortawesome/free-solid-svg-icons';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import { Provider } from 'react-redux'
 import store from './store'
@@ -27,7 +27,7 @@ class App extends Component {
           </div> */}
 
 					<Route exact path="/" component={PlanGrid} />
-					<Route path="/planner" render={props => <Planner {...props} />} />
+					<Route path="/planner/:id" component={Planner} />
 
 				</Router>
 			</Provider>

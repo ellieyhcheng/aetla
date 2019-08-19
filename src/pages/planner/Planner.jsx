@@ -11,7 +11,6 @@ import CourseDetail from '../../components/courseDetail/CourseDetail';
 import Modal from '../../components/modal/Modal';
 import { connect } from 'react-redux';
 import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan } from '../../actions/itemActions';
-import { Redirect } from 'react-router-dom';
 
 class Planner extends Component {
     constructor(props) {
@@ -23,7 +22,7 @@ class Planner extends Component {
     }
 
     componentDidMount() {
-        axios.get(`http://localhost:8080/api/plan/${this.props.id}`)
+        axios.get(`http://localhost:8080/api/plan/${atob(this.props.match.params.id)}`)
             .then(res => {
                 // console.log(res.data.courses)
                 var newPlan = {
@@ -48,6 +47,22 @@ class Planner extends Component {
                     error: true,
                 })
             });
+    }
+
+    componentWillMount() {
+        this.props.storePlanDetails({
+            title: '',
+            description: '',
+            courseList: [],
+            courses: {},
+            selections: {},
+            coursePlan: [],
+            searchWord: '',
+            homeDroppable: '',
+            activeCourse: null,
+            saving: false,
+            loading: true,
+        })
     }
 
     onDragStart = (info) => {
@@ -167,7 +182,7 @@ class Planner extends Component {
             selections: this.props.selections,
         }
 
-        axios.post(`http://localhost:8080/api/plan/${this.props.id}/update`, newPlan)
+        axios.post(`http://localhost:8080/api/plan/${atob(this.props.match.params.id)}/update`, newPlan)
             .then(res => {
                 console.log(res.data)
                 setTimeout(() => {
@@ -183,7 +198,7 @@ class Planner extends Component {
     redirectDashboard = () => {
         setTimeout(() => {
             this.props.history.replace('/')
-        }, 4000);
+        }, 3000);
     }
 
     render() {

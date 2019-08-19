@@ -24,7 +24,7 @@ class Cards extends Component {
 
     render() {
         if (this.state.double)
-            return <Redirect push to="/planner"/>
+            return <Redirect push to={`/planner/${btoa(this.props.info.id)}`}/>
         return (
             <Col xs="2">
                     <Card className="planCard" body style={{ backgroundColor: '#F5DEB3', borderColor: '#F5DEB3' }} onDoubleClick={this.doubleClick}>
