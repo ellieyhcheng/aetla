@@ -1,196 +1,106 @@
-const subjects = [
-    "AERO ST",
-    "ARCHEOL",
-    "AF AMER",
-    "ARCH&UD",
-    "AFRC ST",
-    "ARMENIA",
-    "AFRKAAN",
-    "ART",
-    "AM IND",
-    "ART HIS",
-    "ASL",
-    "ART&ARC",
-    "AN N EA",
-    "ARTS ED",
-    "ANES",
-    "ASIAN",
-    "ANTHRO",
-    "ASIA AM",
-    "APPLING",
-    "ASTR",
-    "ARABIC",
-    "A&O SCI",
-    "BIOENGR",
-    "BIOMATH",
-    "BIOINFO",
-    "BMD RES",
-    "BIOINFR",
-    "BIOSTAT",
-    "BIOL CH",
-    "BULGR",
-    "C&EE ST",
-    "COMM",
-    "CH ENGR",
-    "CESC",
-    "CHEM",
-    "COM HLT",
-    "CHICANO",
-    "COM LIT",
-    "CHIN",
-    "C&S BIO",
-    "C&EE",
-    "COM SCI",
-    "CLASSIC",
-    "CAEM",
-    "CLUSTER",
-    "CZCH",
-    "DANCE",
-    "DGT HUM",
-    "DENT",
-    "DIS STD",
-    "DESMA",
-    "DUTCH",
-    "EPS SCI",
-    "ENGL",
-    "EA STDS",
-    "ESL",
-    "EE BIOL",
-    "ENGCOMP",
-    "ECON",
-    "ENVIRON",
-    "EDUC",
-    "ENV HLT",
-    "EC ENGR",
-    "EPIDEM",
-    "ENGR",
-    "ETHNMUS",
-    "FAM MED",
-    "FOOD ST",
-    "FILIPNO",
-    "FRNCH",
-    "FILM TV",
-    "GENDER",
-    "GJ STDS",
-    "GEOG",
-    "GLBL ST",
-    "GERMAN",
-    "GRAD PD",
-    "GRNTLGY",
-    "GREEK",
-    "GLB HLT",
-    "HLT POL",
-    "HNRS",
-    "HEBREW",
-    "HUM GEN",
-    "HIN-URD",
-    "HNGAR",
-    "HIST",
-    "IL AMER",
-    "INTL DV",
-    "I E STD",
-    "I M STD",
-    "INDO",
-    "IRANIAN",
-    "INF STD",
-    "ISLM ST",
-    "I A STD",
-    "ITALIAN",
-    "JAPAN",
-    "JEWISH",
-    "KOREA",
-    "LBR&WS",
-    "UG-LAW",
-    "LBR STD",
-    "LGBTQS",
-    "LATIN",
-    "LIFESCI",
-    "LATN AM",
-    "LING",
-    "LAW",
-    "LTHUAN",
-    "MGMT",
-    "MED",
-    "MGMTEX",
-    "MIMG",
-    "MGMTFT",
-    "M E STD",
-    "MGMTFE",
-    "MIL SCI",
-    "MGMTGEX",
-    "M PHARM",
-    "MGMTMFE",
-    "MOL BIO",
-    "MGMTMSA",
-    "MOL TOX",
-    "MGMTPHD",
-    "MCD BIO",
-    "MAT SCI",
-    "MC&IP",
-    "MATH",
-    "MUSC",
-    "MECH&AE",
-    "MSC IND",
-    "MED HIS",
-    "MUSCLG",
-    "NAV SCI",
-    "NEUROSC",
-    "NR EAST",
-    "NEURO",
-    "NEURBIO",
-    "NEURSGY",
-    "NEURLGY",
-    "NURSING",
-    "OBGYN",
-    "ORL BIO",
-    "OPTH",
-    "ORTHPDC",
-    "PATH",
-    "POL SCI",
-    "PEDS",
-    "PORTGSE",
-    "PHILOS",
-    "COMPTNG",
-    "PHYSICS",
-    "PSYCTRY",
-    "PBMED",
-    "PSYCH",
-    "PHYSCI",
-    "PUB AFF",
-    "PHYSIOL",
-    "PUB HLT",
-    "POLSH",
-    "PUB PLC",
-    "RAD ONC",
-    "ROMANIA",
-    "RELIGN",
-    "RUSSN",
-    "SCAND",
-    "SOC GEN",
-    "SCI EDU",
-    "SOCIOL",
-    "SEMITIC",
-    "S ASIAN",
-    "SRB CRO",
-    "SEASIAN",
-    "SLAVC",
-    "SPAN",
-    "SOC SC",
-    "STATS",
-    "SOC THT",
-    "SURGERY",
-    "SOC WLF",
-    "SWAHILI",
-    "THAI",
-    "TURKIC",
-    "THEATER",
-    "UKRN",
-    "URBN PL",
-    "UNIV ST",
-    "UROLOGY",
-    "VIETMSE",
-    "WL ARTS",
-    "YIDDSH"
-];
+export default function splitList(courseList, courses) {
+    const list = sortCourseList(courseList, courses)
+    let list1 = [];
+    let list2 = [];
+    list.forEach((courseId, i) => {
+        if (i % 2) {
+            list2.push(courses[courseId])
+        }
+        else
+            list1.push(courses[courseId])
+    })
+    return [list1, list2];
+}
 
-export default subjects;
+function sortCourseList(courseList, courses) {
+    const newList = courseList.sort((courseId1, courseId2) => {
+        const course1 = courses[courseId1];
+        const course2 = courses[courseId2];
+        if ('options' in course1) {
+            if ('options' in course2) {
+                if (course1.name.includes('GE')) {
+                    if (course2.name.includes('GE')) {
+                        if (course1.name < course2.name)
+                            return -1;
+                        else if (course1.name > course2.name)
+                            return 1;
+                        else
+                            return 0;
+                    }
+                    else
+                        return 1;
+                }
+                else {
+                    if (course2.name.includes('GE'))
+                        return -1;
+                    else {
+                        if (course1.name < course2.name)
+                            return -1;
+                        else if (course1.name > course2.name)
+                            return 1;
+                        else
+                            return 0;
+                    }
+                }
+            }
+            else {
+                if (course1.name.includes('GE'))
+                    return 1;
+                else {
+                    if (course2.subject === 'GE')
+                        return -1;
+                    else
+                        return 1;
+                }
+            }
+        }
+        else if ('options' in course2) {
+            if (course2.name.includes('GE'))
+                return -1;
+            else {
+                if (course1.subject === 'GE')
+                    return 1;
+                else
+                    return -1;
+            }
+        }
+        else {
+            if (course1.subject === "GE" && course2.subject !== "GE") {
+                return 1
+            }
+            else if (course2.subject === "GE" && course1.subject !== "GE") {
+                return -1
+            }
+            else if (course2.subject === "GE" && course1.subject === "GE") {
+                if (course1.num > course2.num)
+                    return 1;
+                else
+                    return -1;
+            }
+            if (course1.subject > course2.subject)
+                return 1;
+            else if (course1.subject < course2.subject)
+                return -1;
+            else {
+                const course1Num = parseInt(course1.num.match(/\d+/g));
+                const course2Num = parseInt(course2.num.match(/\d+/g));
+
+                if (course1Num > course2Num)
+                    return 1;
+                else if (course1Num < course2Num)
+                    return -1;
+                else {
+                    const lastLetter1 = course1.num.substring(course1.num.length - 1);
+                    const lastLetter2 = course2.num.substring(course2.num.length - 1);
+
+                    if (lastLetter1 > lastLetter2)
+                        return 1;
+                    else
+                        return -1;
+                }
+            }
+        }
+    });
+
+    return newList
+}
