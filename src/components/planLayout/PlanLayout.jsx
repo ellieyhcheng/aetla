@@ -4,6 +4,8 @@ import CourseCard from '../../components/courseCard/CourseCard';
 import { Droppable } from 'react-beautiful-dnd';
 import Button from '../button/Button';
 import colors from '../../styles/colors.scss';
+import { connect } from 'react-redux';
+import { setCoursePlan, setCourseList } from '../../actions/itemActions'
 
 class PlanLayout extends Component {
     constructor(props) {
@@ -14,11 +16,11 @@ class PlanLayout extends Component {
     }
 
     calculateQuarterUnits = (quarter) => {
-        // console.log(quarter)
         const sum = quarter.reduce((prev, courseId) => {
             const course = this.props.courses[courseId];
-            if ('options' in course)
+            if ('options' in course) {
                 return prev + course.options[this.props.selections[courseId].index]['units']
+            }
             return prev + this.props.courses[courseId]['units']
         }, 0)
 
@@ -48,6 +50,92 @@ class PlanLayout extends Component {
                 bins: this.setBins()
             })
         })
+    }
+
+    addQuarter = (yi) => {
+        const q = ['fall', 'winter', 'spring', 'summer'];
+
+        const newYear = this.props.coursePlan[yi];
+        const length = newYear.quarters.length;
+        if (length >= 4)
+            return;
+        newYear.quarters.push(q[length]);
+
+        const newCoursePlan = this.props.coursePlan.map((oldYear, index) => {
+            if (index === Number(yi))
+                return newYear
+            return oldYear
+        })
+        this.props.setCoursePlan(newCoursePlan)
+    }
+
+    removeQuarter = (index) => {
+        const newCoursePlan = this.props.coursePlan;
+        const newCourseList = this.props.courseList;
+        const length = newCoursePlan[index].quarters.length;
+        if (length <= 1)
+            return;
+        const quarterId = newCoursePlan[index].quarters[length - 1]
+        if (newCoursePlan[index][quarterId].length === 0) {
+            newCoursePlan[index].quarters.splice(length - 1, 1);
+
+            this.props.setCoursePlan(newCoursePlan);
+            return;
+        }
+
+        newCoursePlan[index][quarterId].forEach(courseId => {
+            newCourseList.push(courseId);
+        });
+
+        newCoursePlan[index][quarterId] = [];
+
+        newCoursePlan[index].quarters.splice(length - 1, 1);
+
+        this.props.setCourseList(newCourseList);
+        this.props.setCoursePlan(newCoursePlan);
+    }
+
+    addYear = () => {
+        if (this.props.loading) return;
+
+        const newCoursePlan = this.props.coursePlan;
+        const length = newCoursePlan.length;
+        const newYear = {
+            name: `year${length}`,
+            quarters: ['fall'], // Defaults to at least 'fall' quarter
+            fall: [],
+            winter: [],
+            spring: [],
+            summer: [],
+        }
+
+        newCoursePlan.push(newYear);
+
+        this.props.setCoursePlan(newCoursePlan)
+    }
+
+    removeYear = () => {
+        if (this.props.loading) return;
+        const newCoursePlan = this.props.coursePlan;
+        const newCourseList = this.props.courseList;
+        const length = newCoursePlan.length;
+
+        if (length <= 1)
+            return;
+
+        const year = newCoursePlan[length - 1];
+
+        year.quarters.forEach(quarterId => {
+            if (year[quarterId].length !== 0)
+            year[quarterId].forEach(courseId => {
+                newCourseList.push(courseId);
+            })
+        })
+
+        newCoursePlan.pop();
+
+        this.props.setCourseList(newCourseList)
+        this.props.setCoursePlan(newCoursePlan)
     }
 
     render() {
@@ -124,7 +212,7 @@ class PlanLayout extends Component {
                                 {year.quarters.map((quarterId, j) => (
                                     <div className="plan-row" key={j}>
                                         <div className="course-bin-wrapper">
-                                            <Droppable droppableId={year.name + '-' + quarterId} direction="horizontal">
+                                            <Droppable droppableId={`year${i}-${quarterId}`} direction="horizontal">
                                                 {(provided, snapshot) => (
                                                     <div className="course-bin"
                                                         ref={provided.innerRef}
@@ -132,9 +220,6 @@ class PlanLayout extends Component {
                                                     >
                                                         {year[quarterId].map((courseId, k) => (
                                                             <CourseCard course={this.props.courses[courseId]} index={k} key={this.props.courses[courseId]["_id"]}
-                                                                captureActiveCourse={this.props.captureActiveCourse}
-                                                                captureSelectedIndex={this.props.captureSelectedIndex}
-                                                                selected={this.props.selections[courseId]}
                                                             />
                                                         ))}
                                                         {provided.placeholder}
@@ -161,8 +246,8 @@ class PlanLayout extends Component {
                     }
 
                     <div className="button-section">
-                        <Button type="text" text="Delete Year" color={colors.accent} onClick={this.props.removeYear} fixedWidth></Button>
-                        <Button type="text" text="Add Year" color={colors.accent} onClick={this.props.addYear} fixedWidth></Button>
+                        <Button type="text" text="Delete Year" color={colors.accent} onClick={this.removeYear} fixedWidth></Button>
+                        <Button type="text" text="Add Year" color={colors.accent} onClick={this.addYear} fixedWidth></Button>
                     </div>
                 </div>
                 <div className="plan-footer">
@@ -187,10 +272,10 @@ class PlanLayout extends Component {
                             <div className="year-section" key={i}>
                                 <div className="plan-row">
                                     <Button type="icon" icon="minus-circle"
-                                        onClick={() => this.props.removeQuarter(i)}
+                                        onClick={() => this.removeQuarter(i)}
                                     ></Button>
                                     <Button type="icon" icon="plus-circle"
-                                        onClick={() => this.props.addQuarter(i)}
+                                        onClick={() => this.addQuarter(i)}
                                     ></Button>
                                 </div>
                                 {year.quarters.map((quarterId, j) => (
@@ -212,5 +297,19 @@ class PlanLayout extends Component {
         )
     }
 }
+const mapStateToProps = (state) => {
+    return {
+        loading: state.planner.loading,
+        coursePlan: state.planner.coursePlan.map(year => year), // Due to Redux's shallow copy comparison
+        courseList: state.planner.courseList,
+        courses: state.planner.courses,
+        selections: state.planner.selections,
+    }
+}
 
-export default PlanLayout;
+const actionCreators = {
+    setCoursePlan,
+    setCourseList,
+}
+
+export default connect(mapStateToProps, actionCreators)(PlanLayout);

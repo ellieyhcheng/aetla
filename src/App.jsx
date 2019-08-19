@@ -5,13 +5,11 @@ import {
   faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
   faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes, faAngleDown, faAngleUp
 } from '@fortawesome/free-solid-svg-icons';
-// import { faEdit } from "@fortawesome/free-regular-svg-icons";
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 
-import {Provider} from 'react-redux'
+import { Provider } from 'react-redux'
 import store from './store'
 
-import Toolbar from './components/toolbar/Toolbar';
 import Planner from './pages/planner/Planner';
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
@@ -23,13 +21,13 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-      <Router>
-        <div className="app-wrapper">
-          <Planner/>
-          
-        </div>
-        
-      </Router>
+        <Router>
+          <div className="app-wrapper">
+            <Planner />
+
+          </div>
+
+        </Router>
       </Provider>
     )
   }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './CourseDetail.scss';
+import {connect} from 'react-redux'
 
 
 class CourseDetail extends Component {
@@ -27,4 +28,10 @@ class CourseDetail extends Component {
     }
 }
 
-export default CourseDetail;
+const mapStateToProps = (state) => {
+    return {
+        course: state.planner.activeCourse,
+    }
+}
+
+export default connect(mapStateToProps, {})(CourseDetail);

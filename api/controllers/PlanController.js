@@ -96,15 +96,15 @@ function plan_update_post(req, res, next) {
 			error.status = 404;
 			return next(error);
 		}
-		// console.log(plan.courses)
 		plan.title = req.body.title;
 		plan.description = req.body.description;
 		plan.courseList = req.body.courseList;
 		plan.coursePlan = req.body.coursePlan;
-		plan.selections.forEach(obj => {
-			obj.index = req.body.selections[obj["_id"]].index
-		})
-		// console.log(plan.selections)
+		if (plan.selections)
+			plan.selections.forEach(obj => {
+				obj.index = req.body.selections[obj["_id"]].index
+			})
+		
 
 		plan.save()
 		.then(plan => {

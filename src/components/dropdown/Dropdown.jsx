@@ -7,7 +7,6 @@ class Dropdown extends Component {
 		super(props)
 		this.state = {
 			listOpen: false,
-			// title: !props.title ? '--Course--' : (props.title.length > 7) ? props.title.substring(0, 7) + '...' : props.title,
 			index: props.index || 0,
 			title: props.list[props.index].value,
 		}
