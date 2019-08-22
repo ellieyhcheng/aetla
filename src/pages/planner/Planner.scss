@@ -24,6 +24,39 @@
         font-size: 1.8rem;
     }
 
+    .toolbar-collapse {
+        transition: cubic-bezier(.22,.61,.36,1) 1s;
+        position: fixed;
+        left: 0;
+        width: max-content;
+        height: 100vh;
+        z-index: 999;
+        display: flex;
+
+
+        .toolbar-wrapper {
+            // position: absolute;
+            // left: -$toolbar-width;
+            width: $toolbar-width;
+        }
+    
+        .toggle-button {
+            // position: absolute;
+            // top: 0;
+            // left: $toolbar-width;
+            z-index: 1000;
+            width: 8vh;
+            height: 8vh;
+            font-size: 2rem;
+            transition: cubic-bezier(.22,.61,.36,1) 1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+    
+    
+
     .planner-content {
         overflow: visible;
         margin-left: $toolbar-width;

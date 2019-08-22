@@ -3,7 +3,7 @@ import './App.scss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
     faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
-    faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes, faAngleDown, faAngleUp
+    faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes, faAngleDown, faAngleUp, faBars
 } from '@fortawesome/free-solid-svg-icons';
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ import Planner from './pages/planner/Planner';
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
     faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes
-    , faAngleDown, faAngleUp);
+    , faAngleDown, faAngleUp, faBars,);
 
 class App extends Component {
 
