@@ -14,6 +14,13 @@ import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, set
 import APIClient from "../../apiClient";
 
 class Planner extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isOpen: true,
+            collapse: window.innerWidth < 970,
+        }
+    }
 
     componentDidMount() {
         this.apiClient = new APIClient();
@@ -33,6 +40,10 @@ class Planner extends Component {
             }
             this.props.storePlanDetails(newPlan)
         })
+
+        window.addEventListener('resize', this.collapse);
+        if (this.state.collapse)
+            this.toggle();
     }
 
     onDragStart = (info) => {
@@ -69,19 +80,19 @@ class Planner extends Component {
                 return courseId !== draggableId
             })
 
-            this.props.setCourseList(newList); 
+            this.props.setCourseList(newList);
 
             const newYear = {
                 ...this.props.coursePlan[year],
                 [quarter]: newQuarterList
             }
-            
+
             const newCoursePlan = this.props.coursePlan.map((oldYear, index) => {
                 if (index === Number(year))
                     return newYear
                 return oldYear
             })
-            
+
             this.props.setCoursePlan(newCoursePlan);
 
         } else {
@@ -124,7 +135,7 @@ class Planner extends Component {
                     ...newCoursePlan[year],
                     [quarter]: newQuarterList
                 }
-                
+
                 newCoursePlan = newCoursePlan.map((prevYear, index) => {
                     if (index === Number(year))
                         return newYear
@@ -138,7 +149,7 @@ class Planner extends Component {
 
     onClickSave = () => {
         if (this.props.loading) return;
-        
+
         this.props.toggleSaving()
         // Make post request to update plan
         const newPlan = {
@@ -157,12 +168,66 @@ class Planner extends Component {
         })
     }
 
+    collapse = () => {
+        this.setState({
+            isOpen: true,
+            collapse: window.innerWidth < 970,
+        })
+        if (this.state.collapse)
+            this.toggle();
+    }
+
+    toggle = () => {
+        const toolbar = document.querySelector('.toolbar-collapse');
+        const toggleButton = document.querySelector('.toggle-button');
+        if (this.state.isOpen) {
+            // Close toolbar
+            toolbar.style.transform = `translateX(-50%)`;
+            toggleButton.style.transform = 'rotate(0)';
+        }
+        else {
+            // Open toolbar
+            toolbar.style.transform = `translateX(0)`;
+            toggleButton.style.transform = 'rotate(90deg)';
+        }
+        this.setState({
+            ...this.state,
+            isOpen: !this.state.isOpen,
+        })
+    }
+
     render() {
+        const toolbar = (
+            <Toolbar>
+                <Button type="icon" icon="home" tooltip="Dashboard" direction="right" />
+                <Button type="icon" icon="copy" tooltip="Copy" direction="right" />
+                <Button type="icon" icon="trash-alt" tooltip="Delete" direction="right" />
+                <Button type="icon" icon="download" tooltip="Export Plan" direction="right" />
+                <Button type="icon" icon="sliders-h" tooltip="Plan Settings" direction="right" />
+                <Button type="icon" icon="question-circle" tooltip="Help" direction="right" />
+            </Toolbar>
+        );
         return (
             <div className="planner">
-                <Toolbar />
+                {this.state.collapse ? (
+                    <div className="toolbar-collapse">
+                        <div className="toolbar-wrapper">
+                            {toolbar}
+                        </div>
+                        <div className="toggle-button">
+                            <Button type="icon" icon="bars" onClick={this.toggle} />
+                        </div>
 
-                <div className="planner-content">
+                    </div>
+
+                ) :
+                    toolbar
+                }
+
+
+                <div className="planner-content" style={{
+                    marginLeft: this.state.collapse ? '0px' : '',
+                }}>
                     <div className="planner-header">
                         <div className="center-text">
                             {this.props.loading ?
@@ -185,14 +250,14 @@ class Planner extends Component {
                     >
                         {(
                             <div className="planner-body">
-                                <CourseList/>
+                                <CourseList />
                                 <CourseDetail />
                                 <PlanLayout />
                             </div>
                         )}
                     </DragDropContext>
                 </div>
-                
+
                 {this.props.saving &&
                     <Modal forced>
                         Saving your plan... Please wait...
@@ -219,8 +284,8 @@ const mapStateToProps = (state) => {
 }
 
 const actionCreators = {
-    storePlanDetails, 
-    setActiveCourse, 
+    storePlanDetails,
+    setActiveCourse,
     setHomeDroppable,
     setCourseList,
     setCoursePlan,

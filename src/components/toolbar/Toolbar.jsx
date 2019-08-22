@@ -9,12 +9,9 @@ class Toolbar extends Component {
                 <div className="top">
                     <div className="line-v" />
                     <ul>
-                        <li><Button type="icon" icon="home" tooltip="Dashboard" direction="right"/></li>
-                        <li><Button type="icon" icon="copy" tooltip="Copy" direction="right"/></li>
-                        <li><Button type="icon" icon="trash-alt" tooltip="Delete" direction="right"/></li>
-                        <li><Button type="icon" icon="download" tooltip="Export Plan" direction="right"/></li>
-                        <li><Button type="icon" icon="sliders-h" tooltip="Plan Settings" direction="right"/></li>
-                        <li><Button type="icon" icon="question-circle" tooltip="Help" direction="right"/></li>
+                        {this.props.children.map((child, i) => (
+                            <li key={i}>{child}</li>
+                        ))}
                     </ul>
                 </div>
                 <div className="bot">
