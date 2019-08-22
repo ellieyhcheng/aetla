@@ -3,7 +3,7 @@ import './App.scss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
     faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
-    faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes, faAngleDown, faAngleUp
+    faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes, faAngleDown, faAngleUp, faBars, faFile
 } from '@fortawesome/free-solid-svg-icons';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ import PlanGrid from './pages/PlanGrid/PlanGrid';
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
 	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes
-	, faAngleDown, faAngleUp);
+    , faAngleDown, faAngleUp, faBars, faFile);
 
 class App extends Component {
 

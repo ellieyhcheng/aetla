@@ -10,6 +10,7 @@ class Toolbar extends Component {
                 <div className="top">
                     <div className="line-v" />
                     <ul>
+<<<<<<< HEAD
                         <li>
                             <Link to="/">
                                 <Button type="icon" icon="home" tooltip="Dashboard" direction="right" />
@@ -32,6 +33,11 @@ class Toolbar extends Component {
                         <li>
                             <Button type="icon" icon="question-circle" tooltip="Help" direction="right" />
                         </li>
+=======
+                        {this.props.children.map((child, i) => (
+                            <li key={i}>{child}</li>
+                        ))}
+>>>>>>> master
                     </ul>
                 </div>
                 <div className="bot">
