@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-// import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
-// import './Planner.scss';
+import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 import Toolbar from '../../components/toolbar/Toolbar'
 import PlanList from '../../components/PlanList/PlanList'
 
