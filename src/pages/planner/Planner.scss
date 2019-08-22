@@ -35,15 +35,10 @@
 
 
         .toolbar-wrapper {
-            // position: absolute;
-            // left: -$toolbar-width;
             width: $toolbar-width;
         }
     
         .toggle-button {
-            // position: absolute;
-            // top: 0;
-            // left: $toolbar-width;
             z-index: 1000;
             width: 8vh;
             height: 8vh;
