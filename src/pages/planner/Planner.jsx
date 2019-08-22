@@ -14,6 +14,13 @@ import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, set
 import APIClient from "../../apiClient";
 
 class Planner extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            error: false,
+            saving: false,
+        }
+    }
 
     componentDidMount() {
         this.apiClient = new APIClient();
