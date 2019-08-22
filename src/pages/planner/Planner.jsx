@@ -11,52 +11,28 @@ import CourseDetail from '../../components/courseDetail/CourseDetail';
 import Modal from '../../components/modal/Modal';
 import { connect } from 'react-redux';
 import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan, toggleSaving } from '../../actions/itemActions';
+import APIClient from "../../apiClient";
 
 class Planner extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         id: '5d5451933fc74615a4d7f961',
-    //         title: '',
-    //         description: '',
-    //         courseList: [],
-    //         courses: {},
-    //         selections: {},
-    //         coursePlan: [],
-    //         courseList1: [],
-    //         courseList2: [],
-    //         homeDroppable: '',
-    //         activeCourse: null,
-    //         saving: false,
-    //         loading: true,
-    //     }
-    // }
 
     componentDidMount() {
-        // setTimeout(() => {
-        axios.get(`http://localhost:8080/api/plan/${this.props.id}`)
-            .then(res => {
-                // console.log(res.data.courses)
-                var newPlan = {
-                    title: res.data.title,
-                    description: res.data.description,
-                    courseList: res.data.courseList,
-                    courses: res.data.courses,
-                    selections: res.data.selections,
-                    coursePlan: res.data.coursePlan,
-                    searchWord: '',
-                    homeDroppable: '',
-                    activeCourse: null,
-                    saving: false,
-                    loading: false,
-                }
-                this.props.storePlanDetails(newPlan)
-                // console.log("state: ", this.state);
-            })
-            .catch(e => {
-                console.log(e)
-            });
-        // }, 3000);
+        this.apiClient = new APIClient();
+        this.apiClient.getOnePlan(this.props.id).then(data => {
+            var newPlan = {
+                title: data.title,
+                description: data.description,
+                courseList: data.courseList,
+                courses: data.courses,
+                selections: data.selections,
+                coursePlan: data.coursePlan,
+                searchWord: '',
+                homeDroppable: '',
+                activeCourse: null,
+                saving: false,
+                loading: false,
+            }
+            this.props.storePlanDetails(newPlan)
+        })
     }
 
     onDragStart = (info) => {
@@ -173,19 +149,15 @@ class Planner extends Component {
             selections: this.props.selections,
         }
 
-        axios.post(`http://localhost:8080/api/plan/${this.props.id}/update`, newPlan)
-            .then(res => {
-                console.log(res.data)
-                setTimeout(() => {
-                    this.props.toggleSaving()
-                }, 1000)
-
-            })
+        this.apiClient.savePlan(this.props.id, newPlan).then(data => {
+            console.log(data)
+            setTimeout(() => {
+                this.props.toggleSaving();
+            }, 1000);
+        })
     }
 
     render() {
-        
-
         return (
             <div className="planner">
                 <Toolbar />
