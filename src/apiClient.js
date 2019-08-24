@@ -27,6 +27,7 @@ class APIClient {
             return res.data ? res.data : {};
         }).catch(e => {
             console.log(e)
+            return 'error'
         })
     }
 }

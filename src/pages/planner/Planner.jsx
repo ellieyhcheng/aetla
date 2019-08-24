@@ -6,12 +6,12 @@ import CourseList from '../../components/courseList/CourseList';
 import { DragDropContext } from 'react-beautiful-dnd';
 import PlanLayout from '../../components/planLayout/PlanLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
 import CourseDetail from '../../components/courseDetail/CourseDetail';
 import Modal from '../../components/modal/Modal';
 import { connect } from 'react-redux';
 import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan, toggleSaving } from '../../actions/itemActions';
 import APIClient from "../../apiClient";
+import { Link } from 'react-router-dom';
 
 class Planner extends Component {
     constructor(props) {
@@ -25,22 +25,33 @@ class Planner extends Component {
     }
 
     componentDidMount() {
+        this.mounted = true;
+        const { id } = this.props.match.params;
         this.apiClient = new APIClient();
-        this.apiClient.getOnePlan(this.props.id).then(data => {
-            var newPlan = {
-                title: data.title,
-                description: data.description,
-                courseList: data.courseList,
-                courses: data.courses,
-                selections: data.selections,
-                coursePlan: data.coursePlan,
-                searchWord: '',
-                homeDroppable: '',
-                activeCourse: null,
-                saving: false,
-                loading: false,
+        this.apiClient.getOnePlan(atob(id)).then(data => {
+            if (this.mounted) {
+                if (data === 'error') 
+                    this.setState({
+                        ...this.state,
+                        error: true,
+                    })
+                else {
+                    var newPlan = {
+                        title: data.title,
+                        description: data.description,
+                        courseList: data.courseList,
+                        courses: data.courses,
+                        selections: data.selections,
+                        coursePlan: data.coursePlan,
+                        searchWord: '',
+                        homeDroppable: '',
+                        activeCourse: null,
+                        saving: false,
+                        loading: false,
+                    }
+                    this.props.storePlanDetails(newPlan)
+                }
             }
-            this.props.storePlanDetails(newPlan)
         })
 
         window.addEventListener('resize', this.collapse);
@@ -207,10 +218,16 @@ class Planner extends Component {
         })
     }
 
+    componentWillUnmount() {
+        this.mounted = false;
+    }
+
     render() {
         const toolbar = (
             <Toolbar>
-                <Button type="icon" icon="home" tooltip="Dashboard" direction="right" />
+                <Link to="/dashboard">
+                    <Button type="icon" icon="home" tooltip="Dashboard" direction="right" />
+                </Link>
                 <Button type="icon" icon="copy" tooltip="Copy" direction="right" />
                 <Button type="icon" icon="trash-alt" tooltip="Delete" direction="right" />
                 <Button type="icon" icon="download" tooltip="Export Plan" direction="right" />

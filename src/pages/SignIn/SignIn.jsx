@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
-function Session() {
+function SignIn() {
     return(
-        <div className="session">
+        <div className="signin">
 
         </div>
     )
 }
 
-export default Session;
+export default SignIn;

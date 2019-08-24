@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
-function Session() {
+function Admin() {
     return(
-        <div className="session">
+        <div className="admin">
 
         </div>
     )
 }
 
-export default Session;
+export default Admin;

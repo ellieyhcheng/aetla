@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
-function Session() {
+function PasswordForget() {
     return(
-        <div className="session">
+        <div className="passwordforget">
 
         </div>
     )
 }
 
-export default Session;
+export default PasswordForget;

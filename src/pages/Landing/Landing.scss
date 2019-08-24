@@ -1,0 +1,156 @@
+@import '../../styles/colors.scss';
+@import '../../styles/vars.scss';
+
+.page {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.landing {
+    width: 100vw;
+    height: 100vh;
+    letter-spacing: 0.05rem;    
+    
+    .links {
+        height: 9vh;
+        width: 100%;
+        background: $primary;
+        color: $secondary;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 3vw;
+
+        .logo {
+            height: 3.5vw;
+            max-height: 40%;
+        }
+
+        .right {
+            display: flex;
+            align-items: center;
+            width: 135px;
+            justify-content: space-between;
+
+            .btn {
+                color: $secondary;
+                border-color: $secondary;
+    
+                &:hover {
+                    background: $secondary;
+                    color: $primary;
+                }
+            }
+    
+            .link {
+                cursor: pointer;
+                font-size: 1.1rem;
+    
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+    }
+
+    .content {
+        min-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6vh 0;
+
+            &:nth-child(even) {
+                background: whitesmoke;
+            }
+        }
+
+        .section.one {
+            flex-direction: row;
+
+            .description {
+                margin: 5% 5% 5% 0;
+                
+                .btn {
+                    margin: 5% 0;
+                }
+            }
+
+            .eg-border {
+                position: relative;
+                margin: 5% 5% 5% 5%;
+                
+                .example {
+                    width: 700px;
+                    border: 1px solid $primary;
+                    padding: 10px;
+                    border-radius: 0px;
+                }
+            }
+        }
+
+        .btn {
+            flex-grow: 0;
+            font-size: 1.1rem;
+            letter-spacing: 0.1rem;
+            background: $highlight;
+            border-color: $highlight;
+            color: $primary;
+            position: relative;
+            transition: transform ease 0.2s;
+
+            &:active {
+                // background: $accent;
+                position: relative;
+                transform: translate(1px, 1px);
+            }
+        }
+    }
+}
+
+
+@media only screen and (max-width: 1080px) {
+    .landing {
+        .content {
+            // padding-top: 4vh;
+
+            .section {
+                flex-direction: column;
+                padding: 4vh 0;
+
+                .description {
+                    margin: 2% 0;
+                }
+        
+                .eg-border {
+                    // padding: 2%;
+                    position: relative;
+                    margin: 2%;
+                    
+                    .example {
+                        width: 60vw;
+                        border: 1px solid $primary;
+                        padding: 10px;
+                        border-radius: 0px;
+                        position: relative;
+                    }
+                }
+            }
+        }
+    }
+    
+}
+
+@media only screen and (max-width: 650px) {
+    // .search {
+    //     font-size: 1.5vw !important;
+    // }
+}
