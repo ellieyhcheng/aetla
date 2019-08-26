@@ -23,7 +23,7 @@
 
         .logo {
             height: 3.5vw;
-            max-height: 40%;
+            max-height: 4vh;
         }
 
         .right {
@@ -60,6 +60,12 @@
         flex-direction: column;
         align-items: center;
 
+        .btn:focus {
+            border-color: $accent;
+            box-shadow: 0 0 0 $accent inset, 0 0 7px $accent;
+            outline: 0 none;
+        }
+
         .section {
             width: 100%;
             display: flex;
@@ -71,6 +77,10 @@
             &:nth-child(even) {
                 background: whitesmoke;
             }
+
+            .btn {
+                margin: 30px 0;
+            }
         }
 
         .section.one {
@@ -78,10 +88,6 @@
 
             .description {
                 margin: 5% 5% 5% 0;
-                
-                .btn {
-                    margin: 5% 0;
-                }
             }
 
             .eg-border {
@@ -122,7 +128,7 @@
         .content {
             // padding-top: 4vh;
 
-            .section {
+            .section.one {
                 flex-direction: column;
                 padding: 4vh 0;
 

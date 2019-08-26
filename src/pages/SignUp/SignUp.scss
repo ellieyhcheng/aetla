@@ -1,0 +1,72 @@
+@import '../../styles/colors.scss';
+@import '../../styles/vars.scss';
+
+.btn:focus, button::-moz-focus-inner, [type="button"]::-moz-focus-inner, [type="reset"]::-moz-focus-inner, [type="submit"]::-moz-focus-inner,
+textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {   
+    border-color: $accent;
+    box-shadow: 0 0 0 $accent inset, 0 0 7px $accent;
+    outline: 0 none;
+}
+
+.signup {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    letter-spacing: 0.05rem;
+
+    .logo {
+        width: 200px;
+        margin-top: 8vh;
+        position: relative;
+
+        img {
+            width: 100%;
+            position: relative;
+        }
+    }
+
+    hr {
+        width: 80%;
+        color: $primary;
+        background: $primary;
+        opacity: 0.3;
+        margin: 6vh;
+    }
+
+
+    .content {
+        max-width: 30%;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .login {
+            text-decoration: underline;
+            color: $accent;
+
+            &:hover {
+                color: $highlight;
+            }
+        }
+
+        .signup-button {
+            display: flex;
+            justify-content: center;
+            margin: 8vh 0 5vh;
+    
+            .btn {
+                flex-grow: 0;
+                font-size: 1.1rem;
+                letter-spacing: 0.1rem;
+                background: $primary;
+                border-color: $primary;
+                color: $secondary;
+                position: relative;
+            }
+        }
+    }
+    
+}
