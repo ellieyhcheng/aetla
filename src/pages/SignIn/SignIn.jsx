@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import logo from '../../logo-dark.svg';
 import * as ROUTES from '../../constants/routes';
 import './SignIn.scss';
-import { Form, FormGroup, Label, Input, Button, FormFeedback, FormText } from 'reactstrap';
+import { Form, FormGroup,Input, Button, } from 'reactstrap';
 import { withFirebase } from "../../Firebase";
 
 function SignIn() {
@@ -12,7 +12,7 @@ function SignIn() {
         <div className="signin">
             <div className="logo">
                 <Link to={ROUTES.LANDING}>
-                    <img src={logo} />
+                    <img src={logo} alt="LE plan"/>
 
                 </Link>
             </div>

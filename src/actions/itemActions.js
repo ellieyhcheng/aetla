@@ -1,5 +1,5 @@
 import {GET_PLANS, ADD_PLAN, DELETE_PLAN, STORE_PLAN_DETAILS, SET_ACTIVE_COURSE, 
-    SET_HOME_DROPPABLE, SET_COURSELIST, SET_COURSEPLAN, SET_SEARCH_WORD, SET_SELECTIONS } from "./types"
+    SET_HOME_DROPPABLE, SET_COURSELIST, SET_COURSEPLAN, SET_SEARCH_WORD, SET_SELECTIONS, SET_AUTH_USER } from "./types"
 
 export const getPlans = () => {
     return {
@@ -53,5 +53,12 @@ export const setSelections = (selections) => {
     return {
         type: SET_SELECTIONS,
         selections
+    }
+}
+
+export const setAuthUser = (authUser) => {
+    return {
+        type: SET_AUTH_USER,
+        authUser,
     }
 }

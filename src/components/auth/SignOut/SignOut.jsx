@@ -1,12 +1,19 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { withFirebase } from '../../../Firebase';
+import './SignOut.scss';
+import { withRouter } from "react-router-dom";
+import * as ROUTES from '../../../constants/routes';
 
-function SignOut() {
+function SignOut(props) {
     return(
-        <div className="signout">
-
+        <div className="signout" onClick={() => {
+            props.firebase.doSignOut().then(() => props.history.push(ROUTES.LANDING));
+            console.log("signing out");
+            // props.history.push(ROUTES.LANDING);
+        }}>
+            {props.children}
         </div>
     )
 }
 
-export default SignOut;
+export default withRouter(withFirebase(SignOut));

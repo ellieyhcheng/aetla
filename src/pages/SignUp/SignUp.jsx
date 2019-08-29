@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import logo from '../../logo-dark.svg';
 import * as ROUTES from '../../constants/routes';
 import './SignUp.scss';
-import { Form, FormGroup, Label, Input, Button, FormFeedback, FormText } from 'reactstrap';
+import { Form, FormGroup, Input, Button, FormFeedback, FormText } from 'reactstrap';
 import { withFirebase } from "../../Firebase";
 
 function SignUp() {
@@ -12,13 +12,13 @@ function SignUp() {
         <div className="signup">
             <div className="logo">
                 <Link to={ROUTES.LANDING}>
-                    <img src={logo} />
-
+                    <img src={logo} alt="LE plan"/>
                 </Link>
             </div>
             <hr />
 
             <div className="content">
+                <p className="email">Sign up with your email</p>
                 <SignUpForm />
                 <p>Already have an account? <Link className="login" to={ROUTES.SIGN_IN}>Log In</Link></p>
             </div>
@@ -36,7 +36,7 @@ function SignUpFormBase(props) {
     });
 
     const onSubmit = (e) => {
-        const { name, email, password } = formValues;
+        const { email, password } = formValues;
 
         props.firebase
             .doCreateUserWithEmailAndPassword(email, password)
@@ -68,13 +68,13 @@ function SignUpFormBase(props) {
         })
     }
 
-    const isInvalid = formValues.name === '' || formValues.password === '' || formValues.email === '' || formValues.password !== formValues.password2;
+    const isInvalid = formValues.password === '' || formValues.email === '' || formValues.password !== formValues.password2;
 
     return (
         <Form autoComplete="new-password" onSubmit={onSubmit}>
-            <FormGroup>
+            {/* <FormGroup>
                 <Input type="text" name="name" value={formValues.name} onChange={onChange} placeholder="Name" autoComplete="off" bsSize="lg" />
-            </FormGroup>
+            </FormGroup> */}
             <FormGroup>
                 <Input type="email" name="email" value={formValues.email} onChange={onChange} placeholder="Email" autoComplete="off" bsSize="lg" />
             </FormGroup>

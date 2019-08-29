@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Navbar.scss';
-import Button from '../button/Button';
+// import Button from '../button/Button';
 
 class Navbar extends Component {
     render() {

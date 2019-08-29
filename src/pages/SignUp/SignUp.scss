@@ -37,6 +37,12 @@
         flex-direction: column;
         align-items: center;
 
+        .email {
+            margin: 0 0 3vh;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
         form {
             width: 100%;
         }

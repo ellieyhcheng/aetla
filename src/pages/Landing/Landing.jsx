@@ -1,17 +1,19 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import './Landing.scss';
 import logo from '../../logo-light.svg';
 import example from '../../example-medium.jpg';
 import {Button} from 'reactstrap';
 import * as ROUTES from '../../constants/routes';
+import { connect } from 'react-redux';
 
-function Landing() {
-    return(
+function Landing(props) {
+    const authLanding = (<Redirect to={ROUTES.DASHBOARD} />);
+    const noAuthLanding = (
         <div className="landing page">
             <div className="links">
                 <Link to={ROUTES.LANDING}>
-                    <img className="logo" src={logo} />
+                    <img className="logo" src={logo} alt="LE plan" />
                 </Link>
                 <div className="right">
                     <Link to={ROUTES.SIGN_IN}>
@@ -26,7 +28,7 @@ function Landing() {
             <div className="content">
                 <div className="section one">
                     <div className="eg-border">
-                        <img className="example" src={example} />
+                        <img className="example" src={example} alt="Planner example"/>
                     </div>
                     <div className="description">
                         <h1>Course planning made simple</h1>
@@ -61,6 +63,14 @@ function Landing() {
             </div>
         </div>
     )
+
+    return props.authUser ? authLanding : noAuthLanding;    
 }
 
-export default Landing;
+const mapStateToProps = (state) => {
+    return {
+        authUser: state.auth.authUser,
+    }
+}
+
+export default connect(mapStateToProps, {})(Landing);

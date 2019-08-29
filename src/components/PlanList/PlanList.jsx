@@ -23,7 +23,6 @@ class PlanList extends Component {
 
 
     render() {
-        console.log(this.props)
         const { plans } = this.props.plan;
         return(
         <div className="ml-5 mt-5">
@@ -51,6 +50,7 @@ class PlanList extends Component {
 
 const mapStateToProps = (state) => ({
     getPlans,
-    plan: state.plan
+    plan: state.plan,
+    authUser: state.auth.authUser,
 })
 export default connect(mapStateToProps, {getPlans})(PlanList)
