@@ -15,11 +15,11 @@ import PlanGrid from './pages/PlanGrid/PlanGrid';
 import Landing from './pages/Landing/Landing';
 import SignIn from './pages/SignIn/SignIn';
 import SignUp from './pages/SignUp/SignUp';
-import Admin from './pages/Admin/Admin';
 import PasswordForget from './pages/PasswordForget/PasswordForget';
 import Account from './pages/Account/Account';
 import { setAuthUser } from "./actions/itemActions";
 import { withFirebase } from "./Firebase";
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
 	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes
@@ -42,14 +42,14 @@ class App extends Component {
 		return (
 			<Router>
 				<Route exact path={ROUTES.LANDING} component={Landing} />
-				<Route path={ROUTES.DASHBOARD} component={PlanGrid} />
-				<Route path={ROUTES.PLANNER} component={Planner} />
+				<PrivateRoute path={ROUTES.DASHBOARD} component={PlanGrid} />
+				<PrivateRoute path={ROUTES.PLANNER} component={Planner} />
+				{/* <Route path={ROUTES.GEN_PLANNER} component={Planner} /> */}
 				<Route path={ROUTES.SIGN_IN} component={SignIn} />
 				<Route path={ROUTES.SIGN_UP} component={SignUp} />
 				<Route path={ROUTES.GET_STARTED} component={Landing} />
 				<Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
-				<Route path={ROUTES.ACCOUNT} component={Account} />
-				<Route path={ROUTES.ADMIN} component={Admin} />
+				<PrivateRoute path={ROUTES.ACCOUNT} component={Account} />
 			</Router>
 		)
 	}

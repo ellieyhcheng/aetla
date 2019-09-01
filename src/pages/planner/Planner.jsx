@@ -11,7 +11,6 @@ import Modal from '../../components/modal/Modal';
 import { connect } from 'react-redux';
 import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan } from '../../actions/itemActions';
 import { withApiClient } from "../../ApiClient";
-import { Link } from 'react-router-dom';
 
 class Planner extends Component {
     constructor(props) {

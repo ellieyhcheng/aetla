@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
-import * as ROUTES from '../../../constants/routes';
 import { Form, FormGroup, Input, Button, } from 'reactstrap';
 import { withFirebase } from "../../../Firebase"
 import { connect } from "react-redux";
@@ -70,7 +69,6 @@ function NameChangeBase(props) {
 }
 
 const mapStateToProps = (state) => {
-    console.log(state.auth.authUser)
     return {
         name: state.auth.authUser ? state.auth.authUser.displayName : '',
     }

@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
-import * as ROUTES from '../../../constants/routes';
-// import './PasswordChange.scss';
 import { Form, FormGroup, Input, Button, } from 'reactstrap';
 import { withFirebase } from "../../../Firebase"
 
