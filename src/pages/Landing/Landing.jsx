@@ -6,6 +6,7 @@ import example from '../../example-medium.jpg';
 import {Button} from 'reactstrap';
 import * as ROUTES from '../../constants/routes';
 import { connect } from 'react-redux';
+import { SignUpForm } from "../SignUp/SignUp";
 
 function Landing(props) {
     const authLanding = (<Redirect to={ROUTES.DASHBOARD} />);
@@ -36,29 +37,28 @@ function Landing(props) {
                         <Link to={ROUTES.GET_STARTED}>
                             <Button size="lg" color="yellow">Get Started</Button>
                         </Link>
+                        <p>*Anyone can make a plan, but only registered users can save plans.</p>
+
                     </div>
                 </div>
                 <div className="section">
-                    <h2>Start</h2>
-                    <h5>No accounts necessary to make a plan! Just</h5>
-                    <Link to={ROUTES.GET_STARTED}>
-                        <Button size="lg" color="yellow">Get Started</Button>
-                    </Link>
+                    <h2>Major Customized</h2>
+                    <h5>All the classes you need for you major, filtered just for you.</h5>
                 </div>
                 <div className="section">
-                    <h2>Drag</h2>
+                    <h2>Drag and Drop</h2>
+                    <h5>Intuitive interface to make life simple.</h5>
                 </div>
                 <div className="section">
-                    <h2>Drop</h2>
+                    <h2>Accessible Information</h2>
+                    <h5>Everything you need to know about a class, right here in the planner.</h5>
                 </div>
-                <div className="section">
-                    <h2>Save</h2>
-                    <h5>Make an account to save your plan!</h5>
-                </div>
-                <div className="section">
+                <div className="section five">
                     <h3>Studying for classes is already hard enough. Plan your courses the easy way.</h3> 
-                    <h3>Sign up now for free.</h3>
-                    {/* Insert sign up form */}
+                    <h3>Sign up now for FREE.</h3>
+                    <div className="signupform">
+                        <SignUpForm/>
+                    </div>
                 </div>
             </div>
         </div>

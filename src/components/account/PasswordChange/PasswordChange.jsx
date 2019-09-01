@@ -13,7 +13,7 @@ function PasswordChangeBase(props) {
     });
 
     const onSubmit = (e) => {
-        const { password, password1, password2 } = formValues;
+        const { password1 } = formValues;
 
         props.firebase
             .doPasswordUpdate(password1)

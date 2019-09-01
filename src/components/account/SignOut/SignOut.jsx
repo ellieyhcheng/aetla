@@ -8,9 +8,7 @@ function SignOut(props) {
     return(
         <div className="signout" onClick={() => {
             props.firebase.doSignOut().then(() => {
-                setTimeout(() => {
-                    props.history.push(ROUTES.LANDING);
-                }, 0);
+                props.history.push(ROUTES.LANDING);
             })
         }}>
             {props.children}

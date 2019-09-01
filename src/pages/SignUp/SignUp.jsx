@@ -12,7 +12,7 @@ function SignUp() {
         <div className="signup">
             <div className="logo">
                 <Link to={ROUTES.LANDING}>
-                    <img src={logo} alt="LE plan"/>
+                    <img src={logo} alt="LE plan" />
                 </Link>
             </div>
             <hr />
@@ -36,20 +36,23 @@ function SignUpFormBase(props) {
     });
 
     const onSubmit = (e) => {
-        const { email, password } = formValues;
+        const { name, email, password } = formValues;
 
         props.firebase
             .doCreateUserWithEmailAndPassword(email, password)
             .then(authUser => {
-                setFormValues({
-                    name: '',
-                    email: '',
-                    password: '',
-                    password2: '',
-                    error: null,
-                })
+                props.firebase.doNameUpdate(name)
+                    .then(() => {
+                        setFormValues({
+                            name: '',
+                            email: '',
+                            password: '',
+                            password2: '',
+                            error: null,
+                        })
+                        props.history.push(ROUTES.DASHBOARD);
 
-                props.history.push(ROUTES.DASHBOARD);
+                    })
             })
             .catch(error => {
                 setFormValues({
@@ -72,21 +75,21 @@ function SignUpFormBase(props) {
 
     return (
         <Form autoComplete="new-password" onSubmit={onSubmit}>
-            {/* <FormGroup>
+            <FormGroup>
                 <Input type="text" name="name" value={formValues.name} onChange={onChange} placeholder="Name" autoComplete="off" bsSize="lg" />
-            </FormGroup> */}
+            </FormGroup>
             <FormGroup>
                 <Input type="email" name="email" value={formValues.email} onChange={onChange} placeholder="Email" autoComplete="off" bsSize="lg" />
             </FormGroup>
             <FormGroup>
                 <Input type="password" name="password" value={formValues.password} onChange={onChange} placeholder="Password" autoComplete="off" bsSize="lg" />
                 <FormFeedback>Password too weak</FormFeedback>
-                <FormText>Your password needs to be at least 8 characters long,
-                    including a number, an uppercase letter, and a lowercase letter.</FormText>
             </FormGroup>
             <FormGroup>
                 <Input invalid={formValues.password2 !== '' && formValues.password !== formValues.password2} type="password" name="password2" value={formValues.password2} onChange={onChange} placeholder="Confirm Password" autoComplete="off" bsSize="lg" />
                 <FormFeedback>Passwords don't match</FormFeedback>
+                <FormText>Your password needs to be at least 8 characters long,
+                    including a number, an uppercase letter, and a lowercase letter.</FormText>
             </FormGroup>
 
             <div className="signup-button">
@@ -103,3 +106,4 @@ function SignUpFormBase(props) {
 const SignUpForm = withRouter(withFirebase(SignUpFormBase));
 
 export default SignUp;
+export { SignUpForm };

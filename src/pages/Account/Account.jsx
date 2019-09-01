@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from 'react-router-dom';
 import Navbar from "../../components/Navbar/Navbar";
 import PasswordChange from "../../components/account/PasswordChange/PasswordChange";
 import './Account.scss';

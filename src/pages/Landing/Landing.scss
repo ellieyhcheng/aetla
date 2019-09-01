@@ -78,9 +78,6 @@
                 background: whitesmoke;
             }
 
-            .btn {
-                margin: 30px 0;
-            }
         }
 
         .section.one {
@@ -101,24 +98,56 @@
                     border-radius: 0px;
                 }
             }
-        }
 
-        .btn {
-            flex-grow: 0;
-            font-size: 1.1rem;
-            letter-spacing: 0.1rem;
-            background: $highlight;
-            border-color: $highlight;
-            color: $primary;
-            position: relative;
-            transition: transform ease 0.2s;
-
-            &:active {
-                // background: $accent;
+            .btn {
+                flex-grow: 0;
+                font-size: 1.1rem;
+                letter-spacing: 0.1rem;
+                background: $highlight;
+                border-color: $highlight;
+                color: $primary;
                 position: relative;
-                transform: translate(1px, 1px);
+                transition: transform ease 0.2s;
+                margin: 30px 0;
+    
+                &:active {
+                    // background: $accent;
+                    position: relative;
+                    transform: translate(1px, 1px);
+                }
             }
         }
+
+        .section.five {
+            background: $primary;
+            color: $secondary;
+
+            .signupform {
+                width: 450px;
+                background: $base;
+                padding: 3vh 1vw;
+                border-radius: 4px;
+                margin: 3vh 0;
+
+
+                .signup-button {
+                    display: flex;
+                    justify-content: center;
+            
+                    .btn {
+                        font-size: 1.1rem;
+                        width: 150px;
+                        letter-spacing: 0.1rem;
+                        background: $primary;
+                        border-color: $primary;
+                        color: $secondary;
+                        position: relative;
+                    }
+                }
+            }
+            
+        }
+        
     }
 }
 
