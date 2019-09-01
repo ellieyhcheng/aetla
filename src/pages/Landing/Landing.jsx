@@ -64,7 +64,8 @@ function Landing(props) {
         </div>
     )
 
-    return props.authUser ? authLanding : noAuthLanding;    
+    // return props.authUser ? authLanding : noAuthLanding;
+    return noAuthLanding;
 }
 
 const mapStateToProps = (state) => {

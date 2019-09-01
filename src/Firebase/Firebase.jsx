@@ -32,6 +32,15 @@ class Firebase {
 
     doPasswordUpdate = password => 
         this.auth.currentUser.updatePassword(password);
+    
+    doEmailUpdate = email => 
+        this.auth.currentUser.updateEmail(email);
+
+    doNameUpdate = name => this.auth.currentUser.updateProfile({
+        displayName: name,
+    })
+
+    getUser = () => this.auth.currentUser;
 }
 
 export default Firebase;

@@ -8,6 +8,7 @@
 
 body {
   margin: 0;
+  
   font-family: 'Muli', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif !important;
@@ -16,6 +17,10 @@ body {
   overflow: hidden;
   p {
     margin: 0;
+    // color: $primary;
+  }
+  h1 {
+    color: $primary;
   }
   a {
     color: inherit;
@@ -29,8 +34,12 @@ body {
   .btn:focus, button::-moz-focus-inner, [type="button"]::-moz-focus-inner, [type="reset"]::-moz-focus-inner, [type="submit"]::-moz-focus-inner,
   textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {   
       border-color: $accent;
-      box-shadow: 0 0 0 $accent inset, 0 0 7px $accent;
+      box-shadow: 0 0 0 $accent inset, 0 0 3px $accent;
       outline: 0 none;
+  }
+
+  & > * {
+    color: $primary;
   }
 }
 

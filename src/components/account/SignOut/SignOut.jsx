@@ -7,9 +7,11 @@ import * as ROUTES from '../../../constants/routes';
 function SignOut(props) {
     return(
         <div className="signout" onClick={() => {
-            props.firebase.doSignOut().then(() => props.history.push(ROUTES.LANDING));
-            console.log("signing out");
-            // props.history.push(ROUTES.LANDING);
+            props.firebase.doSignOut().then(() => {
+                setTimeout(() => {
+                    props.history.push(ROUTES.LANDING);
+                }, 600);
+            })
         }}>
             {props.children}
         </div>

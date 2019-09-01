@@ -25,7 +25,9 @@ class PlanList extends Component {
     render() {
         const { plans } = this.props.plan;
         return(
-        <div className="ml-5 mt-5">
+        <div className="mt-5" style={{
+            marginLeft: '160px',
+        }}>
         <Container fluid style={{screenLeft: "5em"}}>
         <Row>
         <Col xs="2">
