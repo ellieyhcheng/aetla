@@ -7,6 +7,7 @@ import Button from '../button/Button';
 import './Cards.scss';
 import { BrowserRouter as Route, Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import * as ROUTES from '../../constants/routes';
 
 class Cards extends Component {
     constructor(props) {
@@ -24,7 +25,8 @@ class Cards extends Component {
 
     render() {
         if (this.state.double)
-            return <Redirect push to={`/planner/${btoa(this.props.info.id)}`}/>
+            return <Redirect push to={ROUTES.PLANNER.replace(':id', `${btoa(this.props.info.id)}`)}/>
+            // return <Redirect push to={`/planner/${btoa(this.props.info.id)}`}/>
         return (
             <Col xs="2">
                     <Card className="planCard" body style={{ backgroundColor: '#F5DEB3', borderColor: '#F5DEB3' }} onDoubleClick={this.doubleClick}>

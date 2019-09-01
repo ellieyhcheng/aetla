@@ -7,12 +7,15 @@ import store from './store'
 import * as serviceWorker from './serviceWorker';
 
 import Firebase, { FirebaseContext } from './Firebase';
+import APIClient, { ApiClientContext } from './ApiClient';
 
 ReactDOM.render(
   <FirebaseContext.Provider value={new Firebase()}>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <ApiClientContext.Provider value={new APIClient()}>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ApiClientContext.Provider>
   </FirebaseContext.Provider>,
   document.getElementById('root'),
 );

@@ -10,7 +10,7 @@ import CourseDetail from '../../components/courseDetail/CourseDetail';
 import Modal from '../../components/modal/Modal';
 import { connect } from 'react-redux';
 import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan } from '../../actions/itemActions';
-import APIClient from "../../apiClient";
+import { withApiClient } from "../../ApiClient";
 import { Link } from 'react-router-dom';
 
 class Planner extends Component {
@@ -27,8 +27,7 @@ class Planner extends Component {
     componentDidMount() {
         this.mounted = true;
         const { id } = this.props.match.params;
-        this.apiClient = new APIClient();
-        this.apiClient.getOnePlan(atob(id)).then(data => {
+        this.props.apiClient.getOnePlan(atob(id)).then(data => {
             if (this.mounted) {
                 if (data === 'error') 
                     this.setState({
@@ -37,6 +36,7 @@ class Planner extends Component {
                     })
                 else {
                     var newPlan = {
+                        id: id,
                         title: data.title,
                         description: data.description,
                         courseList: data.courseList,
@@ -176,7 +176,7 @@ class Planner extends Component {
             selections: this.props.selections,
         }
 
-        this.apiClient.savePlan(this.props.id, newPlan).then(data => {
+        this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
             console.log(data)
             setTimeout(() => {
                 this.props.toggleSaving();
@@ -223,24 +223,12 @@ class Planner extends Component {
     }
 
     render() {
-        const toolbar = (
-            <Toolbar>
-                <Link to="/dashboard">
-                    <Button type="icon" icon="home" tooltip="Dashboard" direction="right" />
-                </Link>
-                <Button type="icon" icon="copy" tooltip="Copy" direction="right" />
-                <Button type="icon" icon="trash-alt" tooltip="Delete" direction="right" />
-                <Button type="icon" icon="download" tooltip="Export Plan" direction="right" />
-                <Button type="icon" icon="sliders-h" tooltip="Plan Settings" direction="right" />
-                <Button type="icon" icon="question-circle" tooltip="Help" direction="right" />
-            </Toolbar>
-        );
         return (
             <div className="planner">
                 {this.state.collapse ? (
                     <div className="toolbar-collapse">
                         <div className="toolbar-wrapper">
-                            {toolbar}
+                            <Toolbar  />
                         </div>
                         <div className="toggle-button">
                             <Button type="icon" icon="bars" onClick={this.toggle} />
@@ -249,7 +237,7 @@ class Planner extends Component {
                     </div>
 
                 ) :
-                    toolbar
+                    (<Toolbar  />)
                 }
 
 
@@ -328,4 +316,4 @@ const actionCreators = {
     setCoursePlan,
 }
 
-export default connect(mapStateToProps, actionCreators)(Planner);
+export default connect(mapStateToProps, actionCreators)(withApiClient(Planner));
