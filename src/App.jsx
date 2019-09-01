@@ -9,17 +9,39 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import { connect } from 'react-redux'
 import * as ROUTES from './constants/routes';
-
-import Planner from './pages/planner/Planner';
-import PlanGrid from './pages/PlanGrid/PlanGrid';
-import Landing from './pages/Landing/Landing';
-import SignIn from './pages/SignIn/SignIn';
-import SignUp from './pages/SignUp/SignUp';
-import PasswordForget from './pages/PasswordForget/PasswordForget';
-import Account from './pages/Account/Account';
+import asyncComponent from "./AsyncComponent";
 import { setAuthUser } from "./actions/itemActions";
 import { withFirebase } from "./Firebase";
-import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+
+// import Planner from './pages/planner/Planner';
+// import PlanGrid from './pages/PlanGrid/PlanGrid';
+// import Landing from './pages/Landing/Landing';
+// import SignIn from './pages/SignIn/SignIn';
+// import SignUp from './pages/SignUp/SignUp';
+// import PasswordForget from './pages/PasswordForget/PasswordForget';
+// import Account from './pages/Account/Account';
+
+const Planner = asyncComponent(() =>
+    import('./pages/planner/Planner').then(module => module.default)
+)
+const PlanGrid = asyncComponent(() =>
+    import('./pages/PlanGrid/PlanGrid').then(module => module.default)
+)
+const Landing = asyncComponent(() =>
+    import('./pages/Landing/Landing').then(module => module.default)
+)
+const SignIn = asyncComponent(() =>
+    import('./pages/SignIn/SignIn').then(module => module.default)
+)
+const SignUp = asyncComponent(() =>
+    import('./pages/SignUp/SignUp').then(module => module.default)
+)
+const PasswordForget = asyncComponent(() =>
+    import('./pages/PasswordForget/PasswordForget').then(module => module.default)
+)
+const Account = asyncComponent(() =>
+    import('./pages/Account/Account').then(module => module.default)
+)
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
 	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes
@@ -42,14 +64,17 @@ class App extends Component {
 		return (
 			<Router>
 				<Route exact path={ROUTES.LANDING} component={Landing} />
-				<PrivateRoute path={ROUTES.DASHBOARD} component={PlanGrid} />
-				<PrivateRoute path={ROUTES.PLANNER} component={Planner} />
 				{/* <Route path={ROUTES.GEN_PLANNER} component={Planner} /> */}
 				<Route path={ROUTES.SIGN_IN} component={SignIn} />
 				<Route path={ROUTES.SIGN_UP} component={SignUp} />
 				<Route path={ROUTES.GET_STARTED} component={Landing} />
 				<Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
-				<PrivateRoute path={ROUTES.ACCOUNT} component={Account} />
+
+				{/* With Authorization Routes */}
+				<Route path={ROUTES.DASHBOARD} component={PlanGrid} />
+				<Route path={ROUTES.PLANNER} component={Planner} />
+				<Route path={ROUTES.ACCOUNT} component={Account} />
+
 			</Router>
 		)
 	}

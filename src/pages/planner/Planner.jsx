@@ -11,6 +11,7 @@ import Modal from '../../components/modal/Modal';
 import { connect } from 'react-redux';
 import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan } from '../../actions/itemActions';
 import { withApiClient } from "../../ApiClient";
+import withAuthorization from '../../components/Session/withAuthorization';
 
 class Planner extends Component {
     constructor(props) {
@@ -26,7 +27,18 @@ class Planner extends Component {
     componentDidMount() {
         this.mounted = true;
         const { id } = this.props.match.params;
-        this.props.apiClient.getOnePlan(atob(id)).then(data => {
+        let decodedId;
+        try {
+            decodedId = decodeURIComponent(escape(atob(id.toString())))
+        }
+        catch(err) {
+            this.setState({
+                ...this.state,
+                error: true,
+            })
+            return; 
+        }
+        this.props.apiClient.getOnePlan(decodedId).then(data => {
             if (this.mounted) {
                 if (data === 'error') 
                     this.setState({
@@ -219,6 +231,21 @@ class Planner extends Component {
 
     componentWillUnmount() {
         this.mounted = false;
+        var newPlan = {
+            id: '',
+            title: '',
+            description: '',
+            courseList: [],
+            courses: {},
+            selections: {},
+            coursePlan: [],
+            searchWord: '',
+            homeDroppable: '',
+            activeCourse: null,
+            saving: false,
+            loading: true,
+        }
+        this.props.storePlanDetails(newPlan)
     }
 
     render() {
@@ -315,4 +342,4 @@ const actionCreators = {
     setCoursePlan,
 }
 
-export default connect(mapStateToProps, actionCreators)(withApiClient(Planner));
+export default withAuthorization(connect(mapStateToProps, actionCreators)(withApiClient(Planner)));

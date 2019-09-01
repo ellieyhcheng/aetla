@@ -5,6 +5,7 @@ import PasswordChange from "../../components/account/PasswordChange/PasswordChan
 import './Account.scss';
 import EmailChange from "../../components/account/EmailChange/EmailChange";
 import NameChange from "../../components/account/NameChange/NameChange";
+import withAuthorization from "../../components/Session/withAuthorization";
 
 function Account() {
     return (
@@ -27,4 +28,4 @@ function Account() {
     )
 }
 
-export default Account;
+export default withAuthorization(Account);

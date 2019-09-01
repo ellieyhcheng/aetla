@@ -10,7 +10,7 @@ function SignOut(props) {
             props.firebase.doSignOut().then(() => {
                 setTimeout(() => {
                     props.history.push(ROUTES.LANDING);
-                }, 600);
+                }, 0);
             })
         }}>
             {props.children}

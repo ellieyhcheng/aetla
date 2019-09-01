@@ -25,7 +25,7 @@ class Cards extends Component {
 
     render() {
         if (this.state.double)
-            return <Redirect push to={ROUTES.PLANNER.replace(':id', `${btoa(this.props.info.id)}`)}/>
+            return <Redirect push to={ROUTES.PLANNER.replace(':id', `${btoa(unescape(encodeURIComponent(this.props.info.id)))}`)}/>
             // return <Redirect push to={`/planner/${btoa(this.props.info.id)}`}/>
         return (
             <Col xs="2">
