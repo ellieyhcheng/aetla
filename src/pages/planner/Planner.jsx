@@ -213,15 +213,17 @@ class Planner extends Component {
     toggle = () => {
         const toolbar = document.querySelector('.toolbar-collapse');
         const toggleButton = document.querySelector('.toggle-button');
-        if (this.state.isOpen) {
-            // Close toolbar
-            toolbar.style.transform = `translateX(-50%)`;
-            toggleButton.style.transform = 'rotate(0)';
-        }
-        else {
-            // Open toolbar
-            toolbar.style.transform = `translateX(0)`;
-            toggleButton.style.transform = 'rotate(90deg)';
+        if (toolbar && toggleButton) {
+            if (this.state.isOpen) {
+                // Close toolbar
+                toolbar.style.transform = `translateX(-50%)`;
+                toggleButton.style.transform = 'rotate(0)';
+            }
+            else {
+                // Open toolbar
+                toolbar.style.transform = `translateX(0)`;
+                toggleButton.style.transform = 'rotate(90deg)';
+            }
         }
         this.setState({
             ...this.state,

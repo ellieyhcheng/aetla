@@ -1,5 +1,5 @@
 import axios from 'axios';
-const BASE_URI = 'http://localhost:8080/api'
+const BASE_URI = 'http://localhost:8080/'
 
 const client = axios.create({
     baseURL: BASE_URI,
@@ -11,11 +11,16 @@ class APIClient {
     // }
    
     getOnePlan(planId) {
-        return this.perform('get', `/plan/${planId}`)
+        return this.perform('get', `/api/plan/${planId}`)
     }
 
     savePlan(planId, plan) {
-        return this.perform('post', `/plan/${planId}/update`, plan)
+        return this.perform('post', `/api/plan/${planId}/update`, plan)
+    }
+
+    createUser(user) {
+        console.log(user)
+        return this.perform('post', `/user/${user.uid}/create`, user)
     }
 
     async perform (method, resource, data) {

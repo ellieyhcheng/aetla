@@ -6,6 +6,7 @@ import * as ROUTES from '../../constants/routes';
 import './SignUp.scss';
 import { Form, FormGroup, Input, Button, FormFeedback, FormText } from 'reactstrap';
 import { withFirebase } from "../../Firebase";
+import { withApiClient } from "../../ApiClient";
 
 function SignUp() {
     return (
@@ -29,6 +30,7 @@ function SignUp() {
 function SignUpFormBase(props) {
     const [formValues, setFormValues] = useState({
         name: '',
+        school: '',
         email: '',
         password: '',
         password2: '',
@@ -36,23 +38,39 @@ function SignUpFormBase(props) {
     });
 
     const onSubmit = (e) => {
-        const { name, email, password } = formValues;
+        const { name, school, email, password } = formValues;
 
         props.firebase
             .doCreateUserWithEmailAndPassword(email, password)
             .then(authUser => {
-                props.firebase.doNameUpdate(name)
-                    .then(() => {
+                props.apiClient.createUser({
+                    school,
+                    plans: [],
+                    uid: authUser.user.uid,
+                }).then(res => {
+                    if (res === 'error') {
                         setFormValues({
-                            name: '',
-                            email: '',
-                            password: '',
-                            password2: '',
-                            error: null,
+                            ...formValues,
+                            error: { message: 'School is a required field' }
                         })
-                        props.history.push(ROUTES.DASHBOARD);
+                    }
+                    else {
+                        props.firebase.doNameUpdate(name)
+                            .then(() => {
+                                setFormValues({
+                                    name: '',
+                                    school: '',
+                                    email: '',
+                                    password: '',
+                                    password2: '',
+                                    error: null,
+                                })
+                                props.history.push(ROUTES.DASHBOARD);
 
-                    })
+                            })
+                    }
+                })
+
             })
             .catch(error => {
                 setFormValues({
@@ -71,12 +89,15 @@ function SignUpFormBase(props) {
         })
     }
 
-    const isInvalid = formValues.password === '' || formValues.email === '' || formValues.password !== formValues.password2;
+    const isInvalid = formValues.password === '' || formValues.email === '' || formValues.password !== formValues.password2 || formValues.school === '';
 
     return (
         <Form autoComplete="new-password" onSubmit={onSubmit}>
             <FormGroup>
                 <Input type="text" name="name" value={formValues.name} onChange={onChange} placeholder="Name" autoComplete="off" bsSize="lg" />
+            </FormGroup>
+            <FormGroup>
+                <Input type="text" name="school" value={formValues.school} onChange={onChange} placeholder="School" autoComplete="off" bsSize="lg" />
             </FormGroup>
             <FormGroup>
                 <Input type="email" name="email" value={formValues.email} onChange={onChange} placeholder="Email" autoComplete="off" bsSize="lg" />
@@ -92,18 +113,17 @@ function SignUpFormBase(props) {
                     including a number, an uppercase letter, and a lowercase letter.</FormText>
             </FormGroup>
 
-            <div className="signup-button">
-                <Button type="submit" block disabled={isInvalid}>Sign Up</Button>
-            </div>
-
             {formValues.error &&
                 <p>{formValues.error.message}</p>
             }
+            <div className="signup-button">
+                <Button type="submit" block disabled={isInvalid}>Sign Up</Button>
+            </div>
         </Form>
     )
 }
 
-const SignUpForm = withRouter(withFirebase(SignUpFormBase));
+const SignUpForm = withRouter(withApiClient(withFirebase(SignUpFormBase)));
 
 export default SignUp;
 export { SignUpForm };

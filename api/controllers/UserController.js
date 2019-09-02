@@ -1,6 +1,8 @@
 'use strict';
 
 var User = require('../models/User');
+const {body, validationResult } = require('express-validator');
+const {sanitizeBody} = require('express-validator');
 
 // Display all users
 function user_all(req, res, next) {
@@ -31,7 +33,40 @@ function user_detail(req, res, next) {
 
 // Handle user create on POST
 function user_create_post(req, res, next) {
-	res.send('NOT IMPLEMENTED: User create POST')
+	if (!(req.body.plans instanceof Array)) {
+		if (typeof req.body.plans === 'undefined')
+			req.body.plans=[];
+		else
+			req.body.plans = new Array(req.body.plans);
+	}
+
+	body('school', 'Schoool must not be empty.').isLength({ min: 1 }).trim();
+	body('uid', 'uid must not be empty.').isLength({ min: 1}).trim();
+	
+	sanitizeBody('*').escape();
+
+	const errors = validationResult(req);
+
+	var user_details = new User({
+		uid: req.body.uid,
+		school: req.body.school,
+		plans: req.body.plans,
+	})
+
+	if (!errors.isEmpty()) {
+		console.log(errors)
+		const error = new Error('Error creating user because bad inputs');
+		error.status = 404;
+		return next(error);
+	}
+
+	user_details.save((err) => {
+		if (err) {
+			console.log(err)
+			return next(err);
+		}
+		res.send('Successfully created user')
+	})
 }
 
 // Handle user delete on POST
