@@ -59,19 +59,9 @@ function plan_detail(req, res, next) {
     // res.send('NOT IMPLEMENTED: Plan detail: ' + req.params.id)
 }
 
-// Display plan create form on GET
-function plan_create_get(req, res, next) {
-	res.send('NOT IMPLEMENTED: Plan create GET')
-}
-
 // Handle plan create on POST
 function plan_create_post(req, res, next) {
 	res.send('NOT IMPLEMENTED: Plan create POST')
-}
-
-// Display plan delete form on GET
-function plan_delete_get(req, res) {
-	res.send('NOT IMPLEMENTED: Plan delete GET')
 }
 
 // Handle plan delete on POST
@@ -79,10 +69,6 @@ function plan_delete_post(req, res, next) {
 	res.send('NOT IMPLEMENTED: Plan delete POST')
 }
 
-// Display plan update form on GET
-function plan_update_get(req, res, next) {
-	// res.send('NOT IMPLEMENTED: Plan update GET')
-}
 
 // Handle plan update on POST
 function plan_update_post(req, res, next) {
@@ -122,11 +108,8 @@ function plan_update_post(req, res, next) {
 module.exports = {
     plan_all,
 	plan_detail,
-	plan_create_get,
 	plan_create_post,
-	plan_delete_get,
 	plan_delete_post,
-	plan_update_get,
 	plan_update_post,
 	
 }
