@@ -26,8 +26,18 @@ function user_detail(req, res, next) {
 			error.status = 404;
 			return next(error);
 		}
+		const result = user.toObject();
+		const abbrevPlans = user.plans.map(plan => {
+			return {
+				"_id": plan["_id"],
+				title: plan.title,
+				description: plan.description,
+			}
+		})
+
+		result.plans = abbrevPlans;
 		
-        res.json(user);
+        res.json(result);
     })
 }
 
@@ -54,7 +64,6 @@ function user_create_post(req, res, next) {
 	})
 
 	if (!errors.isEmpty()) {
-		console.log(errors)
 		const error = new Error('Error creating user because bad inputs');
 		error.status = 404;
 		return next(error);
@@ -62,7 +71,6 @@ function user_create_post(req, res, next) {
 
 	user_details.save((err) => {
 		if (err) {
-			console.log(err)
 			return next(err);
 		}
 		res.send('Successfully created user')

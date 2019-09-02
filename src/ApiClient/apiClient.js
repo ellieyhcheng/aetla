@@ -19,8 +19,11 @@ class APIClient {
     }
 
     createUser(user) {
-        console.log(user)
         return this.perform('post', `/user/${user.uid}/create`, user)
+    }
+
+    getUserProfile(userId) {
+        return this.perform('get', `/user/${userId}`);
     }
 
     async perform (method, resource, data) {

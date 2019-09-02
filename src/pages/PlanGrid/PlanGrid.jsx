@@ -6,6 +6,10 @@ import Navbar from '../../components/Navbar/Navbar';
 import withAuthorization from '../../components/Session/withAuthorization';
 
 class PlanGrid extends Component {
+    componentDidMount() {
+        document.title = 'Dashboard - Aetla'
+    }
+
     render() {
         return (
             <div className="plangrid">
@@ -17,5 +21,6 @@ class PlanGrid extends Component {
         )
     }
 }
+
 
 export default withAuthorization(PlanGrid);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import PasswordChange from "../../components/account/PasswordChange/PasswordChange";
 import './Account.scss';
@@ -7,6 +7,9 @@ import NameChange from "../../components/account/NameChange/NameChange";
 import withAuthorization from "../../components/Session/withAuthorization";
 
 function Account() {
+    useEffect(() => {
+        document.title = 'Settings - Aetla'
+    }, []);
     return (
         <div className="account">
             <Navbar />

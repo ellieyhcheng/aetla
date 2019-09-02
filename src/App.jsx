@@ -9,8 +9,9 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Loadable from 'react-loadable';
 import { connect } from 'react-redux'
 import * as ROUTES from './constants/routes';
-import { setAuthUser } from "./actions/itemActions";
+import { setAuthUser, setUserProfile } from "./actions/itemActions";
 import { withFirebase } from "./Firebase";
+import { withApiClient } from "./ApiClient";
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
 	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes
@@ -57,9 +58,17 @@ const SignUp = Loadable({
 class App extends Component {
 	componentDidMount() {
 		this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
-			authUser
-				? this.props.setAuthUser(authUser)
-				: this.props.setAuthUser(null);
+			authUser ? this.props.setAuthUser(authUser) : this.props.setAuthUser(null);
+			this.props.apiClient.getUserProfile(authUser.uid).then(data => {
+				if (data === 'error') 
+					this.setState({
+						...this.state,
+						error: true,
+					})
+				else {
+					this.props.setUserProfile(data)
+				}
+			})
 		})
 	}
 
@@ -94,8 +103,9 @@ const mapStateToProps = (state) => {
 }
 
 const actionCreators = {
-	setAuthUser
+	setAuthUser,
+	setUserProfile,
 }
 
-export default withFirebase(connect(mapStateToProps, actionCreators)(App));
+export default withApiClient(withFirebase(connect(mapStateToProps, actionCreators)(App)));
 

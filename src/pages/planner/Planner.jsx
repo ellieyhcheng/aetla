@@ -26,6 +26,8 @@ class Planner extends Component {
 
     componentDidMount() {
         this.mounted = true;
+        document.title = 'Planner - Aetla'
+    
         const { id } = this.props.match.params;
         let decodedId;
         try {

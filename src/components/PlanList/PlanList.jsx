@@ -35,8 +35,8 @@ class PlanList extends Component {
                 </CardBody>
             </Card>
             </Col>
-            {plans.map(({id, name, text}, index) => (
-                <Cards info={{id, name, text}} key={index}/>
+            {this.props.plans.map((plan, index) => (
+                <Cards info={plan} key={index}/>
             ))}
         </Row>
         </Container>
@@ -48,6 +48,6 @@ class PlanList extends Component {
 const mapStateToProps = (state) => ({
     getPlans,
     plan: state.plan,
-    authUser: state.auth.authUser,
+    plans: state.auth.userProfile ? state.auth.userProfile.plans : [],
 })
 export default connect(mapStateToProps, {getPlans})(PlanList)

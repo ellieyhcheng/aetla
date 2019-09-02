@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import {
-    Card, CardImg, CardTitle, CardText, CardColumns,
-    CardSubtitle, CardBody, ButtonGroup, Container, Row, Col
+    Card, CardTitle, CardText, CardBody, ButtonGroup, Col
 } from 'reactstrap'
 import Button from '../button/Button';
 import './Cards.scss';
 import { BrowserRouter as Route, Link, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
 import * as ROUTES from '../../constants/routes';
 
 class Cards extends Component {
@@ -25,14 +23,14 @@ class Cards extends Component {
 
     render() {
         if (this.state.double)
-            return <Redirect push to={ROUTES.PLANNER.replace(':id', `${btoa(unescape(encodeURIComponent(this.props.info.id)))}`)}/>
+            return <Redirect push to={ROUTES.PLANNER.replace(':id', `${btoa(unescape(encodeURIComponent(this.props.info["_id"])))}`)}/>
             // return <Redirect push to={`/planner/${btoa(this.props.info.id)}`}/>
         return (
             <Col xs="2">
                     <Card className="planCard" body style={{ backgroundColor: '#F5DEB3', borderColor: '#F5DEB3' }} onDoubleClick={this.doubleClick}>
                         <CardBody >
-                            <CardTitle tag="h3">{this.props.info.name}</CardTitle>
-                            <CardText>{this.props.info.text}</CardText>
+                            <CardTitle tag="h3">{this.props.info.title}</CardTitle>
+                            <CardText>{this.props.info.description}</CardText>
                             <ButtonGroup style={{ marginTop: "2em", marginBottom: "none" }}>
                                 <Button type="icon" icon="download" tooltip="Export Plan" direction="bottom" />
                                 <Button type="icon" icon="trash-alt" tooltip="Delete" direction="bottom" />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, withRouter } from 'react-router-dom';
 
 import logo from '../../logo-dark.svg';
@@ -9,6 +9,9 @@ import { withFirebase } from "../../Firebase";
 import { withApiClient } from "../../ApiClient";
 
 function SignUp() {
+    useEffect(() => {
+        document.title = 'Sign Up - Aetla'
+    }, []);
     return (
         <div className="signup">
             <div className="logo">

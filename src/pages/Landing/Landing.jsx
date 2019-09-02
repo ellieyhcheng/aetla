@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Link, Redirect } from 'react-router-dom';
 import './Landing.scss';
 import logo from '../../logo-light.svg';
@@ -9,6 +9,9 @@ import { connect } from 'react-redux';
 import { SignUpForm } from "../SignUp/SignUp";
 
 function Landing(props) {
+    useEffect(() => {
+        document.title = 'Aetla'
+    }, []);
     const authLanding = (<Redirect to={ROUTES.DASHBOARD} />);
     const noAuthLanding = (
         <div className="landing page">

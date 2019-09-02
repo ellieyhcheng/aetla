@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, withRouter } from 'react-router-dom';
 
 import logo from '../../logo-dark.svg';
@@ -8,6 +8,9 @@ import { Form, FormGroup,Input, Button, } from 'reactstrap';
 import { withFirebase } from "../../Firebase";
 
 function SignIn() {
+    useEffect(() => {
+        document.title = 'Sign In - Aetla'
+    }, []);
     return (
         <div className="signin">
             <div className="logo">

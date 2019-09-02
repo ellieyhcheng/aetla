@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, withRouter } from 'react-router-dom';
 
 import './PasswordForget.scss'
@@ -8,6 +8,9 @@ import { Form, FormGroup, Input, Button, } from 'reactstrap';
 import { withFirebase } from "../../Firebase";
 
 function PasswordForget() {
+    useEffect(() => {
+        document.title = 'Password Reset - Aetla'
+    }, []);
     return (
         <div className="passwordforget">
             <div className="logo">
