@@ -3,7 +3,6 @@ import './PlanLayout.scss';
 import CourseCard from '../../components/courseCard/CourseCard';
 import { Droppable } from 'react-beautiful-dnd';
 import Button from '../button/Button';
-import colors from '../../styles/colors.scss';
 import { connect } from 'react-redux';
 import { setCoursePlan, setCourseList } from '../../actions/itemActions'
 
@@ -246,8 +245,8 @@ class PlanLayout extends Component {
                     }
 
                     <div className="button-section">
-                        <Button type="text" text="Delete Year" color={colors.accent} onClick={this.removeYear} fixedWidth></Button>
-                        <Button type="text" text="Add Year" color={colors.accent} onClick={this.addYear} fixedWidth></Button>
+                        <Button type="text" text="Delete Year" onClick={this.removeYear} fixedWidth></Button>
+                        <Button type="text" text="Add Year" onClick={this.addYear} fixedWidth></Button>
                     </div>
                 </div>
                 <div className="plan-footer">

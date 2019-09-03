@@ -1,5 +1,5 @@
-@import '../../styles/colors.scss';
-@import '../../styles//vars.scss';
+@import '../../constants/colors.scss';
+@import '../../constants/vars.scss';
 
 ul {
     list-style: none;
@@ -13,7 +13,7 @@ li {
 }
 
 .navbar {
-    width: 160px;
+    width: $navbar-width;
     height: 100vh;
     font-size: 1.4rem;
     background-color: $primary;
@@ -37,21 +37,20 @@ li {
     .navbar-item {
         display: flex;
         align-items: center;
-        cursor: pointer;
         width: 100%;
         height: 5vh;
+        padding-left: 15%;
+
 
         &:hover {
             background: $secondary;
             color: $primary;
         }
-
-        padding-left: 15%;
     }
 
     p {
         font-size: 1rem;
-        padding: 0 0.5vw;
+        padding: 0 5px;
     }
 
     .top {
@@ -67,12 +66,18 @@ li {
             margin-bottom: 3vh;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            letter-spacing: 0.2rem;
-            margin: 1vh 0;
-            cursor: pointer;
+        a {
+            width: 55%;            
+
+            .logo {
+                font-size: 1.5rem;
+                letter-spacing: 0.2rem;
+                margin: 2.5vh 0;
+                cursor: pointer;
+                width: 100%;
+            }
         }
+        
     }
 
     .bot {

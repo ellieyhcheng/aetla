@@ -22,11 +22,8 @@ router.get('/catalogs', catalogController.catalog_all);
 router.get('/catalog/:id', catalogController.catalog_detail);
 
 router.get('/plans', planController.plan_all);
-router.get('/plan/create', planController.plan_create_get);
 router.post('/plan/create', planController.plan_create_post);
-router.get('/plan/:id/delete', planController.plan_delete_get);
 router.post('/plan/:id/delete', planController.plan_delete_post);
-router.get('/plan/:id/update', planController.plan_update_get);
 router.post('/plan/:id/update', planController.plan_update_post);
 router.get('/plan/:id', planController.plan_detail);
 

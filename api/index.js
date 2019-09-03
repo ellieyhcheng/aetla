@@ -29,15 +29,6 @@ app.use('/api', apiRouter)
 const userRouter = require('./routes/user');
 app.use('/user', userRouter);
 
-// const courseRouter = require('./routes/course');
-// app.use('/courses', courseRouter);
-
-// const courseListRouter = require('./routes/courseList');
-// app.use('/course-list', courseListRouter);
-
-// const plansRouter = require('./routes/plans');
-// app.use('/plans', plansRouter);
-
 // Handle Errors
 app.use(error());
 

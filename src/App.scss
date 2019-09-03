@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
-@import './styles/colors.scss';
-@import './styles/vars.scss';
+@import './constants/colors.scss';
+@import './constants/vars.scss';
 
 :root {
   font-size: 13px;
@@ -8,19 +8,38 @@
 
 body {
   margin: 0;
+  
   font-family: 'Muli', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
+  p {
+    margin: 0;
+    // color: $primary;
+  }
+  h1 {
+    color: $primary;
+  }
   a {
-    color: $secondary;
-    text-decoration: none;
+    color: inherit;
 
     &:hover {
+      color: inherit;
       text-decoration: none;
     }
+  }
+
+  .btn:focus, button::-moz-focus-inner, [type="button"]::-moz-focus-inner, [type="reset"]::-moz-focus-inner, [type="submit"]::-moz-focus-inner,
+  textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {   
+      border-color: $accent;
+      box-shadow: 0 0 0 $accent inset, 0 0 3px $accent;
+      outline: 0 none;
+  }
+
+  & > * {
+    color: $primary;
   }
 }
 

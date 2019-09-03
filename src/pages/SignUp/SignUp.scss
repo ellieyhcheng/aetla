@@ -1,0 +1,76 @@
+@import '../../constants/colors.scss';
+@import '../../constants/vars.scss';
+
+.signup {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    letter-spacing: 0.05rem;
+
+    .logo {
+        width: 200px;
+        margin-top: 8vh;
+        position: relative;
+
+        img {
+            width: 100%;
+            position: relative;
+        }
+    }
+
+    hr {
+        width: 80%;
+        color: $primary;
+        background: $primary;
+        opacity: 0.3;
+        margin: 6vh;
+    }
+
+
+    .content {
+        width: 50vw;
+        max-width: 450px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .email {
+            margin: 0 0 3vh;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        .login {
+            text-decoration: underline;
+            color: $accent;
+
+            &:hover {
+                color: $highlight;
+            }
+        }
+
+        .signup-button {
+            display: flex;
+            justify-content: center;
+            margin: 8vh 0 5vh;
+    
+            .btn {
+                flex-grow: 0;
+                font-size: 1.1rem;
+                letter-spacing: 0.1rem;
+                background: $primary;
+                border-color: $primary;
+                color: $secondary;
+                position: relative;
+            }
+        }
+    }
+    
+}

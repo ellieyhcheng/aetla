@@ -1,5 +1,6 @@
 import {GET_PLANS, ADD_PLAN, DELETE_PLAN, STORE_PLAN_DETAILS, SET_ACTIVE_COURSE, 
-    SET_HOME_DROPPABLE, SET_COURSELIST, SET_COURSEPLAN, SET_SEARCH_WORD, SET_SELECTIONS, TOGGLE_SAVING} from "./types"
+    SET_HOME_DROPPABLE, SET_COURSELIST, SET_COURSEPLAN, SET_SEARCH_WORD, SET_SELECTIONS, 
+    SET_AUTH_USER, SET_USER_PROFILE } from "./types"
 
 export const getPlans = () => {
     return {
@@ -56,8 +57,16 @@ export const setSelections = (selections) => {
     }
 }
 
-export const toggleSaving = () => {
+export const setAuthUser = (authUser) => {
     return {
-        type: TOGGLE_SAVING,
+        type: SET_AUTH_USER,
+        authUser,
+    }
+}
+
+export const setUserProfile = (userProfile) => {
+    return {
+        type: SET_USER_PROFILE,
+        userProfile,
     }
 }

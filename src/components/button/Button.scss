@@ -1,4 +1,4 @@
-@import '../../styles/colors.scss';
+@import '../../constants/colors.scss';
 
 .button-text {
     margin: 5px;
@@ -19,7 +19,7 @@
 }
 
 .fixed-width {
-    width: 100px;
+    width: 150px;
 }
 
 .button-icon {

@@ -1,7 +1,0 @@
-grey-brown: #727272
-dark-purple: #685372
-smoky-pink: #edd5e5
-white: #fefdff
-tan: #dad2bf
-lavendar: #bec6dd
-plum-pink: #e581a3

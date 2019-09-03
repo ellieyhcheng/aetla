@@ -6,39 +6,65 @@ import CourseList from '../../components/courseList/CourseList';
 import { DragDropContext } from 'react-beautiful-dnd';
 import PlanLayout from '../../components/planLayout/PlanLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
 import CourseDetail from '../../components/courseDetail/CourseDetail';
 import Modal from '../../components/modal/Modal';
 import { connect } from 'react-redux';
-import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan, toggleSaving } from '../../actions/itemActions';
-import APIClient from "../../apiClient";
+import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan } from '../../actions/itemActions';
+import { withApiClient } from "../../ApiClient";
+import withAuthorization from '../../components/Session/withAuthorization';
 
 class Planner extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
+            error: false,
+            saving: false,
             isOpen: true,
             collapse: window.innerWidth < 970,
         }
     }
 
     componentDidMount() {
-        this.apiClient = new APIClient();
-        this.apiClient.getOnePlan(this.props.id).then(data => {
-            var newPlan = {
-                title: data.title,
-                description: data.description,
-                courseList: data.courseList,
-                courses: data.courses,
-                selections: data.selections,
-                coursePlan: data.coursePlan,
-                searchWord: '',
-                homeDroppable: '',
-                activeCourse: null,
-                saving: false,
-                loading: false,
+        this.mounted = true;
+        document.title = 'Planner - Aetla'
+    
+        const { id } = this.props.match.params;
+        let decodedId;
+        try {
+            decodedId = decodeURIComponent(escape(atob(id.toString())))
+        }
+        catch(err) {
+            this.setState({
+                ...this.state,
+                error: true,
+            })
+            return; 
+        }
+        this.props.apiClient.getOnePlan(decodedId).then(data => {
+            if (this.mounted) {
+                if (data === 'error') 
+                    this.setState({
+                        ...this.state,
+                        error: true,
+                    })
+                else {
+                    var newPlan = {
+                        id: id,
+                        title: data.title,
+                        description: data.description,
+                        courseList: data.courseList,
+                        courses: data.courses,
+                        selections: data.selections,
+                        coursePlan: data.coursePlan,
+                        searchWord: '',
+                        homeDroppable: '',
+                        activeCourse: null,
+                        saving: false,
+                        loading: false,
+                    }
+                    this.props.storePlanDetails(newPlan)
+                }
             }
-            this.props.storePlanDetails(newPlan)
         })
 
         window.addEventListener('resize', this.collapse);
@@ -149,8 +175,11 @@ class Planner extends Component {
 
     onClickSave = () => {
         if (this.props.loading) return;
-
-        this.props.toggleSaving()
+        
+        this.setState({
+            ...this.state,
+            saving: true,
+        })
         // Make post request to update plan
         const newPlan = {
             title: this.props.title,
@@ -160,12 +189,18 @@ class Planner extends Component {
             selections: this.props.selections,
         }
 
-        this.apiClient.savePlan(this.props.id, newPlan).then(data => {
+        this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
             console.log(data)
             setTimeout(() => {
                 this.props.toggleSaving();
             }, 1000);
         })
+    }
+
+    redirectDashboard = () => {
+        setTimeout(() => {
+            this.props.history.replace('/')
+        }, 3000);
     }
 
     collapse = () => {
@@ -180,15 +215,17 @@ class Planner extends Component {
     toggle = () => {
         const toolbar = document.querySelector('.toolbar-collapse');
         const toggleButton = document.querySelector('.toggle-button');
-        if (this.state.isOpen) {
-            // Close toolbar
-            toolbar.style.transform = `translateX(-50%)`;
-            toggleButton.style.transform = 'rotate(0)';
-        }
-        else {
-            // Open toolbar
-            toolbar.style.transform = `translateX(0)`;
-            toggleButton.style.transform = 'rotate(90deg)';
+        if (toolbar && toggleButton) {
+            if (this.state.isOpen) {
+                // Close toolbar
+                toolbar.style.transform = `translateX(-50%)`;
+                toggleButton.style.transform = 'rotate(0)';
+            }
+            else {
+                // Open toolbar
+                toolbar.style.transform = `translateX(0)`;
+                toggleButton.style.transform = 'rotate(90deg)';
+            }
         }
         this.setState({
             ...this.state,
@@ -196,23 +233,32 @@ class Planner extends Component {
         })
     }
 
+    componentWillUnmount() {
+        this.mounted = false;
+        var newPlan = {
+            id: '',
+            title: '',
+            description: '',
+            courseList: [],
+            courses: {},
+            selections: {},
+            coursePlan: [],
+            searchWord: '',
+            homeDroppable: '',
+            activeCourse: null,
+            saving: false,
+            loading: true,
+        }
+        this.props.storePlanDetails(newPlan)
+    }
+
     render() {
-        const toolbar = (
-            <Toolbar>
-                <Button type="icon" icon="home" tooltip="Dashboard" direction="right" />
-                <Button type="icon" icon="copy" tooltip="Copy" direction="right" />
-                <Button type="icon" icon="trash-alt" tooltip="Delete" direction="right" />
-                <Button type="icon" icon="download" tooltip="Export Plan" direction="right" />
-                <Button type="icon" icon="sliders-h" tooltip="Plan Settings" direction="right" />
-                <Button type="icon" icon="question-circle" tooltip="Help" direction="right" />
-            </Toolbar>
-        );
         return (
             <div className="planner">
                 {this.state.collapse ? (
                     <div className="toolbar-collapse">
                         <div className="toolbar-wrapper">
-                            {toolbar}
+                            <Toolbar  />
                         </div>
                         <div className="toggle-button">
                             <Button type="icon" icon="bars" onClick={this.toggle} />
@@ -221,7 +267,7 @@ class Planner extends Component {
                     </div>
 
                 ) :
-                    toolbar
+                    (<Toolbar  />)
                 }
 
 
@@ -257,13 +303,23 @@ class Planner extends Component {
                         )}
                     </DragDropContext>
                 </div>
-
-                {this.props.saving &&
+                
+                {this.state.saving &&
                     <Modal forced>
                         Saving your plan... Please wait...
                         <div className="load-icon">
                             <FontAwesomeIcon icon="spinner" pulse />
                         </div>
+                    </Modal>
+                }
+
+                {this.state.error && 
+                    <Modal forced>
+                        Something went wrong... Redirecting you to Dashboard.
+                        <div className="load-icon">
+                            <FontAwesomeIcon icon="spinner" pulse />
+                        </div>
+                        {this.redirectDashboard()}
                     </Modal>
                 }
             </div>
@@ -274,7 +330,6 @@ class Planner extends Component {
 const mapStateToProps = (state) => {
     return {
         title: state.planner.title,
-        saving: state.planner.saving,
         loading: state.planner.loading,
         courseList: state.planner.courseList,
         coursePlan: state.planner.coursePlan,
@@ -289,7 +344,6 @@ const actionCreators = {
     setHomeDroppable,
     setCourseList,
     setCoursePlan,
-    toggleSaving
 }
 
-export default connect(mapStateToProps, actionCreators)(Planner);
+export default withAuthorization(connect(mapStateToProps, actionCreators)(withApiClient(Planner)));
