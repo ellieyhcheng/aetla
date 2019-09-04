@@ -59,16 +59,17 @@ class App extends Component {
 	componentDidMount() {
 		this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
 			authUser ? this.props.setAuthUser(authUser) : this.props.setAuthUser(null);
-			this.props.apiClient.getUserProfile(authUser.uid).then(data => {
-				if (data === 'error') 
-					this.setState({
-						...this.state,
-						error: true,
-					})
-				else {
-					this.props.setUserProfile(data)
-				}
-			})
+			if (authUser)
+				this.props.apiClient.getUserProfile(authUser.uid).then(data => {
+					if (data === 'error') 
+						this.setState({
+							...this.state,
+							error: true,
+						})
+					else {
+						this.props.setUserProfile(data)
+					}
+				})
 		})
 	}
 

@@ -4,13 +4,14 @@
 .signin {
     width: 100vw;
     height: 100vh;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
     align-items: center;
     letter-spacing: 0.05rem;
 
     .logo {
-        width: 200px;
+        width: 180px;        
         margin-top: 8vh;
         position: relative;
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, withRouter } from 'react-router-dom';
 
-import logo from '../../logo-dark.svg';
+import logo from '../../assets/aetla-dark.svg';
 import * as ROUTES from '../../constants/routes';
 import './SignIn.scss';
 import { Form, FormGroup,Input, Button, } from 'reactstrap';
