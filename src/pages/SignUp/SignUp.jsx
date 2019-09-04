@@ -7,6 +7,8 @@ import './SignUp.scss';
 import { Form, FormGroup, Input, Button, FormFeedback, FormText } from 'reactstrap';
 import { withFirebase } from "../../Firebase";
 import { withApiClient } from "../../ApiClient";
+import { connect } from 'react-redux';
+import { setUserProfile } from "../../actions/itemActions";
 
 function SignUp() {
     useEffect(() => {
@@ -58,6 +60,8 @@ function SignUpFormBase(props) {
                         })
                     }
                     else {
+                        props.setUserProfile(res);
+
                         props.firebase.doNameUpdate(name)
                             .then(() => {
                                 setFormValues({
@@ -68,8 +72,8 @@ function SignUpFormBase(props) {
                                     password2: '',
                                     error: null,
                                 })
-                                props.history.push(ROUTES.DASHBOARD);
 
+                                props.history.push(ROUTES.DASHBOARD);
                             })
                     }
                 })
@@ -126,7 +130,13 @@ function SignUpFormBase(props) {
     )
 }
 
-const SignUpForm = withRouter(withApiClient(withFirebase(SignUpFormBase)));
+const mapStateToProps = state => {
+    return {
+
+    }
+}
+
+const SignUpForm = withRouter(withApiClient(withFirebase(connect(mapStateToProps, { setUserProfile })(SignUpFormBase))));
 
 export default SignUp;
 export { SignUpForm };

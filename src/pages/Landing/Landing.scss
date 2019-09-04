@@ -82,6 +82,7 @@
 
         .section.one {
             flex-direction: row;
+            height: 85vh;
 
             .description {
                 margin: 5% 5% 5% 0;
@@ -166,12 +167,12 @@
                 }
         
                 .eg-border {
-                    // padding: 2%;
                     position: relative;
                     margin: 2%;
                     
                     .example {
                         width: 60vw;
+                        min-width: 480px;
                         border: 1px solid $primary;
                         padding: 10px;
                         border-radius: 0px;
