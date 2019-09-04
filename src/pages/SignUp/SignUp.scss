@@ -4,13 +4,14 @@
 .signup {
     width: 100vw;
     height: 100vh;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
     align-items: center;
     letter-spacing: 0.05rem;
 
     .logo {
-        width: 200px;
+        width: 180px;
         margin-top: 8vh;
         position: relative;
 
@@ -32,6 +33,7 @@
     .content {
         width: 50vw;
         max-width: 450px;
+        padding-bottom: 5vh;
         position: relative;
         display: flex;
         flex-direction: column;
@@ -59,7 +61,7 @@
         .signup-button {
             display: flex;
             justify-content: center;
-            margin: 8vh 0 5vh;
+            margin: 5vh 0 5vh;
     
             .btn {
                 flex-grow: 0;

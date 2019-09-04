@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
 import { Link, Redirect } from 'react-router-dom';
 import './Landing.scss';
-import logo from '../../logo-light.svg';
-import example from '../../example-medium.jpg';
+import logo from '../../assets/aetla-light.svg';
+import example from '../../assets/example-medium.jpg';
 import {Button} from 'reactstrap';
 import * as ROUTES from '../../constants/routes';
 import { connect } from 'react-redux';

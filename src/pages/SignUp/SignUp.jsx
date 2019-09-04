@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, withRouter } from 'react-router-dom';
 
-import logo from '../../logo-dark.svg';
+import logo from '../../assets/aetla-dark.svg';
 import * as ROUTES from '../../constants/routes';
 import './SignUp.scss';
 import { Form, FormGroup, Input, Button, FormFeedback, FormText } from 'reactstrap';
 import { withFirebase } from "../../Firebase";
 import { withApiClient } from "../../ApiClient";
+import { connect } from 'react-redux';
+import { setUserProfile } from "../../actions/itemActions";
 
 function SignUp() {
     useEffect(() => {
@@ -58,6 +60,8 @@ function SignUpFormBase(props) {
                         })
                     }
                     else {
+                        props.setUserProfile(res);
+
                         props.firebase.doNameUpdate(name)
                             .then(() => {
                                 setFormValues({
@@ -68,8 +72,8 @@ function SignUpFormBase(props) {
                                     password2: '',
                                     error: null,
                                 })
-                                props.history.push(ROUTES.DASHBOARD);
 
+                                props.history.push(ROUTES.DASHBOARD);
                             })
                     }
                 })
@@ -126,7 +130,13 @@ function SignUpFormBase(props) {
     )
 }
 
-const SignUpForm = withRouter(withApiClient(withFirebase(SignUpFormBase)));
+const mapStateToProps = state => {
+    return {
+
+    }
+}
+
+const SignUpForm = withRouter(withApiClient(withFirebase(connect(mapStateToProps, { setUserProfile })(SignUpFormBase))));
 
 export default SignUp;
 export { SignUpForm };

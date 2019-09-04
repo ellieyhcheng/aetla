@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, withRouter } from 'react-router-dom';
 
 import './PasswordForget.scss'
-import logo from '../../logo-dark.svg';
+import logo from '../../assets/aetla-dark.svg';
 import * as ROUTES from '../../constants/routes';
 import { Form, FormGroup, Input, Button, } from 'reactstrap';
 import { withFirebase } from "../../Firebase";

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SignOut from '../account/SignOut/SignOut';
 import * as ROUTES from '../../constants/routes';
-import logo from '../../logo-light.svg';
+import logo from '../../assets/aetla-light.svg';
 
 
 class Navbar extends Component {

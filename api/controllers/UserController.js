@@ -69,11 +69,11 @@ function user_create_post(req, res, next) {
 		return next(error);
 	}
 
-	user_details.save((err) => {
+	user_details.save((err, result) => {
 		if (err) {
 			return next(err);
 		}
-		res.send('Successfully created user')
+		res.json(result);
 	})
 }
 
