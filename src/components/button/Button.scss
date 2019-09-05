@@ -32,11 +32,12 @@
     }
 
     .icon:hover {
-        color: #ebd4bc;
+        filter: brightness(1.2);
     }
 
     .button-tooltip {
         font-size: 11px;
+        color: $secondary;
         letter-spacing: 0.1em;
         width: auto;
         white-space: nowrap;
@@ -46,6 +47,7 @@
         position: absolute;
         visibility: hidden;
         opacity: 0;
+        border-radius: 2px;
         transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.4s;
     }
 

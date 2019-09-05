@@ -14,7 +14,6 @@ function Account() {
         <div className="account">
             <Navbar />
 
-            <div className="content">
 
                 <div className="header">
                     <h1>Account Settings</h1>
@@ -25,7 +24,6 @@ function Account() {
                     <EmailChange />
                     <PasswordChange />
                 </div>
-            </div>
         </div>
     )
 }

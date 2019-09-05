@@ -192,7 +192,10 @@ class Planner extends Component {
         this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
             console.log(data)
             setTimeout(() => {
-                this.props.toggleSaving();
+                this.setState({
+                    ...this.state,
+                    saving: false,
+                })
             }, 1000);
         })
     }
