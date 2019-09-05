@@ -4,9 +4,11 @@
 .dashboard {
     margin-left: $navbar-width;
     padding: 3vh 3vw;
+    overflow-y: scroll;
+    height: 100vh;
 
     .header {
-        h1 {
+        h2 {
             padding: 0 1vw;
         }
 
@@ -20,6 +22,6 @@
         display: flex;
         width: 100%;
         flex-wrap: wrap;
-        
+        padding: 4vh 0 3vh;
     }
 }

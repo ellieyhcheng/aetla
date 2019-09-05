@@ -16,7 +16,7 @@ function Account() {
 
 
                 <div className="header">
-                    <h1>Account Settings</h1>
+                    <h2>Account Settings</h2>
                     <hr />
                 </div>
                 <div className="grid">
