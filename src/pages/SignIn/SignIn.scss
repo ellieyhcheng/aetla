@@ -30,7 +30,7 @@
     }
 
 
-    .content {
+    .body {
         width: 50vw;
         max-width: 450px;
         position: relative;
@@ -84,11 +84,13 @@
 
         .signup {
             width: 100%;
+            text-align: center;
 
-            a {
+            .signup-button {
                 width: 80%;
+                margin: 10px;
 
-                .btn {
+                .nt {
                     margin-top: 2vh;
                     font-size: 1.2rem;
                     flex-grow: 0;

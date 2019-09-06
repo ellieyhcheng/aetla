@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { withRouter } from 'react-router-dom';
 
-import { Form, FormGroup, Input, Button, } from 'reactstrap';
+import { Form, Message, Button, } from 'semantic-ui-react';
 import { withFirebase } from "../../../Firebase"
 
 function EmailChangeBase(props) {
     const [formValues, setFormValues] = useState({
         email: '',
-        error: null,
     });
+
+    const [error, setError] = useState(null);
 
     const onSubmit = (e) => {
         const { email } = formValues;
@@ -18,16 +19,12 @@ function EmailChangeBase(props) {
             .then(() => {
                 setFormValues({
                     email: '',
-                    error: null,
                 })
 
                 document.querySelector('.submitted').style.visibility = 'visible';
             })
             .catch(error => {
-                setFormValues({
-                    ...formValues,
-                    error,
-                })
+                setError(error);
             })
 
         e.preventDefault();
@@ -45,27 +42,36 @@ function EmailChangeBase(props) {
     return (
         <div className="change-form">
             {/* <hr/> */}
-                <p className="title">Change Email</p>
+            <p className="title">Change Email</p>
 
-                <Form autoComplete="new-password" onSubmit={onSubmit}>
-                    <FormGroup>
-                        <Input type="email" name="email" value={formValues.email} onChange={onChange} placeholder="New Email" autoComplete="new-password" />
-                    </FormGroup>
+            <Form autoComplete="new-password" error={error ? true : false} onSubmit={onSubmit}>
 
-                    <div className="form-row">
-                        <div className="update-button">
-                            <Button type="submit" block disabled={isInvalid}>Update Email</Button>
-                        </div>
-
-                        <div className="submitted">
-                            <p>Your email has been updated</p>
-                        </div>
+                <Form.Input
+                    type="email"
+                    name="email"
+                    value={formValues.email}
+                    onChange={onChange}
+                    placeholder="Email"
+                    autoComplete="new-password"
+                    required
+                    fluid
+                />
+                <div className="form-row">
+                    <div className="update-button">
+                        <Form.Button type="submit" color="brown" disabled={isInvalid}>Update Email</Form.Button>
                     </div>
 
-                    {formValues.error &&
-                        <p>{formValues.error.message}</p>
-                    }
-                </Form>
+                    <div className="submitted">
+                        <p>Your email has been updated</p>
+                    </div>
+
+                </div>
+                <Message
+                    error
+                    content={error ? error.message : ''}
+                    color="yellow"
+                />
+            </Form>
         </div>
     )
 }

@@ -10,6 +10,10 @@ class APIClient {
     //     this.accessToken = accessToken;
     // }
    
+    createPlan(userId) {
+        return this.perform('post', `/api/plan/create`, {userId})
+    }
+
     getOnePlan(planId) {
         return this.perform('get', `/api/plan/${planId}`)
     }

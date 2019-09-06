@@ -1,6 +1,7 @@
 'use strict';
 
 var Plan = require('../models/Plan');
+var User = require('../models/User');
 
 // Display all plans
 function plan_all(req, res, next) {
@@ -61,6 +62,39 @@ function plan_detail(req, res, next) {
 
 // Handle plan create on POST
 function plan_create_post(req, res, next) {
+	const {userId} = req.body;
+
+	const plan_detail = {
+		// u: userId,
+		// title: { type: String, required: true, maxlength: 100 },
+		// description: { type: String, maxlength: 500 },
+		// courseList:  [{ type: Schema.Types.ObjectId, ref: 'Requirement', required: true }], // Array of courses in the courselist panel
+		// coursePlan: [{
+		// 	type: Schema.Types.Mixed,
+		// 	default: {
+		// 		name: 'year1',
+		// 		quarters: ['fall'],
+		// 		fall: [], // CourseIds
+		// 		winter: [],
+		// 		spring: [],
+		// 		summer: [],
+		// 	}
+		// }],
+		// courses: [{ type: Schema.Types.ObjectId, ref: 'Catalog', required: true }], // Array of catalogs, total of courses in courseList and coursePlan
+		// selections: [{
+		// 	_id: { type: Schema.Types.ObjectId, ref: 'Elective', required: true },
+		// 	index: { type: Number, required: true, default: 0 },
+		// }],
+	}
+
+	Plan.create()
+
+	User.findOne({ uid: userId })
+	.exec((err, user) => {
+		
+	})
+
+	// return userprofile
 	res.send('NOT IMPLEMENTED: Plan create POST')
 }
 

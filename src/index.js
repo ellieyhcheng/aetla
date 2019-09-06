@@ -8,8 +8,7 @@ import * as serviceWorker from './serviceWorker';
 
 import Firebase, { FirebaseContext } from './Firebase';
 import APIClient, { ApiClientContext } from './ApiClient';
-// import "./"
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'semantic-ui-less/semantic.less'
 
 ReactDOM.render(
   <FirebaseContext.Provider value={new Firebase()}>

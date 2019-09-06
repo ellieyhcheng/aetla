@@ -14,12 +14,14 @@
     z-index: 1000;
     visibility: visible;
     opacity: 1;
-    transition: ease 1s;
+    // transition: ease 1s;
 
     .modal {
         background: white;
         // border: 1px solid $primary;
         border-radius: 2px;
+        min-width: 150px;
+        min-height: 100px;
         width: max-content;
         height: max-content;
         padding: 4vh 4vw;
@@ -37,13 +39,15 @@
 
         color: $primary;
         font-size: 1.3rem;
-        transition: ease 1s;
+        // transition: ease 1s;
 
 
         .modal-button {
-            position: absolute;
-            top: 0;
+            position: relative;
+            bottom: 0;
             right: 0;
+            display: flex;
+            font-size: 0.9rem;
         }
     }
 }

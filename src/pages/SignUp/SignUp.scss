@@ -30,7 +30,7 @@
     }
 
 
-    .content {
+    .body {
         width: 50vw;
         max-width: 450px;
         padding-bottom: 5vh;
@@ -62,16 +62,6 @@
             display: flex;
             justify-content: center;
             margin: 5vh 0 5vh;
-    
-            .btn {
-                flex-grow: 0;
-                font-size: 1.1rem;
-                letter-spacing: 0.1rem;
-                background: $primary;
-                border-color: $primary;
-                color: $secondary;
-                position: relative;
-            }
         }
     }
     

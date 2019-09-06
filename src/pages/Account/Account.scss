@@ -32,38 +32,21 @@
             height: max-content;
             padding: 10px 15px;
             margin: 0 1vw 5vh;
+            width: 50vw;
+            max-width: 450px;
         
             .title {
                 font-size: 1.5rem;
                 padding: 0 0 1vh; 
             }
         
-            form {
-                width: 50vw;
-                max-width: 450px;
-            }
-        
             .form-row {
                 margin: 2vh 0 1vh;
                 display: flex;
                 justify-content: space-between;
-                padding-left: 0.5vw;
+                padding-left: 2px;
         
-                .update-button {
-                    display: flex;
-                    justify-content: center;
-                    width: 40%;
-            
-                    .btn {
-                        flex-grow: 0;
-                        font-size: 1.1rem;
-                        letter-spacing: 0.1rem;
-                        background: white;
-                        border-color: $primary;
-                        color: $primary;
-                        position: relative;
-                    }
-                }
+                
                 .submitted {
                     visibility: hidden;
                     color: $accent;
