@@ -49,7 +49,7 @@ class Planner extends Component {
                     })
                 else {
                     var newPlan = {
-                        id: id,
+                        id: decodedId,
                         title: data.title,
                         description: data.description,
                         courseList: data.courseList,
@@ -190,7 +190,6 @@ class Planner extends Component {
         }
 
         this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
-            console.log(data)
             setTimeout(() => {
                 this.setState({
                     ...this.state,

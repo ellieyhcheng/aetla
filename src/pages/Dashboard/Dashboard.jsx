@@ -10,7 +10,7 @@ import { withRouter } from "react-router-dom";
 import { Form, Message } from "semantic-ui-react";
 import { majors } from "../../utils";
 import Button from '../../components/button/Button'
-import { setUserProfile } from "../../actions/itemActions";
+import { addPlan } from "../../actions/itemActions";
 import * as ROUTES from '../../constants/routes';
 
 const plans = [
@@ -143,12 +143,12 @@ class Dashboard extends Component {
                     if (data === 'error')
                         return;
                     else {
-                        this.props.setUserProfile(data);
+                        this.props.addPlan(data);
                         this.setState({
                             ...this.state,
                             create: false,
                         })
-                        // this.props.history.push(ROUTES.PLANNER.replace(':id', `${btoa(unescape(encodeURIComponent(this.props.)))}`))
+                        this.props.history.push(ROUTES.PLANNER.replace(':id', `${btoa(unescape(encodeURIComponent(data["_id"])))}`))
                     }
                 })
         }
@@ -245,7 +245,7 @@ const mapStateToProps = state => {
 }
 
 const actionCreators = {
-    setUserProfile
+    addPlan
 }
 
 export default withRouter(withApiClient(withAuthorization(connect(mapStateToProps, actionCreators)(Dashboard))));

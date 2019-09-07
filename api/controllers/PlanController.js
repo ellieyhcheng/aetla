@@ -30,9 +30,6 @@ function plan_detail(req, res, next) {
 				}
 			}
 		})
-		.populate({
-			path: 'courseList'
-		})
 		.exec((err, plan) => {
 			if (err)
 				return next(err);
@@ -42,10 +39,10 @@ function plan_detail(req, res, next) {
 				return next(error);
 			}
 			
-			var newCourseList = plan.courseList.reduce((prev, requirement) => {
-				prev.push(requirement.content)
-				return prev;
-			}, [])
+			// var newCourseList = plan.courseList.reduce((prev, requirement) => {
+			// 	prev.push(requirement.content)
+			// 	return prev;
+			// }, [])
 			var newCourses = {};
 			plan.courses.forEach(catalog => {
 				newCourses = catalog.courses.reduce((prev, requirement) => {
@@ -61,7 +58,7 @@ function plan_detail(req, res, next) {
 			const result = plan.toObject();
 			result.courses = newCourses;
 			result.selections = newSelections;
-			result.courseList = newCourseList;
+			// result.courseList = newCourseList;
 			// result['courses'] = newCourses;
 			// console.log(result)
 			res.json(result);
@@ -103,12 +100,17 @@ function plan_create_post(req, res, next) {
 						}
 						return prev;
 					}, [])
-					console.log(selections)
+
+					const courseList = catalog.courses.reduce((prev, requirement) => {
+						prev.push(requirement.content)
+						return prev;
+					}, [])
+
 					const plan_detail = {
 						u: req.body.uid,
 						title: req.body.title,
 						description: req.body.description,
-						courseList: catalog.courses,
+						courseList: courseList,
 						coursePlan: [
 							{
 								name: 'year1',
@@ -136,24 +138,29 @@ function plan_create_post(req, res, next) {
 						user.save((err, user) => {
 							if (err)
 								return next(err);
+							
+							res.json({
+								"_id" : newPlan["_id"],
+								title: newPlan.title,
+								description: newPlan.description,
+							});
+							// user.populate('plans', (err, user) => {
+							// 	if (err)
+							// 		return next(err);
 
-							user.populate('plans', (err, user) => {
-								if (err)
-									return next(err);
-
-								const result = user.toObject();
-								const abbrevPlans = user.plans.map(plan => {
-									return {
-										"_id": plan["_id"],
-										title: plan.title,
-										description: plan.description,
-									}
-								})
+							// 	const result = user.toObject();
+							// 	const abbrevPlans = user.plans.map(plan => {
+							// 		return {
+							// 			"_id": plan["_id"],
+							// 			title: plan.title,
+							// 			description: plan.description,
+							// 		}
+							// 	})
 						
-								result.plans = abbrevPlans;
+							// 	result.plans = abbrevPlans;
 								
-								res.json(result);
-							})
+							// 	res.json(result);
+							// })
 						})
 					})
 
