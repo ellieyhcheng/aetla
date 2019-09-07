@@ -1,4 +1,5 @@
 'use strict';
+const mongoose = require('mongoose');
 
 var Plan = require('../models/Plan');
 var User = require('../models/User');
@@ -37,7 +38,7 @@ function plan_detail(req, res, next) {
 				error.status = 404;
 				return next(error);
 			}
-			
+
 			// var newCourseList = plan.courseList.reduce((prev, requirement) => {
 			// 	prev.push(requirement.content)
 			// 	return prev;
@@ -65,7 +66,7 @@ function plan_detail(req, res, next) {
 }
 
 // Handle plan create on POST
-function plan_create_post(req, res, next) {
+function plan_create(req, res, next) {
 	User.findOne({ uid: req.body.uid })
 		.exec((err, user) => {
 			if (err)
@@ -124,11 +125,11 @@ function plan_create_post(req, res, next) {
 					}
 
 					var plan = new Plan(plan_detail);
-					plan.save((err, newPlan)=> {
+					plan.save((err, newPlan) => {
 						if (err) {
 							next(err);
 						}
-						
+
 						const newPlans = user.plans;
 						newPlans.push(newPlan.id);
 						user.plan = newPlans;
@@ -136,9 +137,9 @@ function plan_create_post(req, res, next) {
 						user.save((err, user) => {
 							if (err)
 								return next(err);
-							
+
 							res.json({
-								"_id" : newPlan["_id"],
+								"_id": newPlan["_id"],
 								title: newPlan.title,
 								description: newPlan.description,
 							});
@@ -154,9 +155,9 @@ function plan_create_post(req, res, next) {
 							// 			description: plan.description,
 							// 		}
 							// 	})
-						
+
 							// 	result.plans = abbrevPlans;
-								
+
 							// 	res.json(result);
 							// })
 						})
@@ -166,45 +167,40 @@ function plan_create_post(req, res, next) {
 		})
 }
 
-// Handle plan delete on POST
-function plan_delete_post(req, res, next) {
+// Handle plan delete on DELETE
+function plan_delete(req, res, next) {
 
-	Plan.deleteOne({ _id: req.params.id}, (err) => {
+	Plan.deleteOne({ _id: req.params.id }, (err) => {
 		if (err)
 			next(err);
-		
+
 		User.findOne({ plans: req.params.id })
-		.exec((err, user) => {
-			if (err)
-				next(err);
-			if (!user) {
-				const error = new Error('User not found');
-				error.status = 404;
-				return next(error);
-			}
-
-			console.log(user.plans)
-			const newPlans = user.plans.filter(item => item.toString() !== req.params.id);
-			console.log(newPlans)
-			
-			user.plans = newPlans;
-
-			user.save( (err, newUser) => {
+			.exec((err, user) => {
 				if (err)
 					next(err);
-				
-				res.send("Plan deleted")
+				if (!user) {
+					const error = new Error('User not found');
+					error.status = 404;
+					return next(error);
+				}
+
+				const newPlans = user.plans.filter(item => item.toString() !== req.params.id);
+
+				user.plans = newPlans;
+
+				user.save((err, newUser) => {
+					if (err)
+						next(err);
+
+					res.send("Plan deleted")
+				})
+
 			})
-
-		})
 	})
-
-	// res.send('NOT IMPLEMENTED: Plan delete POST')
 }
 
-
-// Handle plan update on POST
-function plan_update_post(req, res, next) {
+// Handle plan update on PUT
+function plan_update(req, res, next) {
 
 	Plan.findById(req.params.id)
 		.exec((err, plan) => {
@@ -230,18 +226,68 @@ function plan_update_post(req, res, next) {
 					res.json('Plan updated!');
 				})
 				.catch(err => {
-					console.log(err)
 					return next(err);
 				})
 		})
 }
 
+function plan_copy(req, res, next) {
+	const planId = req.params.id;
+
+	User.findOne({ uid: req.body.uid })
+		.exec((err, user) => {
+			if (err)
+				next(err)
+			if (!user) {
+				const error = new Error('User not found');
+				error.status = 404;
+				return next(error);
+			}
+			Plan.findById(planId)
+				.exec((err, plan) => {
+					if (err)
+						next(err);
+					if (!plan) {
+						const error = new Error('Plan not found');
+						error.status = 404;
+						return next(error);
+					}
+
+					var copy = plan;
+					copy.title = req.body.title;
+					copy.description = req.body.description;
+					copy._id = mongoose.Types.ObjectId();
+					copy.isNew = true;
+					copy.save((err, newPlan) => {
+						if (err)
+							next(err);
+						
+						const newPlans = user.plans;
+						newPlans.push(newPlan.id);
+						user.plan = newPlans;
+
+						user.save((err, user) => {
+							if (err)
+								return next(err);
+
+							res.json({
+								"_id": newPlan["_id"],
+								title: newPlan.title,
+								description: newPlan.description,
+							});
+						})
+					})
+
+				})
+		})
+
+}
 
 module.exports = {
 	plan_all,
 	plan_detail,
-	plan_create_post,
-	plan_delete_post,
-	plan_update_post,
-
+	plan_create,
+	plan_delete,
+	plan_update,
+	plan_copy,
 }

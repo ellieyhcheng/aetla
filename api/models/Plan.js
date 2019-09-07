@@ -12,7 +12,7 @@ const Schema = mongoose.Schema;
 var PlanSchema = new Schema({
     u: String,
     title: { type: String, required: true, maxlength: 100 },
-    description: { type: String, maxlength: 500 },
+    description: { type: String, maxlength: 500, required: true },
     courseList:  [{ type: Schema.Types.ObjectId, required: true }], // Array of courses in the courselist panel with elective and courses objects
     coursePlan: [{
         type: Schema.Types.Mixed,

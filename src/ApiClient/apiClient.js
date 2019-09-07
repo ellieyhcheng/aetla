@@ -19,11 +19,15 @@ class APIClient {
     }
 
     savePlan(planId, plan) {
-        return this.perform('post', `/api/plan/${planId}/update`, plan)
+        return this.perform('put', `/api/plan/${planId}/update`, plan)
     }
 
     deletePlan(planId) {
-        return this.perform('post', `/api/plan/${planId}/delete`)
+        return this.perform('delete', `/api/plan/${planId}/delete`)
+    }
+
+    copyPlan(planId, plan) {
+        return this.perform('post', `/api/plan/${planId}/copy`, plan)
     }
 
     createUser(user) {

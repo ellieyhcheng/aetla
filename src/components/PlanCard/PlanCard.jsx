@@ -69,8 +69,12 @@ class PlanCard extends Component {
                 <div className="title">{this.props.title}</div>
                 <div className="description">{this.props.description}</div>
                 <div className="buttons">
-                    <Button type="icon" icon="copy" dark fixedWidth tooltip="Copy" direction="top" />
-                    <Button type="icon" icon="download" dark fixedWidth tooltip="Download" direction="top" />
+                    <Button type="icon" icon="copy" dark fixedWidth tooltip="Copy" direction="top" onClick={() => this.props.onCopyClick({
+                        title: this.props.title,
+                        description: this.props.description,
+                        id: this.props["_id"],
+                    })} />
+                    <Button type="icon" icon="download" dark fixedWidth tooltip="Download" direction="top"/>
                     <Button type="icon" icon="trash-alt" dark fixedWidth tooltip="Delete" direction="top" onClick={this.onDelete}/>
                 </div>
             </div>

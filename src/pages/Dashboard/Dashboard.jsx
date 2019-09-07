@@ -92,10 +92,15 @@ class Dashboard extends Component {
         super(props)
         this.state = {
             create: false,
+            copy: false,
             title: '',
             description: '',
             major: '',
             error: null,
+            copyError: null,
+            copyTitle: '',
+            copyDescription: '',
+            copyPlanId: '',
         }
     }
 
@@ -118,6 +123,25 @@ class Dashboard extends Component {
         this.setState({
             ...this.state,
             create: false,
+        })
+    }
+
+    onCopyClick = (plan) => {
+        this.setState({
+            ...this.state,
+            copyTitle: plan.title,
+            copyDescription: plan.description,
+            copyPlanId: plan.id,
+            create: false,
+            copyError: null,
+            copy: true,
+        })
+    }
+
+    onCopyClose = () => {
+        this.setState({
+            ...this.state,
+            copy: false,
         })
     }
 
@@ -156,6 +180,37 @@ class Dashboard extends Component {
         e.preventDefault();
     }
 
+    onCopy = (e) => {
+        if (this.state.copyTitle === '') {
+            this.setState({
+                ...this.state,
+                copyError: {
+                    message: "Please fill out all required fields"
+                }
+            })
+        }
+        else {
+            const copy_details = {
+                title: this.state.copyTitle,
+                description: this.state.copyDescription,
+                uid: this.props.userId,
+            }
+            this.props.apiClient.copyPlan(this.state.copyPlanId, copy_details)
+                .then(data => {
+                    if (data === 'error')
+                        return;
+                    this.props.addPlan(data);
+                    this.setState({
+                        ...this.state,
+                        copy: false,
+                    })
+                    // this.props.history.push(ROUTES.PLANNER.replace(':id', `${btoa(unescape(encodeURIComponent(data["_id"])))}`))
+                })
+        }
+
+        e.preventDefault();
+    }
+
     onChange = (e) => {
         this.setState({
             ...this.state,
@@ -176,7 +231,7 @@ class Dashboard extends Component {
                     <PlanCard empty onClick={this.onClick} />
     
                     {this.props.plans.map((plan, i) => (
-                        <PlanCard {...plan} key={i} />
+                        <PlanCard {...plan} key={i} onCopyClick={this.onCopyClick}/>
                     ))}
                 </div>
     
@@ -230,6 +285,44 @@ class Dashboard extends Component {
                     <div className="modal-button">
                         <Button type="text" text="Cancel" onClick={this.onClose}></Button>
                         <Button type="text" text="Submit" onClick={this.onSubmit}></Button>
+                    </div>
+                </Modal>
+
+                <Modal open={this.state.copy} onClose={this.onCopyClose}>
+                    <h2>Make a Copy</h2>
+                    <hr />
+                    <Form autoComplete="new-password" error={this.state.copyError ? true : false}>
+                        <Form.Input
+                            type="text"
+                            name="copyTitle"
+                            value={this.state.copyTitle}
+                            onChange={this.onChange}
+                            placeholder="My Plan"
+                            autoComplete="off"
+                            required
+                            fluid
+                            label="Plan Title"
+                            maxLength="100"
+                        />
+                        <Form.TextArea
+                            name="copyDescription"
+                            value={this.state.copyDescription}
+                            onChange={this.onChange}
+                            placeholder="This is my awesome plan"
+                            autoComplete="off"
+                            label="Plan Description"
+                            maxLength="500"
+                        />
+                        <Message
+                            error
+                            content={this.state.copyError ? this.state.copyError.message : ''}
+                            color="yellow"
+                        />
+                        
+                    </Form>
+                    <div className="modal-button">
+                        <Button type="text" text="Cancel" onClick={this.onCopyClose}></Button>
+                        <Button type="text" text="Submit" onClick={this.onCopy}></Button>
                     </div>
                 </Modal>
             </div>

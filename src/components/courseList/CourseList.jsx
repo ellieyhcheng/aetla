@@ -106,10 +106,10 @@ class CourseList extends Component {
     }
 }
 
-const findMatches = (wordToMatch, courseList, courses) => {
+const findMatches = (wordToMatch, courseList, courses, selections) => {
     return courseList.filter(courseId => {
         const req = courses[courseId];
-        const course = 'options' in req ? req.options[req.selected] : req;
+        const course = 'options' in req ? req.options[selections[courseId].index] : req;
         const regex = new RegExp(wordToMatch, 'gi');
         const course_title = `${course["subject"]} ${course["num"]}`;
         if (course_title.match(regex) !== null)
@@ -118,18 +118,18 @@ const findMatches = (wordToMatch, courseList, courses) => {
     })
 }
 
-const filterList = (courseList, courses, searchWord) => {
+const filterList = (courseList, courses, searchWord, selections) => {
     if (searchWord === '') {
         return splitList(courseList, courses)
     }
-    const matchArray = findMatches(searchWord, courseList, courses);
+    const matchArray = findMatches(searchWord, courseList, courses, selections);
     return splitList(matchArray, courses);
 }
 
 const mapStateToProps = (state) => {
     return {
         loading: state.planner.loading,
-        courseLists: filterList(state.planner.courseList, state.planner.courses, state.planner.searchWord),
+        courseLists: filterList(state.planner.courseList, state.planner.courses, state.planner.searchWord, state.planner.selections),
         homeDroppable: state.planner.homeDroppable,
         selections: state.planner.selections,
     }

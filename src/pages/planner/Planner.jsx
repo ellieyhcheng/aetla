@@ -23,28 +23,29 @@ class Planner extends Component {
             saving: false,
             isOpen: true,
             collapse: window.innerWidth < 970,
+            saveError: false,
         }
     }
 
     componentDidMount() {
         this.mounted = true;
         document.title = 'Planner - Aetla'
-    
+
         const { id } = this.props.match.params;
         let decodedId;
         try {
             decodedId = decodeURIComponent(escape(atob(id.toString())))
         }
-        catch(err) {
+        catch (err) {
             this.setState({
                 ...this.state,
                 error: true,
             })
-            return; 
+            return;
         }
         this.props.apiClient.getOnePlan(decodedId).then(data => {
             if (this.mounted) {
-                if (data === 'error') 
+                if (data === 'error')
                     this.setState({
                         ...this.state,
                         error: true,
@@ -177,7 +178,7 @@ class Planner extends Component {
 
     onClickSave = () => {
         if (this.props.loading) return;
-        
+
         this.setState({
             ...this.state,
             saving: true,
@@ -192,11 +193,20 @@ class Planner extends Component {
         }
 
         this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
+
             setTimeout(() => {
-                this.setState({
-                    ...this.state,
-                    saving: false,
-                })
+                if (data === 'error')
+                    this.setState({
+                        ...this.state,
+                        saveError: true,
+                        saving: false,
+                    })
+                else
+
+                    this.setState({
+                        ...this.state,
+                        saving: false,
+                    })
             }, 1000);
         })
     }
@@ -301,7 +311,7 @@ class Planner extends Component {
                         )}
                     </DragDropContext>
                 </div>
-                
+
                 <Modal open={this.state.saving} centered>
                     Saving your plan... Please wait...
                     <div className="load-icon">
@@ -309,15 +319,22 @@ class Planner extends Component {
                     </div>
                 </Modal>
 
-                {this.state.error && 
+                {this.state.error &&
                     <Modal open={this.state.error} centered>
                         Something went wrong... Redirecting you to Dashboard.
                         <div className="load-icon">
                             <FontAwesomeIcon icon="spinner" pulse />
                         </div>
-                        <Redirect to={ROUTES.DASHBOARD}/>
+                        <Redirect to={ROUTES.DASHBOARD} />
                     </Modal>
                 }
+
+                <Modal open={this.state.saveError} centered onClose={() => this.setState({ ...this.state, saveError: false })}>
+                    Something went wrong... Please try again or contact us.
+                    <div className="modal-button">
+                        <Button type="text" text="Okay, I guess." onClick={() => this.setState({ ...this.state, saveError: false })}></Button>
+                    </div>
+                </Modal>
             </div>
         )
     }
@@ -326,6 +343,7 @@ class Planner extends Component {
 const mapStateToProps = (state) => {
     return {
         title: state.planner.title,
+        description: state.planner.description,
         loading: state.planner.loading,
         courseList: state.planner.courseList,
         coursePlan: state.planner.coursePlan,
