@@ -12,6 +12,8 @@ import { connect } from 'react-redux';
 import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan } from '../../actions/itemActions';
 import { withApiClient } from "../../ApiClient";
 import withAuthorization from '../../components/Session/withAuthorization';
+import { Redirect } from "react-router-dom";
+import * as ROUTES from '../../constants/routes';
 
 class Planner extends Component {
     constructor(props) {
@@ -199,12 +201,6 @@ class Planner extends Component {
         })
     }
 
-    redirectDashboard = () => {
-        setTimeout(() => {
-            this.props.history.replace('/')
-        }, 3000);
-    }
-
     collapse = () => {
         this.setState({
             isOpen: true,
@@ -313,13 +309,15 @@ class Planner extends Component {
                     </div>
                 </Modal>
 
-                <Modal open={this.state.error} centered>
-                    Something went wrong... Redirecting you to Dashboard.
-                    <div className="load-icon">
-                        <FontAwesomeIcon icon="spinner" pulse />
-                    </div>
-                    {this.redirectDashboard()}
-                </Modal>
+                {this.state.error && 
+                    <Modal open={this.state.error} centered>
+                        Something went wrong... Redirecting you to Dashboard.
+                        <div className="load-icon">
+                            <FontAwesomeIcon icon="spinner" pulse />
+                        </div>
+                        <Redirect to={ROUTES.DASHBOARD}/>
+                    </Modal>
+                }
             </div>
         )
     }

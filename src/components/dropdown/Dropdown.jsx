@@ -51,7 +51,7 @@ class Dropdown extends Component {
 				<div className="header" onClick={this.toggleList} style={{
 					background: this.state.listOpen ? '#ebd987' : 'white',
 				}}>
-					<div className="title">{this.state.title.length > 11 ? this.state.title.substring(0,11) + '...' : this.state.title}</div>
+					<div className="title">{this.state.title.length > 13 ? this.state.title.substring(0,13) + '...' : this.state.title}</div>
 					<div className="icon">
 						{this.state.listOpen ?
 							<FontAwesomeIcon icon="angle-up" />
