@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './Modal.scss';
-import Button from '../button/Button';
-
 
 function Modal(props) {
 
@@ -12,8 +10,6 @@ function Modal(props) {
             modal.style.opacity = 1;
         }
         else {
-            if (props.forced )
-                return;
             const modal = document.querySelector('.modal-overlay');
             modal.style.visibility = 'hidden';
             modal.style.opacity = 0;

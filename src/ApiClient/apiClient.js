@@ -22,6 +22,10 @@ class APIClient {
         return this.perform('post', `/api/plan/${planId}/update`, plan)
     }
 
+    deletePlan(planId) {
+        return this.perform('post', `/api/plan/${planId}/delete`)
+    }
+
     createUser(user) {
         return this.perform('post', `/user/${user.uid}/create`, user)
     }

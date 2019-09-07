@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { withRouter } from 'react-router-dom';
 
-import { Form, Message, Button, } from 'semantic-ui-react';
+import { Form, Message, } from 'semantic-ui-react';
 import { withFirebase } from "../../../Firebase"
 
 function EmailChangeBase(props) {

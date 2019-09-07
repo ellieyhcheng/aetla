@@ -12,8 +12,8 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    visibility: visible;
-    opacity: 1;
+    visibility: hidden;
+    opacity: 0;
     // transition: ease 1s;
 
     .modal {

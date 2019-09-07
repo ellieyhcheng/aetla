@@ -77,3 +77,10 @@ export const addPlan = (plan) => {
         plan
     }
 }
+
+export const deletePlan = (planId) => {
+    return {
+        type: DELETE_PLAN,
+        planId,
+    }
+}

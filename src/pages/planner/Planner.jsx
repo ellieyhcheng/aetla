@@ -260,7 +260,7 @@ class Planner extends Component {
                 {this.state.collapse ? (
                     <div className="toolbar-collapse">
                         <div className="toolbar-wrapper">
-                            <Toolbar  />
+                            <Toolbar />
                         </div>
                         <div className="toggle-button">
                             <Button type="icon" icon="bars" onClick={this.toggle} />
@@ -269,7 +269,7 @@ class Planner extends Component {
                     </div>
 
                 ) :
-                    (<Toolbar  />)
+                    (<Toolbar />)
                 }
 
 
@@ -306,24 +306,20 @@ class Planner extends Component {
                     </DragDropContext>
                 </div>
                 
-                {this.state.saving &&
-                    <Modal forced centered>
-                        Saving your plan... Please wait...
-                        <div className="load-icon">
-                            <FontAwesomeIcon icon="spinner" pulse />
-                        </div>
-                    </Modal>
-                }
+                <Modal open={this.state.saving} centered>
+                    Saving your plan... Please wait...
+                    <div className="load-icon">
+                        <FontAwesomeIcon icon="spinner" pulse />
+                    </div>
+                </Modal>
 
-                {this.state.error && 
-                    <Modal forced centered>
-                        Something went wrong... Redirecting you to Dashboard.
-                        <div className="load-icon">
-                            <FontAwesomeIcon icon="spinner" pulse />
-                        </div>
-                        {this.redirectDashboard()}
-                    </Modal>
-                }
+                <Modal open={this.state.error} centered>
+                    Something went wrong... Redirecting you to Dashboard.
+                    <div className="load-icon">
+                        <FontAwesomeIcon icon="spinner" pulse />
+                    </div>
+                    {this.redirectDashboard()}
+                </Modal>
             </div>
         )
     }

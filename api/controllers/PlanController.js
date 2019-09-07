@@ -12,7 +12,6 @@ function plan_all(req, res, next) {
 				return next(err);
 			res.send(plans);
 		})
-	// res.send('NOT IMPLEMENTED: Plan All')
 }
 
 // Display details of a plan
@@ -63,7 +62,6 @@ function plan_detail(req, res, next) {
 			// console.log(result)
 			res.json(result);
 		})
-	// res.send('NOT IMPLEMENTED: Plan detail: ' + req.params.id)
 }
 
 // Handle plan create on POST
@@ -166,14 +164,42 @@ function plan_create_post(req, res, next) {
 
 				})
 		})
-
-	// return userprofile
-	// res.send('NOT IMPLEMENTED: Plan create POST')
 }
 
 // Handle plan delete on POST
 function plan_delete_post(req, res, next) {
-	res.send('NOT IMPLEMENTED: Plan delete POST')
+
+	Plan.deleteOne({ _id: req.params.id}, (err) => {
+		if (err)
+			next(err);
+		
+		User.findOne({ plans: req.params.id })
+		.exec((err, user) => {
+			if (err)
+				next(err);
+			if (!user) {
+				const error = new Error('User not found');
+				error.status = 404;
+				return next(error);
+			}
+
+			console.log(user.plans)
+			const newPlans = user.plans.filter(item => item.toString() !== req.params.id);
+			console.log(newPlans)
+			
+			user.plans = newPlans;
+
+			user.save( (err, newUser) => {
+				if (err)
+					next(err);
+				
+				res.send("Plan deleted")
+			})
+
+		})
+	})
+
+	// res.send('NOT IMPLEMENTED: Plan delete POST')
 }
 
 
@@ -208,7 +234,6 @@ function plan_update_post(req, res, next) {
 					return next(err);
 				})
 		})
-	// res.send('NOT IMPLEMENTED: Plan update POST')
 }
 
 

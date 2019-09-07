@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import './PasswordForget.scss'
 import logo from '../../assets/aetla-dark.svg';
 import * as ROUTES from '../../constants/routes';
-import { Form, Button, Message, } from 'semantic-ui-react';
+import { Form, Message, } from 'semantic-ui-react';
 import { withFirebase } from "../../Firebase";
 
 function PasswordForget() {
