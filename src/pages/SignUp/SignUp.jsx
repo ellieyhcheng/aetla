@@ -9,6 +9,7 @@ import { withFirebase } from "../../Firebase";
 import { withApiClient } from "../../ApiClient";
 import { connect } from 'react-redux';
 import { setUserProfile } from "../../actions/itemActions";
+import { schools } from "../../utils";
 
 function SignUp() {
     useEffect(() => {
@@ -109,9 +110,7 @@ function SignUpFormBase(props) {
                 label="Your Name"
             />
             <Form.Select
-                options={[
-                    { key: 'UCLA', text: 'University of California - Los Angeles', value: 'ucla' },
-                ]}
+                options={schools}
                 name="school"
                 placeholder="School"
                 onChange={(e, { value }) => setFormValues(

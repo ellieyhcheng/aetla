@@ -23,7 +23,7 @@ var PlanSchema = new Schema({
             winter: [],
             spring: [],
             summer: [],
-        }
+        },
     }],
     courses: [{ type: Schema.Types.ObjectId, ref: 'Catalog', required: true }], // Array of catalogs, total of courses in courseList and coursePlan
     selections: [{

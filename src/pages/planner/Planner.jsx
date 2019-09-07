@@ -308,7 +308,7 @@ class Planner extends Component {
                 </div>
                 
                 {this.state.saving &&
-                    <Modal forced>
+                    <Modal forced centered>
                         Saving your plan... Please wait...
                         <div className="load-icon">
                             <FontAwesomeIcon icon="spinner" pulse />
@@ -317,7 +317,7 @@ class Planner extends Component {
                 }
 
                 {this.state.error && 
-                    <Modal forced>
+                    <Modal forced centered>
                         Something went wrong... Redirecting you to Dashboard.
                         <div className="load-icon">
                             <FontAwesomeIcon icon="spinner" pulse />

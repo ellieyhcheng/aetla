@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import './PasswordForget.scss'
 import logo from '../../assets/aetla-dark.svg';
 import * as ROUTES from '../../constants/routes';
-import { Form, FormGroup, Input, Button, } from 'semantic-ui-react';
+import { Form, Button, Message, } from 'semantic-ui-react';
 import { withFirebase } from "../../Firebase";
 
 function PasswordForget() {
@@ -28,7 +28,7 @@ function PasswordForget() {
                         email to reset your password.
                     </p>
                 </div>
-                <PasswordForgetForm/>
+                <PasswordForgetForm />
             </div>
         </div>
     )
@@ -37,8 +37,10 @@ function PasswordForget() {
 function PasswordForgetFormBase(props) {
     const [formValues, setFormValues] = useState({
         email: '',
-        error: null,
     });
+
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
 
     const onSubmit = (e) => {
         const { email } = formValues;
@@ -48,16 +50,12 @@ function PasswordForgetFormBase(props) {
             .then(() => {
                 setFormValues({
                     email: '',
-                    error: null,
                 })
 
-                document.querySelector('.submitted').style.visibility = 'visible';
+                setSuccess(true);
             })
             .catch(error => {
-                setFormValues({
-                    ...formValues,
-                    error,
-                })
+                setError(error);
             })
 
         e.preventDefault();
@@ -73,24 +71,32 @@ function PasswordForgetFormBase(props) {
     const isInvalid = formValues.email === '';
 
     return (
-        <Form autoComplete="new-password" onSubmit={onSubmit}>
-            <FormGroup>
-                <Input type="email" name="email" value={formValues.email} onChange={onChange} placeholder="Email" autoComplete="off" bsSize="lg" />
-            </FormGroup>
+        <Form autoComplete="new-password" error={error ? true : false} onSubmit={onSubmit} success={success}>
 
+            <Form.Input
+                type="email"
+                name="email"
+                value={formValues.email}
+                onChange={onChange}
+                placeholder="Email"
+                autoComplete="off"
+                required
+                fluid
+            />
             <div className="form-row">
-                <div className="send-button">
-                    <Button type="submit" block disabled={isInvalid}>Send</Button>
+                <div className="update-button">
+                    <Form.Button type="submit" color="brown" disabled={isInvalid}>Update Email</Form.Button>
                 </div>
             </div>
-
-            <div className="submitted">
-                <p>An email will be sent shortly.</p>
-            </div>
-
-            {formValues.error &&
-                <p>{formValues.error.message}</p>
-            }
+            <Message
+                success
+                content="An email will be sent shortly with instructions."
+            />
+            <Message
+                error
+                content={error ? error.message : ''}
+                color="yellow"
+            />
         </Form>
     )
 }
