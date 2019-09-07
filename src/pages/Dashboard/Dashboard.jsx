@@ -204,7 +204,6 @@ class Dashboard extends Component {
                         ...this.state,
                         copy: false,
                     })
-                    // this.props.history.push(ROUTES.PLANNER.replace(':id', `${btoa(unescape(encodeURIComponent(data["_id"])))}`))
                 })
         }
 

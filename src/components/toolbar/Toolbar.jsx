@@ -33,7 +33,7 @@ class Toolbar extends Component {
                             </Link>
                         </li>
                         <li>
-                            <Button type="icon" icon="copy" tooltip="Copy" direction="right" />
+                            <Button type="icon" icon="copy" tooltip="Copy" direction="right" onClick={this.props.onCopy} />
                         </li>
                         <li>
                             <Button type="icon" icon="trash-alt" tooltip="Delete" direction="right" onClick={this.onDelete} />
