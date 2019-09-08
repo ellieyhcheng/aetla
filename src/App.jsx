@@ -54,10 +54,9 @@ class App extends Component {
 					<Switch>
 
 						<Route exact path={ROUTES.LANDING} component={Landing} />
-						{/* <Route path={ROUTES.GEN_PLANNER} component={Planner} /> */}
 						<Route path={ROUTES.SIGN_IN} component={SignIn} />
 						<Route path={ROUTES.SIGN_UP} component={SignUp} />
-						<Route path={ROUTES.GET_STARTED} component={Landing} />
+						{/* <Route path={ROUTES.GET_STARTED} component={Landing} /> */}
 						<Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
 
 						{/* With Authorization Routes */}

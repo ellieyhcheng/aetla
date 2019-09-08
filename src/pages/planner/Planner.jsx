@@ -193,7 +193,7 @@ class Planner extends Component {
         }
     }
 
-    onClickSave = (redirect=false) => {
+    onClickSave = (redirect = false) => {
         if (this.props.loading) return;
 
         this.setState({
@@ -483,7 +483,7 @@ class Planner extends Component {
                             }
 
                             <div className="save-button">
-                                <Button type="icon" icon="save" tooltip="Save" direction="right" onClick={this.onClickSave} />
+                                <Button type="icon" icon="save" tooltip="Save" direction="right" onClick={() => this.onClickSave(false)} />
                             </div>
                         </div>
                         <div className="line-h" />

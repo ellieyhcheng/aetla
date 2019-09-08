@@ -282,12 +282,20 @@ class Dashboard extends Component {
                     <h2>Dashboard</h2>
                     <hr />
                 </div>
-                <div className="grid">
-                    <PlanCard empty onClick={this.onClick} />
-                    {this.props.plans.map((plan, i) => (
-                        <PlanCard {...plan} key={i} onCopyClick={this.onCopyClick} onDeleteClick={this.onDeleteClick}/>
-                    ))}
-                </div>
+
+                {this.props.verified ? (
+                    <div className="grid">
+                        <PlanCard empty onClick={this.onClick} />
+                        {this.props.plans.map((plan, i) => (
+                            <PlanCard {...plan} key={i} onCopyClick={this.onCopyClick} onDeleteClick={this.onDeleteClick}/>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="grid">
+                        <h2>Please verify your email before you get started.</h2>
+                    </div>
+                )}
+                
 
                 {this.state.create &&
                     <Modal open={this.state.create} onClose={this.onClose}>
@@ -401,6 +409,7 @@ const mapStateToProps = state => {
     return {
         plans: state.auth.userProfile ? state.auth.userProfile.plans : [],
         userId: state.auth.authUser ? state.auth.authUser.uid : '',
+        verified: state.auth.authUser ? state.auth.authUser.emailVerified : true,
     }
 }
 
