@@ -28,8 +28,14 @@ class Planner extends Component {
 
             copy: false,
             copyError: null,
-            copyTitle: '',
-            copyDescription: '',
+            copyTitle: props.title,
+            copyDescription: props.description,
+
+            change: false,
+            changeTitle: props.title,
+            changeDescription: props.description,
+            changeCoursesExempt: props.description, // TODO
+            changeError: null,
         }
     }
 
@@ -271,17 +277,8 @@ class Planner extends Component {
             ...this.state,
             copyTitle: this.props.title,
             copyDescription: this.props.description,
-            copyPlanId: this.props.id,
-            create: false,
             copyError: null,
             copy: true,
-        })
-    }
-
-    onCopyClose = () => {
-        this.setState({
-            ...this.state,
-            copy: false,
         })
     }
 
@@ -352,13 +349,73 @@ class Planner extends Component {
         })
     }
 
+    onModalClose = (type) => {
+        this.setState({
+            ...this.state,
+            [type] : false,
+        })
+    }
+
+    onChangeClick = () => {
+        this.setState({
+            ...this.state,
+            changeTitle: this.props.title,
+            changeDescription: this.props.description,
+            changeError: null,
+            change: true,
+        })
+    }
+
+    onPlanChange = (e) => {
+        if (this.state.changeTitle === '') {
+            this.setState({
+                ...this.state,
+                changeError: {
+                    message: "Please fill out all required fields"
+                }
+            })
+        }
+        else {
+            // Make post request to update plan
+            const newPlan = {
+                title: this.state.changeTitle,
+                description: this.state.changeDescription,
+                courseList: this.props.courseList,
+                coursePlan: this.props.coursePlan,
+                selections: this.props.selections,
+            }
+    
+            this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
+                setTimeout(() => {
+                    if (data === 'error')
+                        this.setState({
+                            ...this.state,
+                            changeError: true,
+                            change: false,
+                        })
+                    else {
+                        this.setState({
+                            ...this.state,
+                            change: false,
+                        })
+                        this.props.storePlanDetails(newPlan);
+                    }
+                }, 1000);
+            })
+        }
+
+        e.preventDefault();
+    }
+
     render() {
+        const toolbar = <Toolbar onCopy={this.onCopyClick} onSettings={this.onChangeClick}/>
+        
         return (
             <div className="planner">
                 {this.state.collapse ? (
                     <div className="toolbar-collapse">
                         <div className="toolbar-wrapper">
-                            <Toolbar onCopy={this.onCopyClick} />
+                            {toolbar}
                         </div>
                         <div className="toggle-button">
                             <Button type="icon" icon="bars" onClick={this.toggle} />
@@ -367,7 +424,7 @@ class Planner extends Component {
                     </div>
 
                 ) :
-                    (<Toolbar onCopy={this.onCopyClick} />)
+                    toolbar
                 }
 
 
@@ -421,14 +478,14 @@ class Planner extends Component {
                     </Modal>
                 }
 
-                <Modal open={this.state.saveError} centered onClose={() => this.setState({ ...this.state, saveError: false })}>
+                <Modal open={this.state.saveError} centered onClose={() => this.onModalClose("saveError")}>
                     Something went wrong... Please try again or contact us.
                     <div className="modal-button">
-                        <Button type="text" text="Okay, I guess." onClick={() => this.setState({ ...this.state, saveError: false })}></Button>
+                        <Button type="text" text="Okay, I guess." onClick={() => this.onModalClose("saveError")}></Button>
                     </div>
                 </Modal>
 
-                <Modal open={this.state.copy} onClose={this.onCopyClose}>
+                <Modal open={this.state.copy} onClose={() => this.onModalClose("copy")}>
                     <h2>Make a Copy</h2>
                     <hr />
                     <Form autoComplete="new-password" error={this.state.copyError ? true : false}>
@@ -461,8 +518,46 @@ class Planner extends Component {
                         
                     </Form>
                     <div className="modal-button">
-                        <Button type="text" text="Cancel" onClick={this.onCopyClose}></Button>
+                        <Button type="text" text="Cancel" onClick={() => this.onModalClose("copy")}></Button>
                         <Button type="text" text="Submit" onClick={this.onCopy}></Button>
+                    </div>
+                </Modal>
+                
+                <Modal open={this.state.change} onClose={() => this.onModalClose("change")}>
+                    <h2>Plan Settings</h2>
+                    <hr />
+                    <Form autoComplete="new-password" error={this.state.copyError ? true : false}>
+                        <Form.Input
+                            type="text"
+                            name="changeTitle"
+                            value={this.state.changeTitle}
+                            onChange={this.onChange}
+                            placeholder="My Plan"
+                            autoComplete="off"
+                            required
+                            fluid
+                            label="Plan Title"
+                            maxLength="100"
+                        />
+                        <Form.TextArea
+                            name="changeDescription"
+                            value={this.state.changeDescription}
+                            onChange={this.onChange}
+                            placeholder="This is my awesome plan"
+                            autoComplete="off"
+                            label="Plan Description"
+                            maxLength="500"
+                        />
+                        <Message
+                            error
+                            content={this.state.changeError ? this.state.changeError.message : ''}
+                            color="yellow"
+                        />
+                        
+                    </Form>
+                    <div className="modal-button">
+                        <Button type="text" text="Cancel" onClick={() => this.onModalClose("change")}></Button>
+                        <Button type="text" text="Submit" onClick={this.onPlanChange}></Button>
                     </div>
                 </Modal>
             </div>

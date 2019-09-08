@@ -42,9 +42,7 @@ class Toolbar extends Component {
                             <Button type="icon" icon="download" tooltip="Export Plan" direction="right" />
                         </li>
                         <li>
-                            <Link to={ROUTES.PLAN_SETTINGS}>
-                                <Button type="icon" icon="sliders-h" tooltip="Plan Settings" direction="right" />
-                            </Link>
+                            <Button type="icon" icon="sliders-h" tooltip="Plan Settings" direction="right" onClick={this.props.onSettings}/>
                         </li>
                         <li>
                             <Button type="icon" icon="question-circle" tooltip="Help" direction="right" />
