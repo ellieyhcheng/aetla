@@ -9,9 +9,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CourseDetail from '../../components/courseDetail/CourseDetail';
 import Modal from '../../components/modal/Modal';
 import { connect } from 'react-redux';
-import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan } from '../../actions/itemActions';
+import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan, addPlan } from '../../actions/itemActions';
 import { withApiClient } from "../../ApiClient";
 import withAuthorization from '../../components/Session/withAuthorization';
+import { Redirect } from "react-router-dom";
+import * as ROUTES from '../../constants/routes';
+import { Message, Form, } from "semantic-ui-react";
 
 class Planner extends Component {
     constructor(props) {
@@ -21,35 +24,41 @@ class Planner extends Component {
             saving: false,
             isOpen: true,
             collapse: window.innerWidth < 970,
+            saveError: false,
+
+            copy: false,
+            copyError: null,
+            copyTitle: '',
+            copyDescription: '',
         }
     }
 
     componentDidMount() {
         this.mounted = true;
         document.title = 'Planner - Aetla'
-    
+
         const { id } = this.props.match.params;
         let decodedId;
         try {
             decodedId = decodeURIComponent(escape(atob(id.toString())))
         }
-        catch(err) {
+        catch (err) {
             this.setState({
                 ...this.state,
                 error: true,
             })
-            return; 
+            return;
         }
         this.props.apiClient.getOnePlan(decodedId).then(data => {
             if (this.mounted) {
-                if (data === 'error') 
+                if (data === 'error')
                     this.setState({
                         ...this.state,
                         error: true,
                     })
                 else {
                     var newPlan = {
-                        id: id,
+                        id: decodedId,
                         title: data.title,
                         description: data.description,
                         courseList: data.courseList,
@@ -175,7 +184,7 @@ class Planner extends Component {
 
     onClickSave = () => {
         if (this.props.loading) return;
-        
+
         this.setState({
             ...this.state,
             saving: true,
@@ -190,17 +199,22 @@ class Planner extends Component {
         }
 
         this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
-            console.log(data)
+
             setTimeout(() => {
-                this.props.toggleSaving();
+                if (data === 'error')
+                    this.setState({
+                        ...this.state,
+                        saveError: true,
+                        saving: false,
+                    })
+                else
+
+                    this.setState({
+                        ...this.state,
+                        saving: false,
+                    })
             }, 1000);
         })
-    }
-
-    redirectDashboard = () => {
-        setTimeout(() => {
-            this.props.history.replace('/')
-        }, 3000);
     }
 
     collapse = () => {
@@ -252,13 +266,99 @@ class Planner extends Component {
         this.props.storePlanDetails(newPlan)
     }
 
+    onCopyClick = () => {
+        this.setState({
+            ...this.state,
+            copyTitle: this.props.title,
+            copyDescription: this.props.description,
+            copyPlanId: this.props.id,
+            create: false,
+            copyError: null,
+            copy: true,
+        })
+    }
+
+    onCopyClose = () => {
+        this.setState({
+            ...this.state,
+            copy: false,
+        })
+    }
+
+    onCopy = (e) => {
+        if (this.state.copyTitle === '') {
+            this.setState({
+                ...this.state,
+                copyError: {
+                    message: "Please fill out all required fields"
+                }
+            })
+        }
+        else {
+            const copy_details = {
+                title: this.state.copyTitle,
+                description: this.state.copyDescription,
+                uid: this.props.uid,
+            }
+            this.props.apiClient.copyPlan(this.props.id, copy_details)
+                .then(data => {
+                    if (data === 'error')
+                        return;
+                    this.props.addPlan(data);
+                    
+                    this.props.history.push(ROUTES.PLANNER.replace(':id', `${btoa(unescape(encodeURIComponent(data["_id"])))}`))
+
+                    this.props.apiClient.getOnePlan(data["_id"]).then(newPlan => {
+                        if (this.mounted) {
+                            if (newPlan === 'error')
+                                this.setState({
+                                    ...this.state,
+                                    error: true,
+                                })
+                            else {
+                                var newPlan = {
+                                    id: data["_id"],
+                                    title: newPlan.title,
+                                    description: newPlan.description,
+                                    courseList: newPlan.courseList,
+                                    courses: newPlan.courses,
+                                    selections: newPlan.selections,
+                                    coursePlan: newPlan.coursePlan,
+                                    searchWord: '',
+                                    homeDroppable: '',
+                                    activeCourse: null,
+                                    saving: false,
+                                    loading: false,
+                                }
+                                this.props.storePlanDetails(newPlan)
+
+                                this.setState({
+                                    ...this.state,
+                                    copy: false,
+                                })
+                            }
+                        }
+                    })
+                })
+        }
+
+        e.preventDefault();
+    }
+
+    onChange = (e) => {
+        this.setState({
+            ...this.state,
+            [e.currentTarget.name]: e.currentTarget.value,
+        })
+    }
+
     render() {
         return (
             <div className="planner">
                 {this.state.collapse ? (
                     <div className="toolbar-collapse">
                         <div className="toolbar-wrapper">
-                            <Toolbar  />
+                            <Toolbar onCopy={this.onCopyClick} />
                         </div>
                         <div className="toggle-button">
                             <Button type="icon" icon="bars" onClick={this.toggle} />
@@ -267,7 +367,7 @@ class Planner extends Component {
                     </div>
 
                 ) :
-                    (<Toolbar  />)
+                    (<Toolbar onCopy={this.onCopyClick} />)
                 }
 
 
@@ -303,25 +403,68 @@ class Planner extends Component {
                         )}
                     </DragDropContext>
                 </div>
-                
-                {this.state.saving &&
-                    <Modal forced>
-                        Saving your plan... Please wait...
-                        <div className="load-icon">
-                            <FontAwesomeIcon icon="spinner" pulse />
-                        </div>
-                    </Modal>
-                }
 
-                {this.state.error && 
-                    <Modal forced>
+                <Modal open={this.state.saving} centered>
+                    Saving your plan... Please wait...
+                    <div className="load-icon">
+                        <FontAwesomeIcon icon="spinner" pulse />
+                    </div>
+                </Modal>
+
+                {this.state.error &&
+                    <Modal open={this.state.error} centered>
                         Something went wrong... Redirecting you to Dashboard.
                         <div className="load-icon">
                             <FontAwesomeIcon icon="spinner" pulse />
                         </div>
-                        {this.redirectDashboard()}
+                        <Redirect to={ROUTES.DASHBOARD} />
                     </Modal>
                 }
+
+                <Modal open={this.state.saveError} centered onClose={() => this.setState({ ...this.state, saveError: false })}>
+                    Something went wrong... Please try again or contact us.
+                    <div className="modal-button">
+                        <Button type="text" text="Okay, I guess." onClick={() => this.setState({ ...this.state, saveError: false })}></Button>
+                    </div>
+                </Modal>
+
+                <Modal open={this.state.copy} onClose={this.onCopyClose}>
+                    <h2>Make a Copy</h2>
+                    <hr />
+                    <Form autoComplete="new-password" error={this.state.copyError ? true : false}>
+                        <Form.Input
+                            type="text"
+                            name="copyTitle"
+                            value={this.state.copyTitle}
+                            onChange={this.onChange}
+                            placeholder="My Plan"
+                            autoComplete="off"
+                            required
+                            fluid
+                            label="Plan Title"
+                            maxLength="100"
+                        />
+                        <Form.TextArea
+                            name="copyDescription"
+                            value={this.state.copyDescription}
+                            onChange={this.onChange}
+                            placeholder="This is my awesome plan"
+                            autoComplete="off"
+                            label="Plan Description"
+                            maxLength="500"
+                        />
+                        <Message
+                            error
+                            content={this.state.copyError ? this.state.copyError.message : ''}
+                            color="yellow"
+                        />
+                        
+                    </Form>
+                    <div className="modal-button">
+                        <Button type="text" text="Cancel" onClick={this.onCopyClose}></Button>
+                        <Button type="text" text="Submit" onClick={this.onCopy}></Button>
+                    </div>
+                </Modal>
             </div>
         )
     }
@@ -330,11 +473,13 @@ class Planner extends Component {
 const mapStateToProps = (state) => {
     return {
         title: state.planner.title,
+        description: state.planner.description,
         loading: state.planner.loading,
         courseList: state.planner.courseList,
         coursePlan: state.planner.coursePlan,
         selections: state.planner.selections,
         id: state.planner.id,
+        uid: state.auth.authUser ? state.auth.authUser.uid : '',
     }
 }
 
@@ -344,6 +489,7 @@ const actionCreators = {
     setHomeDroppable,
     setCourseList,
     setCoursePlan,
+    addPlan
 }
 
 export default withAuthorization(connect(mapStateToProps, actionCreators)(withApiClient(Planner)));

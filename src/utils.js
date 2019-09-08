@@ -16,6 +16,8 @@ function sortCourseList(courseList, courses) {
     const newList = courseList.sort((courseId1, courseId2) => {
         const course1 = courses[courseId1];
         const course2 = courses[courseId2];
+        if (!course1) console.log(courseId1)
+        if (!course2) console.log(courseId2)
         if ('options' in course1) {
             if ('options' in course2) {
                 if (course1.name.includes('GE')) {
@@ -104,3 +106,14 @@ function sortCourseList(courseList, courses) {
 
     return newList
 }
+
+const schools = [
+    { key: 'UCLA', text: 'University of California - Los Angeles', value: 'ucla' },
+]
+
+const majors = [
+    { key: 'CSE', text: 'Computer Science and Engineering', value: 'cse' },
+
+]
+
+export { schools, majors, };

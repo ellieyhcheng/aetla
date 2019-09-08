@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { withRouter } from 'react-router-dom';
 
-import { Form, FormGroup, Input, Button, } from 'reactstrap';
+import { Form, Message } from 'semantic-ui-react';
 import { withFirebase } from "../../../Firebase"
 
 function PasswordChangeBase(props) {
@@ -11,6 +11,8 @@ function PasswordChangeBase(props) {
         password2: '',
         error: null,
     });
+
+    const [error, setError] = useState(null);
 
     const onSubmit = (e) => {
         const { password1 } = formValues;
@@ -28,10 +30,7 @@ function PasswordChangeBase(props) {
                 document.querySelector('.submitted').style.visibility = 'visible';
             })
             .catch(error => {
-                setFormValues({
-                    ...formValues,
-                    error,
-                })
+                setError(error);
             })
 
         e.preventDefault();
@@ -49,36 +48,55 @@ function PasswordChangeBase(props) {
     return (
         <div className="change-form">
             {/* <hr/> */}
-                <p className="title">Change Password</p>
+            <p className="title">Change Password</p>
 
-                <Form autoComplete="new-password" onSubmit={onSubmit}>
-                    <FormGroup>
-                        <Input type="password" name="password" value={formValues.password} onChange={onChange} placeholder="Old Password" autoComplete="new-password" />
-                    </FormGroup>
-                    <FormGroup>
-                        <Input type="password" name="password1" value={formValues.password1} onChange={onChange} placeholder="New Password" autoComplete="new-password" />
-                    </FormGroup>
-                    <FormGroup>
-                        <Input type="password" name="password2" value={formValues.password2} onChange={onChange} placeholder="Confirm New Password" autoComplete="new-password" />
-                    </FormGroup>
-
-                    <div className="form-row">
-                        <div className="update-button">
-                            <Button type="submit" block disabled={isInvalid}>Update Password</Button>
-                        </div>
-
-                        <div className="submitted">
-                            <p>Your password has been updated</p>
-                        </div>
+            <Form autoComplete="new-password" error={error ? true : false} onSubmit={onSubmit}>
+                <Form.Input
+                    type="password"
+                    name="password"
+                    value={formValues.password}
+                    onChange={onChange}
+                    autoComplete="new-password"
+                    required
+                    fluid
+                    placeholder="Old Password"
+                />
+                <Form.Input
+                    type="password"
+                    name="password1"
+                    value={formValues.password1}
+                    onChange={onChange}
+                    autoComplete="new-password"
+                    required
+                    fluid
+                    placeholder="New Password"
+                />
+                <Form.Input
+                    type="password"
+                    name="password2"
+                    value={formValues.password2}
+                    onChange={onChange}
+                    autoComplete="new-password"
+                    required
+                    fluid
+                    placeholder="Confirm Password"
+                />
+                <div className="form-row">
+                    <div className="update-button">
+                        <Form.Button type="submit" color="brown" disabled={isInvalid}>Update Password</Form.Button>
                     </div>
 
+                    <div className="submitted">
+                        <p>Your password has been updated</p>
+                    </div>
 
-                    {formValues.error &&
-                        <p>{formValues.error.message}</p>
-                    }
-
-                    
-                </Form>
+                </div>
+                <Message
+                    error
+                    content={error ? error.message : ''}
+                    color="yellow"
+                />
+            </Form>
         </div>
     )
 }

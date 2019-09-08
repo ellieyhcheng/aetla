@@ -4,11 +4,12 @@ import { Link, withRouter } from 'react-router-dom';
 import logo from '../../assets/aetla-dark.svg';
 import * as ROUTES from '../../constants/routes';
 import './SignUp.scss';
-import { Form, FormGroup, Input, Button, FormFeedback, FormText } from 'reactstrap';
+import { Form, Button, Message } from 'semantic-ui-react';
 import { withFirebase } from "../../Firebase";
 import { withApiClient } from "../../ApiClient";
 import { connect } from 'react-redux';
 import { setUserProfile } from "../../actions/itemActions";
+import { schools } from "../../utils";
 
 function SignUp() {
     useEffect(() => {
@@ -23,7 +24,7 @@ function SignUp() {
             </div>
             <hr />
 
-            <div className="content">
+            <div className="body">
                 <p className="email">Sign up with your email</p>
                 <SignUpForm />
                 <p>Already have an account? <Link className="login" to={ROUTES.SIGN_IN}>Log In</Link></p>
@@ -39,8 +40,9 @@ function SignUpFormBase(props) {
         email: '',
         password: '',
         password2: '',
-        error: null,
     });
+
+    const [error, setError] = useState(null);
 
     const onSubmit = (e) => {
         const { name, school, email, password } = formValues;
@@ -54,10 +56,7 @@ function SignUpFormBase(props) {
                     uid: authUser.user.uid,
                 }).then(res => {
                     if (res === 'error') {
-                        setFormValues({
-                            ...formValues,
-                            error: { message: 'School is a required field' }
-                        })
+                        setError({ message: 'School is a required field' })
                     }
                     else {
                         props.setUserProfile(res);
@@ -70,7 +69,6 @@ function SignUpFormBase(props) {
                                     email: '',
                                     password: '',
                                     password2: '',
-                                    error: null,
                                 })
 
                                 props.history.push(ROUTES.DASHBOARD);
@@ -80,10 +78,7 @@ function SignUpFormBase(props) {
 
             })
             .catch(error => {
-                setFormValues({
-                    ...formValues,
-                    error,
-                })
+                setError(error)
             })
 
         e.preventDefault();
@@ -99,32 +94,72 @@ function SignUpFormBase(props) {
     const isInvalid = formValues.password === '' || formValues.email === '' || formValues.password !== formValues.password2 || formValues.school === '';
 
     return (
-        <Form autoComplete="new-password" onSubmit={onSubmit}>
-            <FormGroup>
-                <Input type="text" name="name" value={formValues.name} onChange={onChange} placeholder="Name" autoComplete="off" bsSize="lg" />
-            </FormGroup>
-            <FormGroup>
-                <Input type="text" name="school" value={formValues.school} onChange={onChange} placeholder="School" autoComplete="off" bsSize="lg" />
-            </FormGroup>
-            <FormGroup>
-                <Input type="email" name="email" value={formValues.email} onChange={onChange} placeholder="Email" autoComplete="off" bsSize="lg" />
-            </FormGroup>
-            <FormGroup>
-                <Input type="password" name="password" value={formValues.password} onChange={onChange} placeholder="Password" autoComplete="off" bsSize="lg" />
-                <FormFeedback>Password too weak</FormFeedback>
-            </FormGroup>
-            <FormGroup>
-                <Input invalid={formValues.password2 !== '' && formValues.password !== formValues.password2} type="password" name="password2" value={formValues.password2} onChange={onChange} placeholder="Confirm Password" autoComplete="off" bsSize="lg" />
-                <FormFeedback>Passwords don't match</FormFeedback>
-                <FormText>Your password needs to be at least 8 characters long,
-                    including a number, an uppercase letter, and a lowercase letter.</FormText>
-            </FormGroup>
+        <Form autoComplete="new-password" error={error ? true : false}>
+            <Message
+                error
+                header='Create Account Error'
+                content={error ? error.message : ''}
+            />
+            <Form.Input 
+                type="text" 
+                name="name" 
+                value={formValues.name} 
+                onChange={onChange} 
+                placeholder="Name" 
+                autoComplete="off" 
+                label="Your Name"
+            />
+            <Form.Select
+                options={schools}
+                name="school"
+                placeholder="School"
+                onChange={(e, { value }) => setFormValues(
+                    {
+                        ...formValues,
+                        school: value,
+                    }
+                )}
+                required
+                label="School"
+            />
+            <Form.Input
+                type="email"
+                name="email"
+                value={formValues.email}
+                onChange={onChange}
+                placeholder="Email"
+                autoComplete="off"
+                required
+                label="Email"
+            />
+            <Form.Input 
+                type="password" 
+                name="password" 
+                value={formValues.password} 
+                onChange={onChange} 
+                placeholder="Password" 
+                autoComplete="new-password" 
+                required 
+                label="Password"
+            />
+            <Form.Input
+                type="password"
+                name="password2"
+                value={formValues.password2}
+                onChange={onChange}
+                placeholder="Confirm Password"
+                autoComplete="new-password"
+                error={formValues.password2 !== '' && formValues.password !== formValues.password2 ? {
+                    content: "Passwords must match",
+                    // pointing: "left",
+                } : null}
+                required
+                label="Confirm Password"
+            />
 
-            {formValues.error &&
-                <p>{formValues.error.message}</p>
-            }
+
             <div className="signup-button">
-                <Button type="submit" block disabled={isInvalid}>Sign Up</Button>
+                <Button disabled={isInvalid} fluid primary onClick={onSubmit}>Sign Up</Button>
             </div>
         </Form>
     )

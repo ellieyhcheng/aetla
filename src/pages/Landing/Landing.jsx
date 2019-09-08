@@ -3,7 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 import './Landing.scss';
 import logo from '../../assets/aetla-light.svg';
 import example from '../../assets/example-medium.jpg';
-import {Button} from 'reactstrap';
+import {Button} from 'semantic-ui-react';
 import * as ROUTES from '../../constants/routes';
 import { connect } from 'react-redux';
 import { SignUpForm } from "../SignUp/SignUp";
@@ -21,10 +21,10 @@ function Landing(props) {
                 </Link>
                 <div className="right">
                     <Link to={ROUTES.SIGN_IN}>
-                        <p className="link">Sign In</p>
+                        <Button primary>Sign In</Button>
                     </Link>
                     <Link to={ROUTES.SIGN_UP}>
-                        <Button outline color="primary">Sign Up</Button>
+                        <Button basic secondary>Sign Up</Button>
                     </Link>
                 </div>
             </div>
@@ -36,29 +36,29 @@ function Landing(props) {
                     </div>
                     <div className="description">
                         <h1>Course planning made simple</h1>
-                        <h5>Forget pen and paper. <br/> Plan your college years the modern way.</h5>
+                        <h3>Forget pen and paper. <br/> Plan your college years the modern way.</h3>
                         <Link to={ROUTES.GET_STARTED}>
-                            <Button size="lg" color="yellow">Get Started</Button>
+                            <Button color="yellow">Get Started</Button>
                         </Link>
                         <p>*Anyone can make a plan, but only registered users can save plans.</p>
 
                     </div>
                 </div>
                 <div className="section">
-                    <h2>Major Customized</h2>
-                    <h5>All the classes you need for you major, filtered just for you.</h5>
+                    <h1>Major Customized</h1>
+                    <h3>All the classes you need for you major, filtered just for you.</h3>
                 </div>
                 <div className="section">
-                    <h2>Drag and Drop</h2>
-                    <h5>Intuitive interface to make life simple.</h5>
+                    <h1>Drag and Drop</h1>
+                    <h3>Intuitive interface to make life simple.</h3>
                 </div>
                 <div className="section">
-                    <h2>Accessible Information</h2>
-                    <h5>Everything you need to know about a class, right here in the planner.</h5>
+                    <h1>Accessible Information</h1>
+                    <h3>Everything you need to know about a class, right here in the planner.</h3>
                 </div>
                 <div className="section five">
-                    <h3>Studying for classes is already hard enough. Plan your courses the easy way.</h3> 
-                    <h3>Sign up now for FREE.</h3>
+                    <h3>Studying for classes is already hard enough. Plan your courses the easy way. <br/>
+                        Sign up now for FREE.</h3>
                     <div className="signupform">
                         <SignUpForm/>
                     </div>

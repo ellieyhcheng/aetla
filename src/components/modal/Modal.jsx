@@ -1,39 +1,34 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import './Modal.scss';
-import Button from '../button/Button';
 
+function Modal(props) {
 
-class Modal extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            forced: this.props.forced || false,
-        }
-    }
+    // useEffect(() => {
+    //     if (props.open) {
+    //         const modal = .querySelector('.modal-overlay');
+    //         modal.style.visibility = 'visible';
+    //         modal.style.opacity = 1;
+    //     }
+    //     else {
+    //         const modal = document.querySelector('.modal-overlay');
+    //         modal.style.visibility = 'hidden';
+    //         modal.style.opacity = 0;
+    //     }
+    // }, [props.open])
 
-    closeModal = () => {
-        if (this.state.forced)
-            return;
-        const modal = document.querySelector('.modal-overlay');
-        modal.style.visibility = 'hidden';
-        modal.style.opacity = 0;
-        // document.querySelector('.modal-overlay').remove();
-    }
-
-    render() {
-        return (
-            <div className="modal-overlay" onClick={this.closeModal}>
-                <div className="modal">
-                    {!this.state.forced &&
-                        <div className="modal-button">
-                            <Button type="icon" icon="times" onClick={this.closeModal}></Button>
-                        </div>
-                    }
-                    {this.props.children}
-                </div>
+    return (
+        <div className="modal-overlay" onClick={props.onClose} style={{
+            visibility: props.open ? 'visible' : 'hidden',
+            opacity: props.open ? '1' : '0',
+        }}>
+            <div className="modal" onClick={(e) => e.stopPropagation()} style={{
+                textAlign: props.centered ? 'center' : '',
+                alignItems: props.centered ? 'center' : '',
+            }}>
+                {props.children}
             </div>
-        );
-    }
+        </div>
+    )
 }
 
 export default Modal;

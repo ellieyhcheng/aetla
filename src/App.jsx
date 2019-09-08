@@ -23,8 +23,8 @@ const Planner = Loadable({
 	delay: 5000,
 })
 
-const PlanGrid = Loadable({
-	loader: () => import('./pages/PlanGrid/PlanGrid'),
+const Dashboard = Loadable({
+	loader: () => import('./pages/Dashboard/Dashboard'),
 	loading: () => null,
 	delay: 5000,
 })
@@ -88,7 +88,7 @@ class App extends Component {
 				<Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
 
 				{/* With Authorization Routes */}
-				<Route path={ROUTES.DASHBOARD} component={PlanGrid} />
+				<Route path={ROUTES.DASHBOARD} component={Dashboard} />
 				<Route path={ROUTES.PLANNER} component={Planner} />
 				<Route path={ROUTES.ACCOUNT} component={Account} />
 

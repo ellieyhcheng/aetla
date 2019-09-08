@@ -1,0 +1,17 @@
+/*******************************
+     User Global Variables
+*******************************/
+@primaryColor: #544E54;
+@secondaryColor: #D5BDA4;
+@tertiaryColor: #2D9CDB;
+
+@fontName: 'Muli';
+@importGoogleFonts : true;
+@emSize: 13px;
+@orange: #DAA520;
+@yellow: #ebd987;
+@brown: #544E54;
+@grey: #F4F2F1;
+@pink: #ffb7b7;
+
+@fontWeight: 400;

@@ -1,0 +1,11 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+@fontWeight: 400;
+@primaryTextColor: @secondaryColor;
+@secondaryTextColor: @primaryColor;
+
+@yellowTextColor: @primaryColor;
+
+@brownTextColor: white;

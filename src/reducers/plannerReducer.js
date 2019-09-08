@@ -11,7 +11,6 @@ const initialState = {
     searchWord: '',
     homeDroppable: '',
     activeCourse: null,
-    saving: false,
     loading: true,
 }
 

@@ -22,9 +22,10 @@ router.get('/catalogs', catalogController.catalog_all);
 router.get('/catalog/:id', catalogController.catalog_detail);
 
 router.get('/plans', planController.plan_all);
-router.post('/plan/create', planController.plan_create_post);
-router.post('/plan/:id/delete', planController.plan_delete_post);
-router.post('/plan/:id/update', planController.plan_update_post);
+router.post('/plan/create', planController.plan_create);
+router.delete('/plan/:id/delete', planController.plan_delete);
+router.put('/plan/:id/update', planController.plan_update);
+router.post('/plan/:id/copy', planController.plan_copy);
 router.get('/plan/:id', planController.plan_detail);
 
 

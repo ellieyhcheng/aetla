@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import logo from '../../assets/aetla-dark.svg';
 import * as ROUTES from '../../constants/routes';
 import './SignIn.scss';
-import { Form, FormGroup,Input, Button, } from 'reactstrap';
+import { Form, Button, Message } from 'semantic-ui-react';
 import { withFirebase } from "../../Firebase";
 
 function SignIn() {
@@ -15,13 +15,13 @@ function SignIn() {
         <div className="signin">
             <div className="logo">
                 <Link to={ROUTES.LANDING}>
-                    <img src={logo} alt="LE plan"/>
+                    <img src={logo} alt="LE plan" />
 
                 </Link>
             </div>
             <hr />
 
-            <div className="content">
+            <div className="body">
                 <SignInForm />
 
                 <Link className="password-forget" to={ROUTES.PASSWORD_FORGET}>Forgot your password?</Link>
@@ -29,7 +29,7 @@ function SignIn() {
                 <div className="signup">
                     <p>Don't have an account?</p>
                     <Link className="signup-button" to={ROUTES.SIGN_UP}>
-                        <Button block outline>
+                        <Button basic color="orange" fluid>
                             Sign Up
                         </Button>
                     </Link>
@@ -44,8 +44,9 @@ function SignInFormBase(props) {
         email: '',
         password: '',
         // remember: false,
-        error: null,
     });
+
+    const [error, setError] = useState(null);
 
     const onSubmit = (e) => {
         const { email, password } = formValues;
@@ -57,16 +58,12 @@ function SignInFormBase(props) {
                     email: '',
                     password: '',
                     // remember: false,
-                    error: null,
                 })
 
                 props.history.push(ROUTES.DASHBOARD);
             })
             .catch(error => {
-                setFormValues({
-                    ...formValues,
-                    error,
-                })
+                setError(error);
             })
 
         e.preventDefault();
@@ -82,28 +79,39 @@ function SignInFormBase(props) {
     const isInvalid = formValues.password === '' || formValues.email === '';
 
     return (
-        <Form autoComplete="new-password" onSubmit={onSubmit}>
-            <FormGroup>
-                <Input type="email" name="email" value={formValues.email} onChange={onChange} placeholder="Email" autoComplete="off" bsSize="lg" />
-            </FormGroup>
-            <FormGroup>
-                <Input type="password" name="password" value={formValues.password} onChange={onChange} placeholder="Password" autoComplete="off" bsSize="lg" />
-            </FormGroup>
-
+        <Form autoComplete="new-password" error={error ? true : false}>
+            <Message
+                error
+                header='Create Account Error'
+                content={error ? error.message : ''}
+            />
+            <Form.Input
+                type="email"
+                name="email"
+                value={formValues.email}
+                onChange={onChange}
+                placeholder="Email"
+                autoComplete="off"
+                required
+                label="Email"
+            />
+            <Form.Input
+                type="password"
+                name="password"
+                value={formValues.password}
+                onChange={onChange}
+                placeholder="Password"
+                autoComplete="new-password"
+                required
+                label="Password"
+            />
             <div className="form-row">
-                {/* <div className="remember">
-                    <Input type="checkbox" />
-                    <span className="label">Remember Me</span>
-                </div> */}
+                {/* <Form.Checkbox label="Remember Me" /> https://firebase.google.com/docs/auth/web/auth-state-persistence */}
                 <div className="signin-button">
-                    <Button type="submit" block disabled={isInvalid}>Log In</Button>
+                    <Button disabled={isInvalid} fluid primary onClick={onSubmit}>Log In</Button>
+
                 </div>
             </div>
-            
-
-            {formValues.error &&
-                <p>{formValues.error.message}</p>
-            }
         </Form>
     )
 }

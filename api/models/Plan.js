@@ -12,8 +12,8 @@ const Schema = mongoose.Schema;
 var PlanSchema = new Schema({
     u: String,
     title: { type: String, required: true, maxlength: 100 },
-    description: { type: String, maxlength: 500 },
-    courseList:  [{ type: Schema.Types.ObjectId, ref: 'Requirement', required: true }], // Array of courses in the courselist panel
+    description: { type: String, maxlength: 500, required: true },
+    courseList:  [{ type: Schema.Types.ObjectId, required: true }], // Array of courses in the courselist panel with elective and courses objects
     coursePlan: [{
         type: Schema.Types.Mixed,
         default: {
@@ -23,7 +23,7 @@ var PlanSchema = new Schema({
             winter: [],
             spring: [],
             summer: [],
-        }
+        },
     }],
     courses: [{ type: Schema.Types.ObjectId, ref: 'Catalog', required: true }], // Array of catalogs, total of courses in courseList and coursePlan
     selections: [{

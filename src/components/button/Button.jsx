@@ -10,6 +10,7 @@ class Button extends Component {
             type: props.type || 'text', // { icon, text }
             icon: props.icon || null,
             text: props.text || '',
+            dark: props.dark ? props.dark : false,
             onClick: props.onClick,
             tooltip: props.tooltip || '',
             direction: props.direction,  // { left, top, right, bottom }
@@ -71,10 +72,18 @@ class Button extends Component {
         e.currentTarget.classList.remove('click')
     }
 
+    onClick = (e) => {
+        e.stopPropagation();
+        if (this.state.onClick)
+            this.state.onClick(e);
+    }
+
     render() {
         if (this.state.type === 'icon') {
             return (
-                <div className="button-icon" onClick={this.state.onClick}>
+                <div className="button-icon" onClick={this.onClick} onDoubleClick={(e) => e.stopPropagation()} style={{
+                    color: this.state.dark ? "#544E54" : "#D5BDA4",
+                }}>
                     <FontAwesomeIcon icon={this.state.icon} fixedWidth className="icon" />
                     {this.state.tooltip &&
                         <span className="button-tooltip">{this.state.tooltip}</span>
@@ -84,7 +93,7 @@ class Button extends Component {
         } else { // type === 'text'
             return (
                 <div className={this.state.fixedWidth ? "button-text fixed-width" : "button-text"} 
-                    onClick={this.state.onClick}
+                    onClick={this.onClick}
                     onMouseDown={this.onMouseDown}
                     onMouseUp={this.onMouseUp}
                 >
