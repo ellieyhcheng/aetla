@@ -37,10 +37,10 @@ function Landing(props) {
                     <div className="description">
                         <h1>Course planning made simple</h1>
                         <h3>Forget pen and paper. <br/> Plan your college years the modern way.</h3>
-                        <Link to={ROUTES.GET_STARTED}>
+                        <Link to={ROUTES.SIGN_UP}>
                             <Button color="yellow">Get Started</Button>
                         </Link>
-                        <p>*Anyone can make a plan, but only registered users can save plans.</p>
+                        {/* <p>*Anyone can make a plan, but only registered users can save plans.</p> */}
 
                     </div>
                 </div>
@@ -68,7 +68,6 @@ function Landing(props) {
     )
 
     return props.authUser ? authLanding : noAuthLanding;
-    // return noAuthLanding;
 }
 
 const mapStateToProps = (state) => {

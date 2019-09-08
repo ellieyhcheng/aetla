@@ -8,4 +8,3 @@ export const ADMIN = '/admin';
 export const PASSWORD_FORGET = '/password_reset';
 export const GEN_PLANNER = '/planner';
 export const PLANNER = '/planner/:id';
-export const PLAN_SETTINGS = '/planner/settings';

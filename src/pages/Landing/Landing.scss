@@ -58,6 +58,10 @@
             flex-direction: row;
             height: 85vh;
 
+            h1 {
+                font-size: 3rem;;
+            }
+
             .description {
                 margin: 5% 5% 5% 0;
             }
@@ -98,22 +102,7 @@
                 padding: 3vh 1vw;
                 border-radius: 4px;
                 margin: 3vh 0;
-
-
-                .signup-button {
-                    display: flex;
-                    justify-content: center;
-            
-                    .btn {
-                        font-size: 1.1rem;
-                        width: 150px;
-                        letter-spacing: 0.1rem;
-                        background: $primary;
-                        border-color: $primary;
-                        color: $secondary;
-                        position: relative;
-                    }
-                }
+                text-align: left;
             }
             
         }
@@ -158,4 +147,11 @@
     // .search {
     //     font-size: 1.5vw !important;
     // }
+    .landing {
+        .content {
+            .section, .section.one, .section.five{
+                padding: 5vh 10vw;
+            }
+        }
+    }
 }

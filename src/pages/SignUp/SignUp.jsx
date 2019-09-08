@@ -60,6 +60,7 @@ function SignUpFormBase(props) {
                     }
                     else {
                         props.setUserProfile(res);
+                        props.firebase.doSendEmailVerification();
 
                         props.firebase.doNameUpdate(name)
                             .then(() => {
