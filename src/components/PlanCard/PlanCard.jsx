@@ -42,17 +42,6 @@ class PlanCard extends Component {
             this.props.onClick();
     }
 
-    onDelete = (e) => {
-        this.props.apiClient.deletePlan(this.props["_id"])
-            .then(data => {
-                if (data === 'error')
-                    console.log('Error occured deleting plan ' + this.props["_id"]);
-                else {
-                    this.props.deletePlan(this.props["_id"]);
-                }
-            })
-    }
-
     render() {
         return this.props.empty ? (
             <div className="plancard newcard" onMouseOver={this.emptyMouseOver} onMouseLeave={this.emptyMouseLeave} onClick={this.emptyClick} >
@@ -75,7 +64,7 @@ class PlanCard extends Component {
                         id: this.props["_id"],
                     })} />
                     <Button type="icon" icon="download" dark fixedWidth tooltip="Download" direction="top"/>
-                    <Button type="icon" icon="trash-alt" dark fixedWidth tooltip="Delete" direction="top" onClick={this.onDelete}/>
+                    <Button type="icon" icon="trash-alt" dark fixedWidth tooltip="Delete" direction="top" onClick={() => this.props.onDeleteClick(this.props["_id"])}/>
                 </div>
             </div>
         )

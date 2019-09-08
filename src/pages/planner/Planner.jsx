@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CourseDetail from '../../components/courseDetail/CourseDetail';
 import Modal from '../../components/modal/Modal';
 import { connect } from 'react-redux';
-import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan, addPlan } from '../../actions/itemActions';
+import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan, addPlan, deletePlan } from '../../actions/itemActions';
 import { withApiClient } from "../../ApiClient";
 import withAuthorization from '../../components/Session/withAuthorization';
 import { Redirect } from "react-router-dom";
@@ -36,6 +36,11 @@ class Planner extends Component {
             changeDescription: props.description,
             changeCoursesExempt: props.description, // TODO
             changeError: null,
+
+            delete: false,
+            deleteError: null,
+
+            exit: false,
         }
     }
 
@@ -188,12 +193,13 @@ class Planner extends Component {
         }
     }
 
-    onClickSave = () => {
+    onClickSave = (redirect=false) => {
         if (this.props.loading) return;
 
         this.setState({
             ...this.state,
             saving: true,
+            exit: false,
         })
         // Make post request to update plan
         const newPlan = {
@@ -213,12 +219,14 @@ class Planner extends Component {
                         saveError: true,
                         saving: false,
                     })
-                else
-
+                else {
                     this.setState({
                         ...this.state,
                         saving: false,
                     })
+                    if (redirect)
+                        this.props.history.push(ROUTES.DASHBOARD);
+                }
             }, 1000);
         })
     }
@@ -313,7 +321,7 @@ class Planner extends Component {
                                     error: true,
                                 })
                             else {
-                                var newPlan = {
+                                var copyPlan = {
                                     id: data["_id"],
                                     title: newPlan.title,
                                     description: newPlan.description,
@@ -327,7 +335,7 @@ class Planner extends Component {
                                     saving: false,
                                     loading: false,
                                 }
-                                this.props.storePlanDetails(newPlan)
+                                this.props.storePlanDetails(copyPlan)
 
                                 this.setState({
                                     ...this.state,
@@ -407,8 +415,44 @@ class Planner extends Component {
         e.preventDefault();
     }
 
+    onDeleteClick = () => {
+        this.setState({
+            ...this.state,
+            delete: true,
+            deleteError: false,
+        })
+    }
+
+    onDelete = () => {
+        this.props.apiClient.deletePlan(this.props.id)
+            .then(data => {
+                if (data === 'error') {
+                    this.setState({
+                        ...this.state,
+                        deleteError: true,
+                    })
+                }
+                else {
+                    this.props.deletePlan(this.props.id);
+                    this.setState({
+                        ...this.state,
+                        delete: false,
+                        deleteError: false,
+                    })
+                    this.props.history.push(ROUTES.DASHBOARD);
+                }
+            })
+    }
+
+    onExitClick = () => {
+        this.setState({
+            ...this.state,
+            exit: true,
+        })
+    }
+
     render() {
-        const toolbar = <Toolbar onCopy={this.onCopyClick} onSettings={this.onChangeClick}/>
+        const toolbar = <Toolbar onCopy={this.onCopyClick} onSettings={this.onChangeClick} onDelete={this.onDeleteClick} onExit={this.onExitClick}/>
         
         return (
             <div className="planner">
@@ -426,7 +470,6 @@ class Planner extends Component {
                 ) :
                     toolbar
                 }
-
 
                 <div className="planner-content" style={{
                     marginLeft: this.state.collapse ? '0px' : '',
@@ -461,13 +504,14 @@ class Planner extends Component {
                     </DragDropContext>
                 </div>
 
-                <Modal open={this.state.saving} centered>
-                    Saving your plan... Please wait...
-                    <div className="load-icon">
-                        <FontAwesomeIcon icon="spinner" pulse />
-                    </div>
-                </Modal>
-
+                {this.state.saving && 
+                    <Modal open={this.state.saving} centered>
+                        Saving your plan... Please wait...
+                        <div className="load-icon">
+                            <FontAwesomeIcon icon="spinner" pulse />
+                        </div>
+                    </Modal>
+                }
                 {this.state.error &&
                     <Modal open={this.state.error} centered>
                         Something went wrong... Redirecting you to Dashboard.
@@ -478,88 +522,114 @@ class Planner extends Component {
                     </Modal>
                 }
 
-                <Modal open={this.state.saveError} centered onClose={() => this.onModalClose("saveError")}>
-                    Something went wrong... Please try again or contact us.
-                    <div className="modal-button">
-                        <Button type="text" text="Okay, I guess." onClick={() => this.onModalClose("saveError")}></Button>
-                    </div>
-                </Modal>
-
-                <Modal open={this.state.copy} onClose={() => this.onModalClose("copy")}>
-                    <h2>Make a Copy</h2>
-                    <hr />
-                    <Form autoComplete="new-password" error={this.state.copyError ? true : false}>
-                        <Form.Input
-                            type="text"
-                            name="copyTitle"
-                            value={this.state.copyTitle}
-                            onChange={this.onChange}
-                            placeholder="My Plan"
-                            autoComplete="off"
-                            required
-                            fluid
-                            label="Plan Title"
-                            maxLength="100"
-                        />
-                        <Form.TextArea
-                            name="copyDescription"
-                            value={this.state.copyDescription}
-                            onChange={this.onChange}
-                            placeholder="This is my awesome plan"
-                            autoComplete="off"
-                            label="Plan Description"
-                            maxLength="500"
-                        />
-                        <Message
-                            error
-                            content={this.state.copyError ? this.state.copyError.message : ''}
-                            color="yellow"
-                        />
-                        
-                    </Form>
-                    <div className="modal-button">
-                        <Button type="text" text="Cancel" onClick={() => this.onModalClose("copy")}></Button>
-                        <Button type="text" text="Submit" onClick={this.onCopy}></Button>
-                    </div>
-                </Modal>
-                
-                <Modal open={this.state.change} onClose={() => this.onModalClose("change")}>
-                    <h2>Plan Settings</h2>
-                    <hr />
-                    <Form autoComplete="new-password" error={this.state.copyError ? true : false}>
-                        <Form.Input
-                            type="text"
-                            name="changeTitle"
-                            value={this.state.changeTitle}
-                            onChange={this.onChange}
-                            placeholder="My Plan"
-                            autoComplete="off"
-                            required
-                            fluid
-                            label="Plan Title"
-                            maxLength="100"
-                        />
-                        <Form.TextArea
-                            name="changeDescription"
-                            value={this.state.changeDescription}
-                            onChange={this.onChange}
-                            placeholder="This is my awesome plan"
-                            autoComplete="off"
-                            label="Plan Description"
-                            maxLength="500"
-                        />
-                        <Message
-                            error
-                            content={this.state.changeError ? this.state.changeError.message : ''}
-                            color="yellow"
-                        />
-                        
-                    </Form>
-                    <div className="modal-button">
-                        <Button type="text" text="Cancel" onClick={() => this.onModalClose("change")}></Button>
-                        <Button type="text" text="Submit" onClick={this.onPlanChange}></Button>
-                    </div>
-                </Modal>
+                {this.state.saveError && 
+                    <Modal open={this.state.saveError} centered onClose={() => this.onModalClose("saveError")}>
+                        Something went wrong... Please try again or contact us.
+                        <div className="modal-button">
+                            <Button type="text" text="Okay, I guess." onClick={() => this.onModalClose("saveError")}></Button>
+                        </div>
+                    </Modal>
+                }
+                {this.state.copy && 
+                    <Modal open={this.state.copy} onClose={() => this.onModalClose("copy")}>
+                        <h2>Make a Copy</h2>
+                        <hr />
+                        <Form autoComplete="new-password" error={this.state.copyError ? true : false}>
+                            <Form.Input
+                                type="text"
+                                name="copyTitle"
+                                value={this.state.copyTitle}
+                                onChange={this.onChange}
+                                placeholder="My Plan"
+                                autoComplete="off"
+                                required
+                                fluid
+                                label="Plan Title"
+                                maxLength="100"
+                            />
+                            <Form.TextArea
+                                name="copyDescription"
+                                value={this.state.copyDescription}
+                                onChange={this.onChange}
+                                placeholder="This is my awesome plan"
+                                autoComplete="off"
+                                label="Plan Description"
+                                maxLength="500"
+                            />
+                            <Message
+                                error
+                                content={this.state.copyError ? this.state.copyError.message : ''}
+                                color="yellow"
+                            />
+                            
+                        </Form>
+                        <div className="modal-button">
+                            <Button type="text" text="Cancel" onClick={() => this.onModalClose("copy")}></Button>
+                            <Button type="text" text="Submit" onClick={this.onCopy}></Button>
+                        </div>
+                    </Modal>
+                }
+                {this.state.change && 
+                    <Modal open={this.state.change} onClose={() => this.onModalClose("change")}>
+                        <h2>Plan Settings</h2>
+                        <hr />
+                        <Form autoComplete="new-password" error={this.state.copyError ? true : false}>
+                            <Form.Input
+                                type="text"
+                                name="changeTitle"
+                                value={this.state.changeTitle}
+                                onChange={this.onChange}
+                                placeholder="My Plan"
+                                autoComplete="off"
+                                required
+                                fluid
+                                label="Plan Title"
+                                maxLength="100"
+                            />
+                            <Form.TextArea
+                                name="changeDescription"
+                                value={this.state.changeDescription}
+                                onChange={this.onChange}
+                                placeholder="This is my awesome plan"
+                                autoComplete="off"
+                                label="Plan Description"
+                                maxLength="500"
+                            />
+                            <Message
+                                error
+                                content={this.state.changeError ? this.state.changeError.message : ''}
+                                color="yellow"
+                            />
+                            
+                        </Form>
+                        <div className="modal-button">
+                            <Button type="text" text="Cancel" onClick={() => this.onModalClose("change")}></Button>
+                            <Button type="text" text="Submit" onClick={this.onPlanChange}></Button>
+                        </div>
+                    </Modal>
+                }
+                {this.state.delete &&
+                    <Modal open={this.state.delete} onClose={() => this.onModalClose("delete")}>
+                        <p>Are you sure you want to delete this plan?</p>
+                        {this.state.deleteError && <Message color="yellow" content="Something went wrong, please try again." />}
+                        <div className="modal-button">
+                            <Button type="text" text="Cancel" onClick={() => this.onModalClose("delete")}></Button>
+                            <Button type="text" text="Submit" onClick={this.onDelete}></Button>
+                        </div>
+                    </Modal>
+                }
+                {this.state.exit &&
+                    <Modal open={this.state.exit} onClose={() => this.onModalClose("exit")}>
+                        <p>Do you want to save changes to your plan?</p>
+                        <div className="modal-button">
+                            <Button type="text" text="Cancel" onClick={() => this.onModalClose("exit")}></Button>
+                            <Button type="text" text="No" onClick={() => this.props.history.push(ROUTES.DASHBOARD)}></Button>
+                            <Button type="text" text="Yes" onClick={() => {
+                                this.onClickSave(true);
+                            }}></Button>
+                        </div>
+                    </Modal>
+                }
             </div>
         )
     }
@@ -584,7 +654,8 @@ const actionCreators = {
     setHomeDroppable,
     setCourseList,
     setCoursePlan,
-    addPlan
+    addPlan,
+    deletePlan,
 }
 
 export default withAuthorization(connect(mapStateToProps, actionCreators)(withApiClient(Planner)));

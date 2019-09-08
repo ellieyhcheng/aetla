@@ -129,14 +129,13 @@ function plan_create(req, res, next) {
 						if (err) {
 							next(err);
 						}
-
 						const newPlans = user.plans;
 						newPlans.push(newPlan.id);
 						user.plan = newPlans;
 
 						user.save((err, user) => {
 							if (err)
-								return next(err);
+								next(err);
 
 							res.json({
 								"_id": newPlan["_id"],

@@ -7,19 +7,9 @@ import { withRouter } from "react-router-dom";
 import { withApiClient } from "../../ApiClient";
 import { connect } from "react-redux";
 import { deletePlan } from "../../actions/itemActions";
+import SignOut from '../account/SignOut/SignOut';
 
 class Toolbar extends Component {
-    onDelete = (e) => {
-        this.props.apiClient.deletePlan(this.props.id)
-            .then(data => {
-                if (data === 'error')
-                    console.log('Error occured deleting plan ' + this.props.id);
-                else {
-                    this.props.deletePlan(this.props.id);
-                }
-            })
-        this.props.history.push(ROUTES.DASHBOARD);
-    }
 
     render() {
         return (
@@ -28,15 +18,13 @@ class Toolbar extends Component {
                     <div className="line-v" />
                     <ul>
                         <li>
-                            <Link to={ROUTES.DASHBOARD}>
-                                <Button type="icon" icon="home" tooltip="Dashboard" direction="right" />
-                            </Link>
+                            <Button type="icon" icon="home" tooltip="Dashboard" direction="right" onClick={this.props.onExit} />
                         </li>
                         <li>
                             <Button type="icon" icon="copy" tooltip="Copy" direction="right" onClick={this.props.onCopy} />
                         </li>
                         <li>
-                            <Button type="icon" icon="trash-alt" tooltip="Delete" direction="right" onClick={this.onDelete} />
+                            <Button type="icon" icon="trash-alt" tooltip="Delete" direction="right" onClick={this.props.onDelete} />
                         </li>
                         <li>
                             <Button type="icon" icon="download" tooltip="Export Plan" direction="right" />
@@ -57,7 +45,9 @@ class Toolbar extends Component {
                             </Link>
                         </li>
                         <li>
-                            <Button type="icon" icon="power-off" tooltip="Logout" direction="right" />
+                            <SignOut>
+                                <Button type="icon" icon="power-off" tooltip="Logout" direction="right" />
+                            </SignOut>
                         </li>
                     </ul>
                     <div className="line-v" />
