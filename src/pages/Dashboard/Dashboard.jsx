@@ -112,6 +112,8 @@ class Dashboard extends Component {
     }
 
     onClick = () => {
+        if (!this.props.verified)
+            return;
         this.setState({
             ...this.state,
             title: '',
@@ -285,10 +287,14 @@ class Dashboard extends Component {
 
                 {this.props.verified ? (
                     <div className="grid">
-                        <PlanCard empty onClick={this.onClick} />
-                        {this.props.plans.map((plan, i) => (
-                            <PlanCard {...plan} key={i} onCopyClick={this.onCopyClick} onDeleteClick={this.onDeleteClick}/>
-                        ))}
+                        {this.props.plans.map((plan, i) => {
+                            if (i === 0)
+                                return <PlanCard empty onClick={this.onClick} />;
+                            else
+                                return (
+                                    <PlanCard {...plan} key={i} onCopyClick={this.onCopyClick} onDeleteClick={this.onDeleteClick}/>
+                                )
+                        })}
                     </div>
                 ) : (
                     <div className="grid">
@@ -406,11 +412,18 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = state => {
-    return {
-        plans: state.auth.userProfile ? state.auth.userProfile.plans : [],
-        userId: state.auth.authUser ? state.auth.authUser.uid : '',
-        verified: state.auth.authUser ? state.auth.authUser.emailVerified : true,
-    }
+    if (state.auth.authUser)
+        return {
+            plans: state.auth.userProfile ? (state.auth.authUser.emailVerified ? [{}, ...state.auth.userProfile.plans] : []) : [{}],
+            userId: state.auth.authUser ? state.auth.authUser.uid : '',
+            verified: state.auth.authUser ? state.auth.authUser.emailVerified : true,
+        }
+    else
+        return {
+            plans: [{}],
+            userId: '',
+            verified: true,
+        }
 }
 
 const actionCreators = {
