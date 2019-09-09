@@ -289,7 +289,7 @@ class Dashboard extends Component {
                     <div className="grid">
                         {this.props.plans.map((plan, i) => {
                             if (i === 0)
-                                return <PlanCard empty onClick={this.onClick} />;
+                                return <PlanCard empty onClick={this.onClick} key={i} />;
                             else
                                 return (
                                     <PlanCard {...plan} key={i} onCopyClick={this.onCopyClick} onDeleteClick={this.onDeleteClick}/>

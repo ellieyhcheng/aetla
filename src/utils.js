@@ -138,6 +138,7 @@ function download(plan) {
     var {coursePlan, courses, title, description, selections} = plan;
     let totalUnits = 0;
     var table = [];
+    var foot = [];
     coursePlan.forEach(year => {
         var rows = [];
         var units = [0, 0, 0, 0];
@@ -155,13 +156,11 @@ function download(plan) {
                     if ('options' in req) {
                         var {index} = selections[courseId];
                         var course = req.options[index];
-                        // r[qid] = `${course.subject} ${course.num}`;
                         r.push(`${course.subject} ${course.num}`);
                         units[j] += course.units;
                         totalUnits += course.units;
                     }
                     else {
-                        // r[qid] = `${req.subject} ${req.num}`;
                         r.push(`${req.subject} ${req.num}`);
                         units[j] += req.units;
                         totalUnits += req.units;
@@ -174,8 +173,8 @@ function download(plan) {
             rows.push(r);
             int++;
         }
-        // console.log(rows);
-        rows.push(units);
+        foot.push(units);
+        
         table.push(rows);
     })
 
@@ -228,12 +227,13 @@ function download(plan) {
             ["Fall", "Winter", "Spring", "Summer"],
         ]
 
-        var tableRows = body.length + 2;
-        var tableHeight = tableRows * 20;
+        var tableRows = body.length + 3;
+        var tableHeight = tableRows * 20.2;
 
         doc.autoTable({
             head: head,
             body: body,
+            foot: [foot[i]],
             startY: y,
             margin: {
                 left: margin,
@@ -241,6 +241,8 @@ function download(plan) {
             tableLineColor: [84, 78, 84],
             tableLineWidth: 1,
             tableWidth: (pageWidth) / 2,
+            showHead: 'firstPage',
+            showFoot: 'lastPage',
             styles: {
                 lineColor: [84, 78, 84],
                 lineWidth: 0.5,
@@ -258,6 +260,12 @@ function download(plan) {
                 textColor: [84, 78, 84],
                 fontSize: 8,
             },
+            footStyles: {
+                fillColor: [244, 242, 241],
+                fontSize: 8,
+                textColor: [84, 78, 84],
+                fontStyle: 'bold',
+            },
         }); y += tableHeight;
     })
     
@@ -266,8 +274,6 @@ function download(plan) {
 
     
     window.open(doc.output('bloburl'), `${title}.pdf`);
-    // doc.output('dataurlnewwindow', `${title}.pdf`)
-    // doc.save(`${title}.pdf`);
 }
 
 
