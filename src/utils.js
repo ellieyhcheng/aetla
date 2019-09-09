@@ -135,7 +135,7 @@ function ordinalize(i) {
 }
 
 function download(plan) {
-    var {coursePlan, courses, title, description, selections} = plan;
+    var {coursePlan, courses, description, title, selections} = plan;
     let totalUnits = 0;
     var table = [];
     var foot = [];
@@ -146,8 +146,7 @@ function download(plan) {
 
         const q = ["fall", "winter", "spring", "summer"];
 
-        let int = 0;
-        while (int < n) {
+        Array.from(Array(n).keys()).forEach(int => {
             let r = [];
             q.forEach((qid, j) => {
                 var courseId = year[qid][int];
@@ -172,7 +171,7 @@ function download(plan) {
             })
             rows.push(r);
             int++;
-        }
+        })
         foot.push(units);
         
         table.push(rows);
@@ -206,10 +205,11 @@ function download(plan) {
     doc.setTextColor(100);
 
     var lineHeight = doc.getLineHeight(description) / doc.internal.scaleFactor
-    var text = doc.splitTextToSize(description, pageWidth - 2*margin);
+    var text = doc.splitTextToSize(description, pageWidth / 2 - 2 * margin - 10);
     var lines = text.length  // splitted text is a string array
     var blockHeight = lines * lineHeight
-    doc.text(text, margin, y); y+= (blockHeight + 10);
+    doc.text(text, (pageWidth / 2 + margin + 10), y + 10); 
+    // y+= (blockHeight + 10);
 
     // Generate table
     table.forEach((body, i) => {

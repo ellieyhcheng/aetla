@@ -41,6 +41,7 @@ class Planner extends Component {
             deleteError: null,
 
             exit: false,
+            changesMade: false,
         }
     }
 
@@ -110,6 +111,11 @@ class Planner extends Component {
         if (destination.droppableId === source.droppableId &&
             destination.index === source.index)
             return;
+
+        this.setState({
+            ...this.state,
+            changesMade: true,
+        })
 
         if (source.droppableId.includes("courseList")) {
             // Dropped into course plan
@@ -223,6 +229,7 @@ class Planner extends Component {
                     this.setState({
                         ...this.state,
                         saving: false,
+                        changesMade: false
                     })
                     if (redirect)
                         this.props.history.push(ROUTES.DASHBOARD);
@@ -445,10 +452,14 @@ class Planner extends Component {
     }
 
     onExitClick = () => {
-        this.setState({
-            ...this.state,
-            exit: true,
-        })
+        if (this.state.changesMade)
+            this.setState({
+                ...this.state,
+                exit: true,
+            })
+        else {
+            this.props.history.push(ROUTES.DASHBOARD)
+        }
     }
 
     render() {
