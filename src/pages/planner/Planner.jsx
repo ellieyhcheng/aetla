@@ -14,7 +14,7 @@ import { withApiClient } from "../../ApiClient";
 import withAuthorization from '../../components/Session/withAuthorization';
 import { Redirect } from "react-router-dom";
 import * as ROUTES from '../../constants/routes';
-import { Message, Form, } from "semantic-ui-react";
+import { Message, Form, List, } from "semantic-ui-react";
 
 class Planner extends Component {
     constructor(props) {
@@ -42,6 +42,8 @@ class Planner extends Component {
 
             exit: false,
             changesMade: false,
+            
+            help: false,
         }
     }
 
@@ -317,7 +319,7 @@ class Planner extends Component {
                     if (data === 'error')
                         return;
                     this.props.addPlan(data);
-                    
+
                     this.props.history.push(ROUTES.PLANNER.replace(':id', `${btoa(unescape(encodeURIComponent(data["_id"])))}`))
 
                     this.props.apiClient.getOnePlan(data["_id"]).then(newPlan => {
@@ -367,7 +369,7 @@ class Planner extends Component {
     onModalClose = (type) => {
         this.setState({
             ...this.state,
-            [type] : false,
+            [type]: false,
         })
     }
 
@@ -399,7 +401,7 @@ class Planner extends Component {
                 coursePlan: this.props.coursePlan,
                 selections: this.props.selections,
             }
-    
+
             this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
                 setTimeout(() => {
                     if (data === 'error')
@@ -462,9 +464,22 @@ class Planner extends Component {
         }
     }
 
+    onHelpClick = () => {
+        this.setState({
+            ...this.state,
+            help: true,
+        })
+    }
+
     render() {
-        const toolbar = <Toolbar onCopy={this.onCopyClick} onSettings={this.onChangeClick} onDelete={this.onDeleteClick} onExit={this.onExitClick}/>
-        
+        const toolbar = <Toolbar 
+            onCopy={this.onCopyClick} 
+            onSettings={this.onChangeClick} 
+            onDelete={this.onDeleteClick} 
+            onExit={this.onExitClick} 
+            onHelp={this.onHelpClick}
+            />
+
         return (
             <div className="planner">
                 {this.state.collapse ? (
@@ -515,7 +530,7 @@ class Planner extends Component {
                     </DragDropContext>
                 </div>
 
-                {this.state.saving && 
+                {this.state.saving &&
                     <Modal open={this.state.saving} centered>
                         Saving your plan... Please wait...
                         <div className="load-icon">
@@ -533,7 +548,7 @@ class Planner extends Component {
                     </Modal>
                 }
 
-                {this.state.saveError && 
+                {this.state.saveError &&
                     <Modal open={this.state.saveError} centered onClose={() => this.onModalClose("saveError")}>
                         Something went wrong... Please try again or contact us.
                         <div className="modal-button">
@@ -541,7 +556,7 @@ class Planner extends Component {
                         </div>
                     </Modal>
                 }
-                {this.state.copy && 
+                {this.state.copy &&
                     <Modal open={this.state.copy} onClose={() => this.onModalClose("copy")}>
                         <h2>Make a Copy</h2>
                         <hr />
@@ -572,7 +587,7 @@ class Planner extends Component {
                                 content={this.state.copyError ? this.state.copyError.message : ''}
                                 color="yellow"
                             />
-                            
+
                         </Form>
                         <div className="modal-button">
                             <Button type="text" text="Cancel" onClick={() => this.onModalClose("copy")}></Button>
@@ -580,7 +595,7 @@ class Planner extends Component {
                         </div>
                     </Modal>
                 }
-                {this.state.change && 
+                {this.state.change &&
                     <Modal open={this.state.change} onClose={() => this.onModalClose("change")}>
                         <h2>Plan Settings</h2>
                         <hr />
@@ -611,7 +626,7 @@ class Planner extends Component {
                                 content={this.state.changeError ? this.state.changeError.message : ''}
                                 color="yellow"
                             />
-                            
+
                         </Form>
                         <div className="modal-button">
                             <Button type="text" text="Cancel" onClick={() => this.onModalClose("change")}></Button>
@@ -638,6 +653,52 @@ class Planner extends Component {
                             <Button type="text" text="Yes" onClick={() => {
                                 this.onClickSave(true);
                             }}></Button>
+                        </div>
+                    </Modal>
+                }
+
+                {this.state.help &&
+                    <Modal open={this.state.help} onClose={() => this.onModalClose("help")}>
+                        <div className="help">
+                            <h2>Help</h2>
+                            <hr />
+                            <div className="help-body">
+                                <List>
+                                    <List.Item>
+                                        <List.Header>Course Cards</List.Header>
+                                        To move the course cards onto the course plan, drag and drop the boxes in the desired row.
+                                        By clicking on the card, you can also see the course details from the school registrar listings.
+                                    </List.Item>
+                                    <List.Item>
+                                        <List.Header>Course List</List.Header>
+                                        Course List is where the required courses for graduation in this major is held at first. You can search for 
+                                        a particular course using the search bar. Electives are also included in the search, but the selected course
+                                        is the marker for the search, not the elective name.
+                                    </List.Item>
+                                    <List.Item>
+                                        <List.Header>Course Plan</List.Header>
+                                        Course Plan refers to the grid on the right, where courses can be dropped into the desired row, corresponding to
+                                        the desired quarters. 
+                                        You can click on the (-) and (+) icons on the right of the Course Plan to add or remove a quarter from the year,
+                                        for up to 4 quarters.
+                                        At the bottom of the Course Plan, you can click on the "Add Year" and "Remove Year" buttons to add or remove years
+                                        as desired.
+                                    </List.Item>
+                                    <List.Item>
+                                        <List.Header>Save</List.Header>
+                                        Save your plan with the icon at the top of the page next to the plan title to keep your changes.
+                                    </List.Item>
+                                    <List.Item>
+                                        <List.Header>Toolbar</List.Header>
+                                        The toolbar on the left allows you to go back to your dashboard, to make a copy of your plan as is, 
+                                        to delete the plan, to export the plan as a PDF, and to access the plan settings to modify the plan's
+                                        title and descriptions.
+                                    </List.Item>
+                                </List>
+                            </div>
+                        </div>
+                        <div className="modal-button">
+                            <Button type="text" text="Close" onClick={() => this.onModalClose("help")}></Button>
                         </div>
                     </Modal>
                 }

@@ -44,7 +44,7 @@ class Toolbar extends Component {
                             <Button type="icon" icon="sliders-h" tooltip="Plan Settings" direction="right" onClick={this.props.onSettings}/>
                         </li>
                         <li>
-                            <Button type="icon" icon="question-circle" tooltip="Help" direction="right" />
+                            <Button type="icon" icon="question-circle" tooltip="Help" direction="right" onClick={this.props.onHelp}/>
                         </li>
                     </ul>
                 </div>

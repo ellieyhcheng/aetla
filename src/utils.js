@@ -185,9 +185,10 @@ function download(plan) {
     })
 
     var margin = 50;
-    var y = margin;
     var pageSize = doc.internal.pageSize;
     var pageWidth = pageSize.width ? pageSize.width : pageSize.getWidth();
+    var x = pageWidth / 2 + margin + 10;
+    var y = margin;
 
     // Title
     if (title.length > 50)
@@ -208,8 +209,11 @@ function download(plan) {
     var text = doc.splitTextToSize(description, pageWidth / 2 - 2 * margin - 10);
     var lines = text.length  // splitted text is a string array
     var blockHeight = lines * lineHeight
-    doc.text(text, (pageWidth / 2 + margin + 10), y + 10); 
-    // y+= (blockHeight + 10);
+    var y1 = y + 10;
+    doc.text(text, x, y + 10); 
+
+    y1 += (blockHeight + 10);
+    doc.text(`Total Units: ${totalUnits}`, x, y1);
 
     // Generate table
     table.forEach((body, i) => {
@@ -268,10 +272,6 @@ function download(plan) {
             },
         }); y += tableHeight;
     })
-    
-    y += (lineHeight * 2);
-    doc.text(`Total Units: ${totalUnits}`, margin, y);
-
     
     window.open(doc.output('bloburl'), `${title}.pdf`);
 }
