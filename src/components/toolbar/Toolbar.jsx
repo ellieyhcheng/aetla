@@ -6,10 +6,21 @@ import * as ROUTES from '../../constants/routes';
 import { withRouter } from "react-router-dom";
 import { withApiClient } from "../../ApiClient";
 import { connect } from "react-redux";
-import { deletePlan } from "../../actions/itemActions";
 import SignOut from '../account/SignOut/SignOut';
+import { download } from "../../utils";
 
 class Toolbar extends Component {
+
+    onDownload = () => {
+        this.props.apiClient.getOnePlan(this.props.id)
+        .then(data => {
+            if (data === 'error')
+                return
+            else {
+                download(data);
+            }
+        })
+    }
 
     render() {
         return (
@@ -27,7 +38,7 @@ class Toolbar extends Component {
                             <Button type="icon" icon="trash-alt" tooltip="Delete" direction="right" onClick={this.props.onDelete} />
                         </li>
                         <li>
-                            <Button type="icon" icon="download" tooltip="Export Plan" direction="right" />
+                            <Button type="icon" icon="download" tooltip="Export Plan" direction="right" onClick={this.onDownload}/>
                         </li>
                         <li>
                             <Button type="icon" icon="sliders-h" tooltip="Plan Settings" direction="right" onClick={this.props.onSettings}/>
@@ -63,4 +74,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, {deletePlan})(withApiClient(withRouter(Toolbar)));
+export default connect(mapStateToProps, {})(withApiClient(withRouter(Toolbar)));

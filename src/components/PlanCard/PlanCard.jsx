@@ -6,6 +6,7 @@ import { withRouter } from "react-router-dom";
 import * as ROUTES from '../../constants/routes';
 import { withApiClient } from "../../ApiClient";
 import { connect } from "react-redux";
+import { download } from "../../utils";
 import { setUserProfile, deletePlan } from "../../actions/itemActions";
 
 class PlanCard extends Component {
@@ -42,6 +43,17 @@ class PlanCard extends Component {
             this.props.onClick();
     }
 
+    onDownload = () => {
+        this.props.apiClient.getOnePlan(this.props["_id"])
+        .then(data => {
+            if (data === 'error')
+                return
+            else {
+                download(data);
+            }
+        })
+    }
+
     render() {
         return this.props.empty ? (
             <div className="plancard newcard" onMouseOver={this.emptyMouseOver} onMouseLeave={this.emptyMouseLeave} onClick={this.emptyClick} >
@@ -63,7 +75,7 @@ class PlanCard extends Component {
                         description: this.props.description,
                         id: this.props["_id"],
                     })} />
-                    <Button type="icon" icon="download" dark fixedWidth tooltip="Download" direction="top"/>
+                    <Button type="icon" icon="download" dark fixedWidth tooltip="Export Plan" direction="top" onClick={this.onDownload}/>
                     <Button type="icon" icon="trash-alt" dark fixedWidth tooltip="Delete" direction="top" onClick={() => this.props.onDeleteClick(this.props["_id"])}/>
                 </div>
             </div>
@@ -72,7 +84,7 @@ class PlanCard extends Component {
 
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
     return {
         userId: state.auth.authUser ? state.auth.authUser.uid : '',
     }
