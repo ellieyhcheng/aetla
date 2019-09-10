@@ -59,7 +59,8 @@ function SignUpFormBase(props) {
                         setError({ message: 'School is a required field' })
                     }
                     else {
-                        // props.setUserProfile(res);
+                        props.setUserProfile(res);
+                        
                         props.firebase.doSendEmailVerification();
 
                         props.firebase.doNameUpdate(name)

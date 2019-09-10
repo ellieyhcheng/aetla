@@ -44,19 +44,20 @@ class APIClient {
     }
 
     async perform (method, resource, data) {
-        return client({
-            method,
-            url: resource,
-            data,
-            headers: {
-                id_token: this.token,
-            },
-        }).then(res => {
-            return res.data ? res.data : {};
-        }).catch(e => {
-            console.log(`${method} ${resource} caused:\n ${e}`);
-            return 'error'
-        })
+        if (this.token)
+            return client({
+                method,
+                url: resource,
+                data,
+                headers: {
+                    id_token: this.token,
+                },
+            }).then(res => {
+                return res.data ? res.data : {};
+            }).catch(e => {
+                console.log(`${method} ${resource} caused:\n ${e}`);
+                return 'error'
+            })
     }
 }
 

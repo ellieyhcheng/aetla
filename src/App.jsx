@@ -25,7 +25,41 @@ const Account = lazy(() => import('./pages/Account/Account'));
 const SignUp = lazy(() => import('./pages/SignUp/SignUp'));
 
 class App extends Component {
-	
+	componentDidMount() {
+		this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
+			if (authUser) {
+				authUser.getIdToken().then((idToken) => {
+					this.props.apiClient.setToken(idToken);
+					this.props.setAuthUser({
+						uid: authUser.uid,
+						displayName: authUser.displayName,
+						email: authUser.email,
+						emailVerified: authUser.emailVerified,
+					}); // save only needed data
+					if (authUser.emailVerified)
+						this.props.apiClient.getUserProfile().then(data => {
+							if (data === 'error')
+								this.setState({
+									...this.state,
+									error: true,
+								})
+							else {
+								this.props.setUserProfile(data);
+							}
+						})
+				});
+			}
+			else {
+				this.props.apiClient.setToken(null);
+				this.props.setAuthUser(null);
+				this.props.setUserProfile(null);
+			}
+		})
+	}
+
+	componentWillUnmount() {
+		this.listener();
+	}
 
 	render() {
 		return (
