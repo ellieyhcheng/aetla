@@ -12,6 +12,10 @@ module.exports = (() => {
 				uri: process.env.MONGODB_URI
 			},
 
+			auth: {
+				loc: "./auth/aetla-firebase.json",
+			},
+
 			// Server settings
 			server: {
 				host: 'localhost',

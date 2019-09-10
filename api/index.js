@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const config = require('./config');
 const error = require('errorhandler');
+const decoder = require('./auth');
 
 // Connect to database
 require('./models');
@@ -19,8 +20,10 @@ app.use(bodyParser.json());
 
 // Route site index at /
 app.get('/', (req, res) => {
-    res.send('Courselists')
+    res.send('Connected!')
 })
+
+app.use(decoder.token);
 
 const apiRouter = require('./routes/api');
 app.use('/api', apiRouter)
@@ -35,6 +38,3 @@ app.use(error());
 server.listen(config.server.port, () => {
 	console.log('Listening on port ' + config.server.port);
 });
-
-
-

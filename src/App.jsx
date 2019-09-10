@@ -27,18 +27,35 @@ const SignUp = lazy(() => import('./pages/SignUp/SignUp'));
 class App extends Component {
 	componentDidMount() {
 		this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
-			authUser ? this.props.setAuthUser(authUser) : this.props.setAuthUser(null);
-			if (authUser)
-				this.props.apiClient.getUserProfile(authUser.uid).then(data => {
-					if (data === 'error')
-						this.setState({
-							...this.state,
-							error: true,
-						})
-					else {
-						this.props.setUserProfile(data)
-					}
-				})
+
+			if (authUser) {
+				authUser.getIdToken().then((idToken) => {
+					// localStorage.setItem("token", idToken);
+					this.props.apiClient.setToken(idToken);
+					this.props.setAuthUser({
+						uid: authUser.uid,
+						displayName: authUser.displayName,
+						email: authUser.email,
+						emailVerified: authUser.emailVerified,
+					}); // save only needed data
+					this.props.apiClient.getUserProfile().then(data => {
+						if (data === 'error')
+							this.setState({
+								...this.state,
+								error: true,
+							})
+						else {
+							this.props.setUserProfile(data);
+						}
+					})
+				});
+			}
+			else {
+				// localStorage.removeItem("token");
+				this.props.apiClient.setToken(null);
+				this.props.setAuthUser(null);
+				this.props.setUserProfile(null);
+			}
 		})
 	}
 
@@ -74,7 +91,6 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		authUser: state.auth.authUser,
 	}
 }
 

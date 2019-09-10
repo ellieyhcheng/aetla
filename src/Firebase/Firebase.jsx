@@ -44,6 +44,8 @@ class Firebase {
     })
 
     getUser = () => this.auth.currentUser;
+
+    // getToken = () => this.auth.currentUser.getIdToken();
 }
 
 export default Firebase;

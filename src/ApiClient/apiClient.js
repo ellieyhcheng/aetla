@@ -3,13 +3,18 @@ const BASE_URI = 'http://localhost:8080/'
 
 const client = axios.create({
     baseURL: BASE_URI,
+    withCredentials: true
 });
 
 class APIClient {
-    // constructor(accessToken) {
-    //     this.accessToken = accessToken;
-    // }
-   
+    constructor() {
+        this.token = null;
+    }
+
+    setToken(token) {
+        this.token = token;
+    }
+
     createPlan(plan) {
         return this.perform('post', `/api/plan/create`, plan)
     }
@@ -34,8 +39,8 @@ class APIClient {
         return this.perform('post', `/user/${user.uid}/create`, user)
     }
 
-    getUserProfile(userId) {
-        return this.perform('get', `/user/${userId}`);
+    getUserProfile() {
+        return this.perform('get', `/user`);
     }
 
     async perform (method, resource, data) {
@@ -43,6 +48,9 @@ class APIClient {
             method,
             url: resource,
             data,
+            headers: {
+                id_token: this.token,
+            },
         }).then(res => {
             return res.data ? res.data : {};
         }).catch(e => {

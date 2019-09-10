@@ -16,7 +16,7 @@ function user_all(req, res, next) {
 
 // Display details of a user
 function user_detail(req, res, next) {
-	User.findOne({uid: req.params.id})
+	User.findOne({uid: req.uid})
 	.populate('plans')
     .exec((err, user) => {
         if (err)

@@ -17,6 +17,8 @@ function plan_all(req, res, next) {
 
 // Display details of a plan
 function plan_detail(req, res, next) {
+	// console.log(req.decodedToken);
+
 	Plan.findById(req.params.id)
 		.populate({
 			path: 'courses',
@@ -142,23 +144,6 @@ function plan_create(req, res, next) {
 								title: newPlan.title,
 								description: newPlan.description,
 							});
-							// user.populate('plans', (err, user) => {
-							// 	if (err)
-							// 		return next(err);
-
-							// 	const result = user.toObject();
-							// 	const abbrevPlans = user.plans.map(plan => {
-							// 		return {
-							// 			"_id": plan["_id"],
-							// 			title: plan.title,
-							// 			description: plan.description,
-							// 		}
-							// 	})
-
-							// 	result.plans = abbrevPlans;
-
-							// 	res.json(result);
-							// })
 						})
 					})
 
