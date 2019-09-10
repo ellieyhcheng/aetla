@@ -10,7 +10,7 @@ import { withRouter } from "react-router-dom";
 import { Form, Message } from "semantic-ui-react";
 import { majors } from "../../utils";
 import Button from '../../components/button/Button'
-import { addPlan, deletePlan } from "../../actions/itemActions";
+import { addPlan, deletePlan, setAuthUser, setUserProfile } from "../../actions/itemActions";
 import * as ROUTES from '../../constants/routes';
 
 class Dashboard extends Component {
@@ -35,7 +35,44 @@ class Dashboard extends Component {
 
     componentDidMount() {
         document.title = 'Dashboard - Aetla';
-    }
+
+		this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
+
+			if (authUser) {
+				authUser.getIdToken().then((idToken) => {
+					this.props.apiClient.setToken(idToken);
+					this.props.setAuthUser({
+						uid: authUser.uid,
+						displayName: authUser.displayName,
+						email: authUser.email,
+						emailVerified: authUser.emailVerified,
+					}); // save only needed data
+					this.props.apiClient.getUserProfile().then(data => {
+						if (data === 'error')
+							this.setState({
+								...this.state,
+								error: true,
+							})
+						else {
+							this.props.setUserProfile(data);
+						}
+					})
+				});
+			}
+			else {
+				this.props.apiClient.setToken(null);
+				this.props.setAuthUser(null);
+				this.props.setUserProfile(null);
+			}
+		})
+	}
+
+	componentWillUnmount() {
+		this.listener();
+	}
+
+    // componentDidMount() {
+    // }
 
     onClick = () => {
         if (!this.props.verified)
@@ -355,6 +392,8 @@ const mapStateToProps = state => {
 const actionCreators = {
     addPlan,
     deletePlan,
+    setAuthUser,
+    setUserProfile,
 }
 
 export default withRouter(withApiClient(withAuthorization(connect(mapStateToProps, actionCreators)(Dashboard))));
