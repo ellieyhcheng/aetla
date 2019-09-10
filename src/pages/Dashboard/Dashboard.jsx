@@ -36,8 +36,8 @@ class Dashboard extends Component {
     componentDidMount() {
         document.title = 'Dashboard - Aetla';
 
+        // Works only because Sign In always redirects to Dashbaord. If this changes, need to move this elsewhere.
 		this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
-
 			if (authUser) {
 				authUser.getIdToken().then((idToken) => {
 					this.props.apiClient.setToken(idToken);

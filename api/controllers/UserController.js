@@ -50,7 +50,7 @@ function user_create_post(req, res, next) {
 			req.body.plans = new Array(req.body.plans);
 	}
 
-	body('school', 'Schoool must not be empty.').isLength({ min: 1 }).trim();
+	body('school', 'School must not be empty.').isLength({ min: 1 }).trim();
 	body('uid', 'uid must not be empty.').isLength({ min: 1}).trim();
 	
 	sanitizeBody('*').escape();
@@ -79,6 +79,7 @@ function user_create_post(req, res, next) {
 
 // Handle user delete on POST
 function user_delete_post(req, res, next) {
+	const uid = req.uid;
 	res.send('NOT IMPLEMENTED: User delete POST')
 }
 
@@ -86,7 +87,7 @@ function user_delete_post(req, res, next) {
 // Handle user update on POST
 function user_update_post(req, res, next) {
 
-	User.findOne({uid: req.params.id})
+	User.findOne({uid: req.uid})
 	.exec((err, user) => {
 		if (err)
 			return next(err);
@@ -95,6 +96,24 @@ function user_update_post(req, res, next) {
 			error.status = 404;
 			return next(error);
 		}
+
+		if (!(req.body.plans instanceof Array)) {
+			if (typeof req.body.plans === 'undefined')
+				req.body.plans=[];
+			else
+				req.body.plans = new Array(req.body.plans);
+		}
+	
+		sanitizeBody('*').escape();
+	
+		const errors = validationResult(req);
+	
+		if (!errors.isEmpty()) {
+			const error = new Error('Error updating user because bad inputs');
+			error.status = 404;
+			return next(error);
+		}
+		
 		user.plans = req.body.plans;
 		user.school = req.body.school;	
 

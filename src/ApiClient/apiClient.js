@@ -36,7 +36,7 @@ class APIClient {
     }
 
     createUser(user) {
-        return this.perform('post', `/user/${user.uid}/create`, user)
+        return this.perform('post', `/user/create`, user)
     }
 
     getUserProfile() {
