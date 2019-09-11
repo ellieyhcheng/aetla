@@ -39,10 +39,6 @@ function plan_detail(req, res, next) {
 				return next(error);
 			}
 
-			// var newCourseList = plan.courseList.reduce((prev, requirement) => {
-			// 	prev.push(requirement.content)
-			// 	return prev;
-			// }, [])
 			var newCourses = {};
 			plan.courses.forEach(catalog => {
 				newCourses = catalog.courses.reduce((prev, requirement) => {
@@ -58,15 +54,27 @@ function plan_detail(req, res, next) {
 			const result = plan.toObject();
 			result.courses = newCourses;
 			result.selections = newSelections;
-			// result.courseList = newCourseList;
-			// result['courses'] = newCourses;
-			// console.log(result)
 			res.json(result);
 		})
 }
 
 // Handle plan create on POST
 function plan_create(req, res, next) {
+
+	body('title', 'title must not be empty.').isLength({ min: 1, max: 100 }).trim();
+	body('description', 'description must not be too long.').isLength({ max: 500 }).trim();
+	body('uid', 'uid must not be empty.').isLength({ min: 1}).trim();
+	
+	sanitizeBody('*').escape();
+
+	const errors = validationResult(req);
+
+	if (!errors.isEmpty()) {
+		const error = new Error('Error creating plan because bad inputs');
+		error.status = 404;
+		return next(error);
+	}
+
 	User.findOne({ uid: req.body.uid })
 		.exec((err, user) => {
 			if (err)
@@ -142,23 +150,6 @@ function plan_create(req, res, next) {
 								title: newPlan.title,
 								description: newPlan.description,
 							});
-							// user.populate('plans', (err, user) => {
-							// 	if (err)
-							// 		return next(err);
-
-							// 	const result = user.toObject();
-							// 	const abbrevPlans = user.plans.map(plan => {
-							// 		return {
-							// 			"_id": plan["_id"],
-							// 			title: plan.title,
-							// 			description: plan.description,
-							// 		}
-							// 	})
-
-							// 	result.plans = abbrevPlans;
-
-							// 	res.json(result);
-							// })
 						})
 					})
 
@@ -200,6 +191,19 @@ function plan_delete(req, res, next) {
 
 // Handle plan update on PUT
 function plan_update(req, res, next) {
+
+	body('title', 'title must not be empty.').isLength({ min: 1, max: 100 }).trim();
+	body('description', 'description must not be too long.').isLength({ max: 500 }).trim();
+	
+	sanitizeBody('*').escape();
+
+	const errors = validationResult(req);
+
+	if (!errors.isEmpty()) {
+		const error = new Error('Error creating plan because bad inputs');
+		error.status = 404;
+		return next(error);
+	}
 
 	Plan.findById(req.params.id)
 		.exec((err, plan) => {

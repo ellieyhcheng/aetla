@@ -44,6 +44,19 @@ class Firebase {
     })
 
     getUser = () => this.auth.currentUser;
+
+    doDeleteUser = () => this.auth.currentUser.delete();
+
+    reauthenticateWithEmailAndPassWord = (email, password) => 
+        this.auth.currentUser.reauthenticateWithCredential(
+            app.auth.EmailAuthProvider.credential(email, password)
+        )
+
+    rememberMe = (isRemembered) => 
+        isRemembered ? 
+            this.auth.setPersistence(app.auth.Auth.Persistence.LOCAL)
+         : 
+            this.auth.setPersistence(app.auth.Auth.Persistence.SESSION);
 }
 
 export default Firebase;

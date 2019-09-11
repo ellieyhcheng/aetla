@@ -50,8 +50,6 @@
         }
     }
     
-    
-
     .planner-content {
         overflow: visible;
         margin-left: $toolbar-width;
@@ -103,6 +101,23 @@
         
 
         
+    }
+
+    .help {
+        height: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+
+        .help-body {
+            
+
+            .ui.list .list > .item .header, .ui.list > .item .header {
+                color: $accent;
+            }
+        }
     }
 }
 

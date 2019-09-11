@@ -10,82 +10,8 @@ import { withRouter } from "react-router-dom";
 import { Form, Message } from "semantic-ui-react";
 import { majors } from "../../utils";
 import Button from '../../components/button/Button'
-import { addPlan, deletePlan } from "../../actions/itemActions";
+import { addPlan, deletePlan, setAuthUser, setUserProfile } from "../../actions/itemActions";
 import * as ROUTES from '../../constants/routes';
-
-const plans = [
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-    {
-        title: 'My first plan',
-        description: "this is a very cool description don't you know it",
-        _id: '1234556887655',
-    },
-
-]
 
 class Dashboard extends Component {
     constructor(props) {
@@ -109,7 +35,8 @@ class Dashboard extends Component {
 
     componentDidMount() {
         document.title = 'Dashboard - Aetla';
-    }
+
+	}
 
     onClick = () => {
         if (!this.props.verified)
@@ -414,21 +341,23 @@ class Dashboard extends Component {
 const mapStateToProps = state => {
     if (state.auth.authUser)
         return {
-            plans: state.auth.userProfile ? (state.auth.authUser.emailVerified ? [{}, ...state.auth.userProfile.plans] : []) : [{}],
-            userId: state.auth.authUser ? state.auth.authUser.uid : '',
-            verified: state.auth.authUser ? state.auth.authUser.emailVerified : true,
+            plans: state.auth.userProfile ? (state.auth.authUser.emailVerified ? [{}, ...state.auth.userProfile.plans] : []) : [],
+            userId: state.auth.authUser.uid,
+            verified: state.auth.authUser.emailVerified,
         }
     else
         return {
-            plans: [{}],
+            plans: [],
             userId: '',
-            verified: true,
+            verified: false,
         }
 }
 
 const actionCreators = {
     addPlan,
     deletePlan,
+    setAuthUser,
+    setUserProfile,
 }
 
 export default withRouter(withApiClient(withAuthorization(connect(mapStateToProps, actionCreators)(Dashboard))));

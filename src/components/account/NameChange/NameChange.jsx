@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { setAuthUser } from "../../../actions/itemActions";
 
 function NameChangeBase(props) {
-    const [name, setName] = useState(props.name);
+    const [name, setName] = useState(props.name || '');
 
     const [error, setError] = useState(null);
 
@@ -44,7 +44,7 @@ function NameChangeBase(props) {
                 <Form.Input
                     type="text"
                     name="name"
-                    value={name}
+                    value={name || ''}
                     onChange={onChange}
                     autoComplete="new-password"
                     required

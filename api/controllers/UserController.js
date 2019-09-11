@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('../models/User');
+var Plan = require('../models/Plan');
 const {body, validationResult } = require('express-validator');
 const {sanitizeBody} = require('express-validator');
 
@@ -16,7 +17,7 @@ function user_all(req, res, next) {
 
 // Display details of a user
 function user_detail(req, res, next) {
-	User.findOne({uid: req.params.id})
+	User.findOne({uid: req.uid})
 	.populate('plans')
     .exec((err, user) => {
         if (err)
@@ -50,7 +51,7 @@ function user_create_post(req, res, next) {
 			req.body.plans = new Array(req.body.plans);
 	}
 
-	body('school', 'Schoool must not be empty.').isLength({ min: 1 }).trim();
+	body('school', 'School must not be empty.').isLength({ min: 1 }).trim();
 	body('uid', 'uid must not be empty.').isLength({ min: 1}).trim();
 	
 	sanitizeBody('*').escape();
@@ -78,15 +79,27 @@ function user_create_post(req, res, next) {
 }
 
 // Handle user delete on POST
-function user_delete_post(req, res, next) {
-	res.send('NOT IMPLEMENTED: User delete POST')
+function user_delete(req, res, next) {
+	const uid = req.uid;
+
+	User.deleteOne({ uid: uid }, (err) => {
+		if (err)
+			next(err);
+
+		Plan.deleteMany({ u: uid }, (err) => {
+			if (err)
+				next(err);
+			res.send("User deleted")			
+		})
+	})
+	// res.send('NOT IMPLEMENTED: User delete POST')
 }
 
 
 // Handle user update on POST
 function user_update_post(req, res, next) {
 
-	User.findOne({uid: req.params.id})
+	User.findOne({uid: req.uid})
 	.exec((err, user) => {
 		if (err)
 			return next(err);
@@ -95,6 +108,24 @@ function user_update_post(req, res, next) {
 			error.status = 404;
 			return next(error);
 		}
+
+		if (!(req.body.plans instanceof Array)) {
+			if (typeof req.body.plans === 'undefined')
+				req.body.plans=[];
+			else
+				req.body.plans = new Array(req.body.plans);
+		}
+	
+		sanitizeBody('*').escape();
+	
+		const errors = validationResult(req);
+	
+		if (!errors.isEmpty()) {
+			const error = new Error('Error updating user because bad inputs');
+			error.status = 404;
+			return next(error);
+		}
+		
 		user.plans = req.body.plans;
 		user.school = req.body.school;	
 
@@ -114,6 +145,6 @@ module.exports = {
     user_all,
 	user_detail,
 	user_create_post,
-	user_delete_post,
+	user_delete,
 	user_update_post,
 }

@@ -8,7 +8,7 @@ import { Form, Button, Message } from 'semantic-ui-react';
 import { withFirebase } from "../../Firebase";
 import { withApiClient } from "../../ApiClient";
 import { connect } from 'react-redux';
-import { setUserProfile } from "../../actions/itemActions";
+import { setUserProfile, setAuthUser } from "../../actions/itemActions";
 import { schools } from "../../utils";
 
 function SignUp() {
@@ -49,33 +49,44 @@ function SignUpFormBase(props) {
 
         props.firebase
             .doCreateUserWithEmailAndPassword(email, password)
-            .then(authUser => {
-                props.apiClient.createUser({
-                    school,
-                    plans: [],
-                    uid: authUser.user.uid,
-                }).then(res => {
-                    if (res === 'error') {
-                        setError({ message: 'School is a required field' })
-                    }
-                    else {
-                        props.setUserProfile(res);
-                        props.firebase.doSendEmailVerification();
+            .then(credential => {
+                credential.user.getIdToken().then((idToken) => {
+                    props.apiClient.setToken(idToken);
 
-                        props.firebase.doNameUpdate(name)
-                            .then(() => {
-                                setFormValues({
-                                    name: '',
-                                    school: '',
-                                    email: '',
-                                    password: '',
-                                    password2: '',
-                                })
-
-                                props.history.push(ROUTES.DASHBOARD);
+                    props.firebase.doNameUpdate(name)
+                        .then(() => {
+                            setFormValues({
+                                name: '',
+                                school: '',
+                                email: '',
+                                password: '',
+                                password2: '',
                             })
-                    }
-                })
+                            setAuthUser({
+                                uid: credential.user.uid,
+                                displayName: credential.user.displayName,
+                                email: credential.user.email,
+                                emailVerified: credential.user.emailVerified,
+                            })
+                        })
+
+                    props.firebase.doSendEmailVerification();
+                    
+                    props.apiClient.createUser({
+                        school,
+                        plans: [],
+                        uid: credential.user.uid,
+                    }).then(res => {
+                        if (res === 'error') {
+                            setError({ message: 'School is a required field' })
+                        }
+                        else {
+                            // props.setUserProfile(res);
+                            props.history.push(ROUTES.DASHBOARD);
+                        }
+                    })
+                });
+                
 
             })
             .catch(error => {
