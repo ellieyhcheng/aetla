@@ -51,7 +51,12 @@ class Firebase {
         this.auth.currentUser.reauthenticateWithCredential(
             app.auth.EmailAuthProvider.credential(email, password)
         )
-      
+
+    rememberMe = (isRemembered) => 
+        isRemembered ? 
+            this.auth.setPersistence(app.auth.Auth.Persistence.LOCAL)
+         : 
+            this.auth.setPersistence(app.auth.Auth.Persistence.SESSION);
 }
 
 export default Firebase;

@@ -43,28 +43,36 @@ function SignInFormBase(props) {
     const [formValues, setFormValues] = useState({
         email: '',
         password: '',
-        // remember: false,
+        remember: false,
     });
 
     const [error, setError] = useState(null);
 
     const onSubmit = (e) => {
-        const { email, password } = formValues;
+        const { email, password, remember } = formValues;
 
-        props.firebase
-            .doSignInWithEmailAndPassword(email, password)
+        props.firebase.rememberMe(remember)
             .then(() => {
-                setFormValues({
-                    email: '',
-                    password: '',
-                    // remember: false,
+                props.firebase
+                .doSignInWithEmailAndPassword(email, password)
+                .then(() => {
+                    setFormValues({
+                        email: '',
+                        password: '',
+                        remember: false,
+                    })
+    
+                    props.history.push(ROUTES.DASHBOARD);
                 })
-
-                props.history.push(ROUTES.DASHBOARD);
+                .catch(error => {
+                    setError(error);
+                })
             })
             .catch(error => {
                 setError(error);
             })
+
+        
 
         e.preventDefault();
     }
@@ -73,6 +81,13 @@ function SignInFormBase(props) {
         setFormValues({
             ...formValues,
             [e.currentTarget.name]: e.currentTarget.value,
+        })
+    }
+
+    const toggleRemember = (e) => {
+        setFormValues({
+            ...formValues, 
+            remember: !formValues.remember
         })
     }
 
@@ -106,7 +121,7 @@ function SignInFormBase(props) {
                 label="Password"
             />
             <div className="form-row">
-                {/* <Form.Checkbox label="Remember Me" /> https://firebase.google.com/docs/auth/web/auth-state-persistence */}
+                <Form.Checkbox label="Remember Me" name="remember" checked={formValues.remember} onChange={toggleRemember}/>
                 <div className="signin-button">
                     <Button disabled={isInvalid} fluid primary onClick={onSubmit}>Log In</Button>
 
