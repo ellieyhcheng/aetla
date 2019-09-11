@@ -10,7 +10,7 @@ import Firebase, { FirebaseContext } from './Firebase';
 import APIClient, { ApiClientContext } from './ApiClient';
 import { CookiesProvider } from "react-cookie";
 
-import 'semantic-ui-less/semantic.less'
+import 'semantic-ui-less/semantic.less';
 
 ReactDOM.render(
   <FirebaseContext.Provider value={new Firebase()}>

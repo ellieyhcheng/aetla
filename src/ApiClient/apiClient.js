@@ -39,6 +39,10 @@ class APIClient {
         return this.perform('post', `/user/create`, user)
     }
 
+    deleteUser() {
+        return this.perform('delete', `/user/delete`);
+    }
+
     getUserProfile() {
         return this.perform('get', `/user`);
     }

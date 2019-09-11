@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('../models/User');
+var Plan = require('../models/Plan');
 const {body, validationResult } = require('express-validator');
 const {sanitizeBody} = require('express-validator');
 
@@ -78,9 +79,20 @@ function user_create_post(req, res, next) {
 }
 
 // Handle user delete on POST
-function user_delete_post(req, res, next) {
+function user_delete(req, res, next) {
 	const uid = req.uid;
-	res.send('NOT IMPLEMENTED: User delete POST')
+
+	User.deleteOne({ uid: uid }, (err) => {
+		if (err)
+			next(err);
+
+		Plan.deleteMany({ u: uid }, (err) => {
+			if (err)
+				next(err);
+			res.send("User deleted")			
+		})
+	})
+	// res.send('NOT IMPLEMENTED: User delete POST')
 }
 
 
@@ -133,6 +145,6 @@ module.exports = {
     user_all,
 	user_detail,
 	user_create_post,
-	user_delete_post,
+	user_delete,
 	user_update_post,
 }

@@ -38,9 +38,6 @@ class Dashboard extends Component {
 
 	}
 
-    // componentDidMount() {
-    // }
-
     onClick = () => {
         if (!this.props.verified)
             return;
@@ -344,15 +341,15 @@ class Dashboard extends Component {
 const mapStateToProps = state => {
     if (state.auth.authUser)
         return {
-            plans: state.auth.userProfile ? (state.auth.authUser.emailVerified ? [{}, ...state.auth.userProfile.plans] : []) : [{}],
-            userId: state.auth.authUser ? state.auth.authUser.uid : '',
-            verified: state.auth.authUser ? state.auth.authUser.emailVerified : true,
+            plans: state.auth.userProfile ? (state.auth.authUser.emailVerified ? [{}, ...state.auth.userProfile.plans] : []) : [],
+            userId: state.auth.authUser.uid,
+            verified: state.auth.authUser.emailVerified,
         }
     else
         return {
-            plans: [{}],
+            plans: [],
             userId: '',
-            verified: true,
+            verified: false,
         }
 }
 

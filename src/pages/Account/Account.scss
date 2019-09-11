@@ -4,6 +4,8 @@
 .account {
     margin-left: $navbar-width;
     padding: 3vh 3vw;
+    overflow-y: scroll;
+    height: 100vh;
 
     .header {
         h2 {

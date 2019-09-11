@@ -73,8 +73,8 @@ class Button extends Component {
     }
 
     onClick = (e) => {
-        if (this.state.onClick) {
-            this.state.onClick(e);
+        if (this.props.onClick) {
+            this.props.onClick(e);
             e.stopPropagation();
         }
 
