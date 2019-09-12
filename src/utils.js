@@ -111,11 +111,11 @@ function sortCourseList(courseList, courses) {
 }
 
 const schools = [
-    { key: 'UCLA', text: 'University of California - Los Angeles', value: 'ucla' },
+    { key: 'UCLA', text: 'University of California - Los Angeles', value: 'UCLA' },
 ]
 
 const majors = [
-    { key: 'CSE', text: 'Computer Science and Engineering', value: 'cse' },
+    { key: 'CSE', text: 'Computer Science and Engineering', value: 'CSE' },
 
 ]
 

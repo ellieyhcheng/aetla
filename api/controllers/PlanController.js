@@ -6,6 +6,9 @@ var User = require('../models/User');
 var Catalog = require('../models/Catalog');
 const {body, validationResult } = require('express-validator');
 const {sanitizeBody} = require('express-validator');
+var async = require('async');
+
+var utils = require('../utils');
 
 // Display all plans
 function plan_all(req, res, next) {
@@ -41,13 +44,14 @@ function plan_detail(req, res, next) {
 				return next(error);
 			}
 
-			var newCourses = {};
-			plan.courses.forEach(catalog => {
-				newCourses = catalog.courses.reduce((prev, requirement) => {
-					prev[requirement.content.id] = requirement.content;
-					return prev;
-				}, newCourses);
-			})
+			var newCourses = plan.courses.reduce((prev, catalog) => {
+				var newReduce = catalog.courses.reduce((newPrev, requirement) => {
+					newPrev[requirement.content.id] = requirement.content;
+					return newPrev;
+				}, prev);
+				
+				return newReduce;
+			}, {})
 			var newSelections = plan.selections.reduce((prev, obj) => {
 				prev[obj["_id"]] = obj;
 				return prev;
@@ -84,78 +88,125 @@ function plan_create(req, res, next) {
 			if (user === null) {
 				const error = new Error('User not found');
 				error.status = 404;
-				return next(error);
+				next(error);
 			}
 
-			Catalog.findOne({ name: req.body.major.toUpperCase() })
-				.populate({
-					path: 'courses',
-				})
-				.exec((err, catalog) => {
-					if (err)
-						next(err);
-					if (catalog === null) {
-						const error = new Error('Major catalog not found');
-						error.status = 404;
-						return next(error);
-					}
+			async.waterfall([
+				function(cb) {
+					console.log(req.body.major)
+					console.log(utils.majorToSchool[req.body.major])
+					Catalog.findOne({name: `${utils.majorToSchool[req.body.major]} GE`})
+					.populate({
+						path: 'courses',
+					})
+					.exec((err, ge) => {
+						if (err)
+							cb(err, null);
+						if (ge === null) {
+							const error = new Error('GE catalog not found');
+							error.status = 404;
+							cb(error, null);
+						}
+	
+						const catalogs = [ge];
 
-					const selections = catalog.courses.reduce((prev, requirement) => {
-						if (requirement.contentModel === 'Elective') {
-							prev.push({
-								_id: requirement.content,
-								index: 0,
+						const selections = ge.courses.reduce((prev, requirement) => {
+							if (requirement.contentModel === 'Elective') {
+								prev.push({
+									_id: requirement.content,
+									index: 0,
+								})
+							}
+							return prev;
+						}, [])
+	
+						const courseList = ge.courses.reduce((prev, requirement) => {
+							prev.push(requirement.content)
+							return prev;
+						}, [])
+
+						cb(null, selections, courseList, catalogs);
+					})
+				},
+				function(selections, courseList, catalogs, cb) {
+					Catalog.findOne({ name: req.body.major.toUpperCase() })
+					.populate({
+						path: 'courses',
+					})
+					.exec((err, catalog) => {
+						if (err)
+							cb(err, null);
+						if (catalog === null) {
+							const error = new Error('Major catalog not found');
+							error.status = 404;
+							cb(error, null);
+						}
+	
+						catalogs.push(catalog);
+
+						const newSelections = catalog.courses.reduce((prev, requirement) => {
+							if (requirement.contentModel === 'Elective') {
+								prev.push({
+									_id: requirement.content,
+									index: 0,
+								})
+							}
+							return prev;
+						}, selections)
+	
+						const newCourseList = catalog.courses.reduce((prev, requirement) => {
+							prev.push(requirement.content)
+							return prev;
+						}, courseList)
+	
+						const plan_detail = {
+							u: req.body.uid,
+							title: req.body.title,
+							description: req.body.description,
+							courseList: newCourseList,
+							coursePlan: [
+								{
+									name: 'year1',
+									quarters: ['fall'],
+									fall: [], // CourseIds
+									winter: [],
+									spring: [],
+									summer: [],
+								},
+							],
+							courses: catalogs,
+							selections: newSelections,
+						}
+	
+						var plan = new Plan(plan_detail);
+						plan.save((err, newPlan) => {
+							if (err) {
+								cb(err, null);
+							}
+							const newPlans = user.plans;
+							newPlans.push(newPlan.id);
+							user.plan = newPlans;
+	
+							user.save((err, user) => {
+								if (err)
+									cb(err, null);
+	
+								cb(null, {
+									"_id": newPlan["_id"],
+									title: newPlan.title,
+									description: newPlan.description,
+								});
 							})
-						}
-						return prev;
-					}, [])
-
-					const courseList = catalog.courses.reduce((prev, requirement) => {
-						prev.push(requirement.content)
-						return prev;
-					}, [])
-
-					const plan_detail = {
-						u: req.body.uid,
-						title: req.body.title,
-						description: req.body.description,
-						courseList: courseList,
-						coursePlan: [
-							{
-								name: 'year1',
-								quarters: ['fall'],
-								fall: [], // CourseIds
-								winter: [],
-								spring: [],
-								summer: [],
-							},
-						],
-						courses: catalog,
-						selections: selections,
-					}
-
-					var plan = new Plan(plan_detail);
-					plan.save((err, newPlan) => {
-						if (err) {
-							next(err);
-						}
-						const newPlans = user.plans;
-						newPlans.push(newPlan.id);
-						user.plan = newPlans;
-
-						user.save((err, user) => {
-							if (err)
-								next(err);
-
-							res.json({
-								"_id": newPlan["_id"],
-								title: newPlan.title,
-								description: newPlan.description,
-							});
 						})
 					})
-
-				})
+				}
+			], (err, result) => {
+				if (err)
+					next(err);
+				else {
+					res.json(result);
+				}
+			})			
 		})
 }
 
