@@ -65,7 +65,7 @@ class Planner extends Component {
         }
         this.props.apiClient.getOnePlan(decodedId).then(data => {
             if (this.mounted) {
-                if (data === 'error')
+                if (data === 'error' || !data)
                     this.setState({
                         ...this.state,
                         error: true,

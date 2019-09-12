@@ -27,34 +27,6 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 load();
 
-// console.log('\nChoose an option:\n\t(1) Load written data automatically. (Default)\n\t(2) Create data entry by entry through console.')
-
-// var rl = readline.createInterface({
-//     input: process.stdin,
-//     output: process.stdout,
-//     prompt: '\nOption: '
-// });
-
-// rl.prompt();
-
-// rl.on('line', (line) => {
-//     switch (line.trim()) {
-//         default:
-//         case '1':
-//             console.log('Chosen option 1');
-//             autoLoad();
-//             break;
-//         case '2':
-//             console.log('Chosen option 2');
-
-//             break;
-//     }
-// }).on('close', () => {
-//     mongoose.connection.close();
-//     console.log('\nExiting addData.js!');
-//     process.exit(0);
-// })
-
 var electives = []
 var requirements = []
 var catalogs = []
@@ -95,48 +67,86 @@ function coursesGet(courseArr, cb) {
 }
 
 function electiveCreate(options, name, cb) {
-    async.waterfall([
-        function (cb) {
-            coursesGet(options, cb)
-        },
-        function (res, cb) {
-            // console.log(res)
-            Elective.findOne({
-                options: res,
-            }, (err, old) => {
-                if (err) {
-                    console.log("Error finding elective " + name);
-                    cb(err, null);
-                    return;
-                }
-                if (old !== null) {
-                    console.log(old)
-                    console.log("Elective already exists " + name);
-                    electives.push(old);
-                    cb(null, old);
-                    return;
-                }
+        async.waterfall([
+            function (cb) {
+                coursesGet(options, cb)
+            },
+            function (res, cb) {
+                // console.log(res)
+                if (name === "") {
+                    Elective.findOne({
+                        options: {$all: [...res]},
+                    }, (err, old) => {
+                        if (err) {
+                            console.log("Error finding elective " + name);
+                            cb(err, null);
+                            return;
+                        }
+                        if (old !== null) {
+                            console.log(old)
+                            console.log("Elective already exists " + name);
+                            electives.push(old);
+                            cb(null, old);
+                            return;
+                        }
 
-                electivedetail = {
-                    options: res,
-                    name: name,
+                        electivedetail = {
+                            options: res,
+                            name: name,
+                        }
+
+                        var elective = new Elective(electivedetail);
+                        elective.save(err => {
+                            if (err) {
+                                console.log('ERROR CREATING elective: ' + elective);
+                                cb(err, null);
+                                return
+                            }
+                            // console.log('CREATED elective: ' + elective);
+                            electives.push(elective);
+                            cb(null, elective);
+                        })
+
+                    })
                 }
+                else {
+                    Elective.findOne({
+                        name: name,
+                    }, (err, old) => {
+                        if (err) {
+                            console.log("Error finding elective " + name);
+                            cb(err, null);
+                            return;
+                        }
+                        if (old !== null) {
+                            console.log(old)
+                            console.log("Elective already exists " + name);
+                            electives.push(old);
+                            cb(null, old);
+                            return;
+                        }
 
-                var elective = new Elective(electivedetail);
-                elective.save(err => {
-                    if (err) {
-                        console.log('ERROR CREATING elective: ' + elective);
-                        cb(err, null);
-                        return
-                    }
-                    // console.log('CREATED elective: ' + elective);
-                    electives.push(elective);
-                    cb(null, elective);
-                })
+                        electivedetail = {
+                            options: res,
+                            name: name,
+                        }
 
-            })
-        },
-    ], cb)
+                        var elective = new Elective(electivedetail);
+                        elective.save(err => {
+                            if (err) {
+                                console.log('ERROR CREATING elective: ' + elective);
+                                cb(err, null);
+                                return
+                            }
+                            // console.log('CREATED elective: ' + elective);
+                            electives.push(elective);
+                            cb(null, elective);
+                        })
+
+                    })
+                }
+            },
+        ], cb)
 }
 
 /**
@@ -230,7 +240,7 @@ function load() {
     async.series([
         createElectives,
         createRequirements,
-        // createCatalogs,
+        createCatalogs,
 
     ], (err, result) => {
         if (err) {
@@ -279,65 +289,9 @@ const nonElectives = [
     // 'GE SAN'
 ]
 
-
 function createElectives(cb) {
     const electiveArray = [
-        [
-            [
-                'EC ENGR 101A',
-                'EC ENGR 101B',
-                'EC ENGR 101A',
-                'EC ENGR 112',
-                'EC ENGR 113',
-                'EC ENGR 113DA',
-                'EC ENGR 113DB',
-                'EC ENGR 114',
-                'EC ENGR 115A',
-                'EC ENGR 115B',
-                'EC ENGR 115E',
-                'EC ENGR M119',
-                'EC ENGR M116L',
-                'EC ENGR M116C',
-                'EC ENGR 121B',
-                'EC ENGR 121DA',
-                'EC ENGR 121DB',
-                'EC ENGR 123A',
-                'EC ENGR 123B',
-                'EC ENGR 128',
-                'EC ENGR 132A',
-                'EC ENGR 132B',
-                'EC ENGR 133A',
-                'EC ENGR 133B',
-                'EC ENGR 134',
-                'EC ENGR 141',
-                'EC ENGR 142',
-                'EC ENGR C143A',
-                'EC ENGR M146',
-                'EC ENGR C147',
-                'EC ENGR M153',
-                'EC ENGR 162A',
-                'EC ENGR 163A',
-                'EC ENGR 163DA',
-                'EC ENGR 163DB',
-                'EC ENGR 163C',
-                'EC ENGR 164DA',
-                'EC ENGR 164DB',
-                'EC ENGR 170A',
-                'EC ENGR 170B',
-                'EC ENGR 170C',
-                'EC ENGR 173DB',
-                'EC ENGR M171L',
-                'EC ENGR 173DA',
-                'EC ENGR 176',
-                'EC ENGR 180DA',
-                'EC ENGR 180DB',
-                'EC ENGR 183DA',
-                'EC ENGR 183DB',
-                'EC ENGR 184DA',
-                'EC ENGR 184DB',
-                'EC ENGR M185',
-            ]
-        , 'ECE Elective'],
+        
     ]
     async.map(electiveArray, (elec, cb) => {
         electiveCreate(elec[0], elec[1], cb)

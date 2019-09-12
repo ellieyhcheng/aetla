@@ -25,6 +25,14 @@ const Account = lazy(() => import('./pages/Account/Account'));
 const SignUp = lazy(() => import('./pages/SignUp/SignUp'));
 
 class App extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			loaded: false,
+			error: false,
+		}
+	}
 	componentDidMount() {
 		this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
 			if (authUser) {
@@ -45,14 +53,28 @@ class App extends Component {
 								})
 							else {
 								this.props.setUserProfile(data);
+								this.setState({
+									...this.state,
+									loaded: true,
+								})
 							}
 						})
+					else {
+						this.setState({
+							...this.state,
+							loaded: true,
+						})
+					}
 				});
 			}
 			else {
 				this.props.apiClient.setToken(null);
 				this.props.setAuthUser(null);
 				this.props.setUserProfile(null);
+				this.setState({
+					...this.state,
+					loaded: true,
+				})
 			}
 		})
 	}
@@ -65,20 +87,22 @@ class App extends Component {
 		return (
 			<Router>
 				{/* Please give me a moment... I'm trying my best */}
-				<Suspense fallback={<div></div>}> 
-					<Switch>
+				<Suspense fallback={<div></div>}>
+					{this.state.loaded &&
+						<Switch>
 
-						<Route exact path={ROUTES.LANDING} component={Landing} />
-						<Route path={ROUTES.SIGN_IN} component={SignIn} />
-						<Route path={ROUTES.SIGN_UP} component={SignUp} />
-						{/* <Route path={ROUTES.GET_STARTED} component={Landing} /> */}
-						<Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
+							<Route exact path={ROUTES.LANDING} component={Landing} />
+							<Route path={ROUTES.SIGN_IN} component={SignIn} />
+							<Route path={ROUTES.SIGN_UP} component={SignUp} />
+							{/* <Route path={ROUTES.GET_STARTED} component={Landing} /> */}
+							<Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
 
-						{/* With Authorization Routes */}
-						<Route path={ROUTES.DASHBOARD} component={Dashboard} />
-						<Route path={ROUTES.PLANNER} component={Planner} />
-						<Route path={ROUTES.ACCOUNT} component={Account} />
-					</Switch>
+							{/* With Authorization Routes */}
+							<Route path={ROUTES.DASHBOARD} component={Dashboard} />
+							<Route path={ROUTES.PLANNER} component={Planner} />
+							<Route path={ROUTES.ACCOUNT} component={Account} />
+						</Switch>
+					}
 				</Suspense>
 
 
