@@ -58,7 +58,7 @@ function coursesGet(courseArr, cb) {
                     if (res === null)
                         console.log("Error finding course: " + name)
                     // console.log("Found course: " + name)
-                    cb(null, res)
+                    cb(null, res.id)
                     return;
                 })
             }, cb)
@@ -69,7 +69,10 @@ function coursesGet(courseArr, cb) {
 function electiveCreate(options, name, cb) {
         async.waterfall([
             function (cb) {
-                coursesGet(options, cb)
+                if (options)
+                    coursesGet(options, cb)
+                else
+                    cb(null, []) // Search by name
             },
             function (res, cb) {
                 // console.log(res)
@@ -83,7 +86,7 @@ function electiveCreate(options, name, cb) {
                             return;
                         }
                         if (old !== null) {
-                            console.log(old)
+                            console.log(res)
                             console.log("Elective already exists " + name);
                             electives.push(old);
                             cb(null, old);
@@ -95,7 +98,7 @@ function electiveCreate(options, name, cb) {
                             name: name,
                         }
 
-                        var elective = new Elective(electivedetail);
+                        let elective = new Elective(electivedetail);
                         elective.save(err => {
                             if (err) {
                                 console.log('ERROR CREATING elective: ' + elective);
@@ -119,7 +122,7 @@ function electiveCreate(options, name, cb) {
                             return;
                         }
                         if (old !== null) {
-                            console.log(old)
+                            console.log(res)
                             console.log("Elective already exists " + name);
                             electives.push(old);
                             cb(null, old);
@@ -131,7 +134,7 @@ function electiveCreate(options, name, cb) {
                             name: name,
                         }
 
-                        var elective = new Elective(electivedetail);
+                        let elective = new Elective(electivedetail);
                         elective.save(err => {
                             if (err) {
                                 console.log('ERROR CREATING elective: ' + elective);
@@ -165,6 +168,8 @@ function requirementCreate(content, type, cb) {
                 cb(null, content)
         },
         function (res, cb) {
+            if (res.length === 1)
+                res = res[0];
             Requirement.findOne({
                 content: res,
             }, (err, old) => {
@@ -202,7 +207,7 @@ function requirementCreate(content, type, cb) {
     
 }
 
-function catalogCreate(name, requirements, cb) {
+function catalogCreate(name, reqs, cb) {
     Catalog.findOne({
         name: name
     }, (err, old) => {
@@ -212,7 +217,7 @@ function catalogCreate(name, requirements, cb) {
             return;
         }
         if (old !== null) {
-            requirements.push(old);
+            catalogs.push(old);
             cb(null, old);
             return;
         }
@@ -254,44 +259,127 @@ function load() {
     })
 }
 
-// TODO: Change nonElectives and electives
+// TODO: Change nonElectives and electives and name
+// naming by https://www.registrar.ucla.edu/Faculty-Staff/Courses-and-Programs/Major-and-Minor-Codes/Undergraduate-Majors-and-Premajors
+const catalogName = "MECHANIC"
 const nonElectives = [
-    // 'COM SCI 1',
-    // 'COM SCI 31',
-    // 'COM SCI 32',
-    // 'COM SCI 33',
-    // 'COM SCI 35L',
-    // 'COM SCI 111',
-    // 'COM SCI 118',
-    // 'COM SCI 131',
-    // 'COM SCI 180',
-    // 'COM SCI 181',
-    // 'COM SCI 152B',
-    // 'EC ENGR 100',
-    // 'EC ENGR 102',
-    // 'EC ENGR 115C',
-    // 'EC ENGR 3',
-    // 'MATH 31A',
-    // 'MATH 31B',
-    // 'MATH 32A',
-    // 'MATH 32B',
-    // 'MATH 33A',
-    // 'MATH 33B',
-    // 'MATH 61',
-    // 'PHYSICS 1A',
-    // 'PHYSICS 1B',
-    // 'PHYSICS 1C',
-    // 'TBR 1',
-    // 'TBR 2',
-    // 'TBR 3',
-    // 'GE LS',
-    // 'GE HAN',
-    // 'GE SAN'
+    "MATH 31A",
+    "MATH 31B",
+    "MATH 32A",
+    "MATH 32B",
+    "MATH 33A",
+    "MECH&AE 82",
+    "PHYSICS 1A",
+    "PHYSICS 1B",
+    "PHYSICS 1C",
+    "PHYSICS 4AL",
+    "PHYSICS 4BL",
+    "CHEM 20A",
+    "CHEM 20B",
+    "CHEM 20L",
+    "MECH&AE 94",
+    "MECH&AE 101",
+    "MECH&AE 102",
+    "MECH&AE 103",
+    "MAT SCI 104",
+    "EC ENGR 100",
+    "MECH&AE 105A",
+    "MECH&AE 105D",
+    "MECH&AE 107",
+    "MECH&AE 157",
+    "MECH&AE 171A",
+    "MECH&AE 156A",
+    "MECH&AE 162A",
+    "MECH&AE 162D",
+    "MECH&AE 162E",
+    "EC ENGR 110L"
 ]
+
 
 function createElectives(cb) {
     const electiveArray = [
+        [["MECH&AE M20", "COM SCI 31"], ""],
+        [["MECH&AE 183A", "MECH&AE M183B"], ""],
+        [["MECH&AE 131A", "MECH&AE 133A"], ""],
+        [["COM SCI M152A", "EC ENGR M116L"], ""],
+        [["COM SCI 152B", "COM SCI 130"], ""],
+        [["STATS 100A", "C&EE 110", "EC ENGR 131A", "MATH 170A"], ""],
+        [[
+            "MECH&AE 131A",
+            "MECH&AE 133A",
+            "MECH&AE 135",
+            "MECH&AE 136",
+            "MECH&AE C137",
+            "MECH&AE CM140",
+            "MECH&AE 150A",
+            "MECH&AE 150B",
+            "MECH&AE 150C",
+            "MECH&AE C150G",
+            "MECH&AE C150P",
+            "MECH&AE C150R",
+            "MECH&AE 154S",
+            "MECH&AE 155",
+            "MECH&AE C156B",
+            "MECH&AE 157A",
+            "MECH&AE 161A",
+            "MECH&AE 161B",
+            "MECH&AE 161C",
+            "MECH&AE 166C",
+            "MECH&AE M168",
+            "MECH&AE 169A",
+            "MECH&AE 171B",
+            "MECH&AE 172",
+            "MECH&AE 174",
+            "MECH&AE C175A",
+            "MECH&AE 181A",
+            "MECH&AE 182B",
+            "MECH&AE 182C",
+            "MECH&AE 183A",
+            "MECH&AE M183B",
+            "MECH&AE C183C",
+            "MECH&AE 185",
+            "MECH&AE C186",
+            "MECH&AE C187L",
+        ], "ME Elective 1"],
+        [[
+            "MECH&AE 131A",
+            "MECH&AE 133A",
+            "MECH&AE 135",
+            "MECH&AE 136",
+            "MECH&AE C137",
+            "MECH&AE CM140",
+            "MECH&AE 150A",
+            "MECH&AE 150B",
+            "MECH&AE 150C",
+            "MECH&AE C150G",
+            "MECH&AE C150P",
+            "MECH&AE C150R",
+            "MECH&AE 154S",
+            "MECH&AE 155",
+            "MECH&AE C156B",
+            "MECH&AE 157A",
+            "MECH&AE 161A",
+            "MECH&AE 161B",
+            "MECH&AE 161C",
+            "MECH&AE 166C",
+            "MECH&AE M168",
+            "MECH&AE 169A",
+            "MECH&AE 171B",
+            "MECH&AE 172",
+            "MECH&AE 174",
+            "MECH&AE C175A",
+            "MECH&AE 181A",
+            "MECH&AE 182B",
+            "MECH&AE 182C",
+            "MECH&AE 183A",
+            "MECH&AE M183B",
+            "MECH&AE C183C",
+            "MECH&AE 185",
+            "MECH&AE C186",
+            "MECH&AE C187L",
+        ], "ME Elective 2"],
         
+
     ]
     async.map(electiveArray, (elec, cb) => {
         electiveCreate(elec[0], elec[1], cb)
@@ -316,7 +404,7 @@ function createRequirements(cb) {
 function createCatalogs(cb) {
     async.parallel([
         function (cb) {
-            catalogCreate("CSE", requirements, cb);
+            catalogCreate(catalogName, requirements, cb);
         },
     ], cb)
 }

@@ -115,7 +115,9 @@ const schools = [
 ]
 
 const majors = [
-    { key: 'CSE', text: 'Computer Science and Engineering', value: 'CSE' },
+    { key: 'CS&ENGR', text: 'Computer Science and Engineering', value: 'CS&ENGR' },
+    { key: 'COM SCI', text: 'Computer Science', value: 'COM SCI' },
+    { key: 'MECHANIC', text: 'Mechanical Engineering', value: 'MECHANIC' },
 
 ]
 

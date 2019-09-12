@@ -242,27 +242,29 @@ class Planner extends Component {
 
     collapse = () => {
         this.setState({
-            isOpen: true,
+            isOpen: window.innerWidth < 970,
             collapse: window.innerWidth < 970,
         })
-        if (this.state.collapse)
-            this.toggle();
+        this.toggle();
     }
 
     toggle = () => {
-        const toolbar = document.querySelector('.toolbar-collapse');
+        const toolbar = document.querySelector('.toolbar-wrapper');
         const toggleButton = document.querySelector('.toggle-button');
         if (toolbar && toggleButton) {
             if (this.state.isOpen) {
                 // Close toolbar
-                toolbar.style.transform = `translateX(-50%)`;
-                toggleButton.style.transform = 'rotate(0)';
+                toolbar.style.transform = `translateX(-100%)`;
+                toggleButton.style.transform = 'translateX(0) rotate(0)';
             }
             else {
                 // Open toolbar
                 toolbar.style.transform = `translateX(0)`;
-                toggleButton.style.transform = 'rotate(90deg)';
+                toggleButton.style.transform = 'translateX(80%) rotate(90deg)';
             }
+        }
+        else if (toolbar && !toggleButton) {
+            toolbar.style.transform = `translateX(0)`;
         }
         this.setState({
             ...this.state,
@@ -482,19 +484,14 @@ class Planner extends Component {
 
         return (
             <div className="planner">
-                {this.state.collapse ? (
-                    <div className="toolbar-collapse">
-                        <div className="toolbar-wrapper">
-                            {toolbar}
-                        </div>
-                        <div className="toggle-button">
-                            <Button type="icon" icon="bars" onClick={this.toggle} />
-                        </div>
+                <div className="toolbar-wrapper">
+                    {toolbar}
+                </div>
 
+                {this.state.collapse && 
+                    <div className="toggle-button">
+                        <Button type="icon" icon="bars" onClick={this.toggle} />
                     </div>
-
-                ) :
-                    toolbar
                 }
 
                 <div className="planner-content" style={{
@@ -550,7 +547,7 @@ class Planner extends Component {
 
                 {this.state.saveError &&
                     <Modal open={this.state.saveError} centered onClose={() => this.onModalClose("saveError")}>
-                        Something went wrong... Please try again or contact us.
+                        Something went wrong... Please try again, refresh the page, or contact us.
                         <div className="modal-button">
                             <Button type="text" text="Okay, I guess." onClick={() => this.onModalClose("saveError")}></Button>
                         </div>

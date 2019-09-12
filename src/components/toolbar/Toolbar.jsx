@@ -35,13 +35,13 @@ class Toolbar extends Component {
                             <Button type="icon" icon="copy" tooltip="Copy" direction="right" onClick={this.props.onCopy} />
                         </li>
                         <li>
-                            <Button type="icon" icon="trash-alt" tooltip="Delete" direction="right" onClick={this.props.onDelete} />
-                        </li>
-                        <li>
                             <Button type="icon" icon="download" tooltip="Export Plan" direction="right" onClick={this.onDownload}/>
                         </li>
                         <li>
                             <Button type="icon" icon="sliders-h" tooltip="Plan Settings" direction="right" onClick={this.props.onSettings}/>
+                        </li>
+                        <li>
+                            <Button type="icon" icon="trash-alt" tooltip="Delete" direction="right" onClick={this.props.onDelete} />
                         </li>
                         <li>
                             <Button type="icon" icon="question-circle" tooltip="Help" direction="right" onClick={this.props.onHelp}/>

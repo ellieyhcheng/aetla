@@ -86,8 +86,7 @@ class App extends Component {
 	render() {
 		return (
 			<Router>
-				{/* Please give me a moment... I'm trying my best */}
-				<Suspense fallback={<div></div>}>
+				<Suspense fallback={<div>Please give me a moment... I'm trying my best</div>}>
 					{this.state.loaded &&
 						<Switch>
 

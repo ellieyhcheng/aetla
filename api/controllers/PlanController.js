@@ -93,9 +93,7 @@ function plan_create(req, res, next) {
 
 			async.waterfall([
 				function(cb) {
-					console.log(req.body.major)
-					console.log(utils.majorToSchool[req.body.major])
-					Catalog.findOne({name: `${utils.majorToSchool[req.body.major]} GE`})
+					Catalog.findOne({name: utils.majorToSchool[req.body.major]})
 					.populate({
 						path: 'courses',
 					})
