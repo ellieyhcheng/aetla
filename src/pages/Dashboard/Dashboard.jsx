@@ -36,6 +36,14 @@ class Dashboard extends Component {
     componentDidMount() {
         document.title = 'Dashboard - Aetla';
 
+        if (this.props.verified)
+            this.props.apiClient.getUserProfile().then(data => {
+                if (data === 'error')
+                    return;
+                else {
+                    this.props.setUserProfile(data);
+                }
+            })
 	}
 
     onClick = () => {
