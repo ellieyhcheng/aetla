@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 var Plan = require('../models/Plan');
 var User = require('../models/User');
 var Catalog = require('../models/Catalog');
-const {body, validationResult } = require('express-validator');
-const {sanitizeBody} = require('express-validator');
+const { body, validationResult } = require('express-validator');
+const { sanitizeBody } = require('express-validator');
 var async = require('async');
 
 var utils = require('../utils');
@@ -49,7 +49,7 @@ function plan_detail(req, res, next) {
 					newPrev[requirement.content.id] = requirement.content;
 					return newPrev;
 				}, prev);
-				
+
 				return newReduce;
 			}, {})
 			var newSelections = plan.selections.reduce((prev, obj) => {
@@ -69,8 +69,8 @@ function plan_create(req, res, next) {
 
 	body('title', 'title must not be empty.').isLength({ min: 1, max: 100 }).trim();
 	body('description', 'description must not be too long.').isLength({ max: 500 }).trim();
-	body('uid', 'uid must not be empty.').isLength({ min: 1}).trim();
-	
+	body('uid', 'uid must not be empty.').isLength({ min: 1 }).trim();
+
 	sanitizeBody('*').escape();
 
 	const errors = validationResult(req);
@@ -91,120 +91,105 @@ function plan_create(req, res, next) {
 				next(error);
 			}
 
-			async.waterfall([
-				function(cb) {
-					Catalog.findOne({name: utils.majorToSchool[req.body.major]})
-					.populate({
-						path: 'courses',
-					})
-					.exec((err, ge) => {
-						if (err)
-							cb(err, null);
-						if (ge === null) {
-							const error = new Error('GE catalog not found');
-							error.status = 404;
-							cb(error, null);
-						}
-	
-						const catalogs = [ge];
+			const ges = [];
+			req.body.major.forEach(major => {
+				const school = utils.majorToSchool[major];
+				if (ges.indexOf(school) === -1) {
+					ges.push(school);
+				}
+			})
+			req.body.major = req.body.major.concat(ges);
 
-						const selections = ge.courses.reduce((prev, requirement) => {
-							if (requirement.contentModel === 'Elective') {
-								prev.push({
-									_id: requirement.content,
-									index: 0,
-								})
-							}
-							return prev;
-						}, [])
-	
-						const courseList = ge.courses.reduce((prev, requirement) => {
-							prev.push(requirement.content)
-							return prev;
-						}, [])
+			const selections = [];
+			const courseList = [];
+			const catalogs = [];
 
-						cb(null, selections, courseList, catalogs);
-					})
-				},
-				function(selections, courseList, catalogs, cb) {
-					Catalog.findOne({ name: req.body.major.toUpperCase() })
+			async.each(req.body.major, function(item, cb) {
+				Catalog.findOne({ name: item })
 					.populate({
 						path: 'courses',
 					})
 					.exec((err, catalog) => {
 						if (err)
-							cb(err, null);
+							cb(err);
 						if (catalog === null) {
-							const error = new Error('Major catalog not found');
+							const error = new Error('GE catalog not found');
 							error.status = 404;
-							cb(error, null);
+							cb(error);
 						}
-	
-						catalogs.push(catalog);
 
-						const newSelections = catalog.courses.reduce((prev, requirement) => {
+						catalog.courses.forEach(requirement => {
 							if (requirement.contentModel === 'Elective') {
-								prev.push({
+								const selection = {
 									_id: requirement.content,
 									index: 0,
-								})
+								}
+								if (selections.indexOf(selection) === -1) {
+									selections.push(selection)
+								}
 							}
-							return prev;
-						}, selections)
-	
-						const newCourseList = catalog.courses.reduce((prev, requirement) => {
-							prev.push(requirement.content)
-							return prev;
-						}, courseList)
-	
-						const plan_detail = {
-							u: req.body.uid,
-							title: req.body.title,
-							description: req.body.description,
-							courseList: newCourseList,
-							coursePlan: [
-								{
-									name: 'year1',
-									quarters: ['fall'],
-									fall: [], // CourseIds
-									winter: [],
-									spring: [],
-									summer: [],
-								},
-							],
-							courses: catalogs,
-							selections: newSelections,
-						}
-	
-						var plan = new Plan(plan_detail);
-						plan.save((err, newPlan) => {
-							if (err) {
-								cb(err, null);
+							
+							let found = false;
+							for (let i = 0; i < courseList.length; i++) {
+								if (courseList[i].equals(requirement.content)) {
+									found = true;
+									break;
+								}
 							}
-							const newPlans = user.plans;
-							newPlans.push(newPlan.id);
-							user.plan = newPlans;
-	
-							user.save((err, user) => {
-								if (err)
-									cb(err, null);
-	
-								cb(null, {
-									"_id": newPlan["_id"],
-									title: newPlan.title,
-									description: newPlan.description,
-								});
-							})
+
+							if (!found)
+								courseList.push(requirement.content);
 						})
+
+						catalogs.push(catalog);
+
+						cb(null);
 					})
-				}
-			], (err, result) => {
+			}, function (err) {
 				if (err)
 					next(err);
 				else {
-					res.json(result);
+					const plan_detail = {
+						u: req.body.uid,
+						title: req.body.title,
+						description: req.body.description,
+						courseList: courseList,
+						coursePlan: [
+							{
+								name: 'year1',
+								quarters: ['fall'],
+								fall: [], // CourseIds
+								winter: [],
+								spring: [],
+								summer: [],
+							},
+						],
+						courses: catalogs,
+						selections: selections,
+					}
+		
+					var plan = new Plan(plan_detail);
+					plan.save((err, newPlan) => {
+						if (err) {
+							next(err);
+						}
+						const newPlans = user.plans;
+						newPlans.push(newPlan.id);
+						user.plan = newPlans;
+		
+						user.save((err, user) => {
+							if (err)
+								cb(err, null);
+		
+							res.json({
+								"_id": newPlan["_id"],
+								title: newPlan.title,
+								description: newPlan.description,
+							});
+						})
+					})
 				}
-			})			
+			})
 		})
 }
 
@@ -245,7 +230,7 @@ function plan_update(req, res, next) {
 
 	body('title', 'title must not be empty.').isLength({ min: 1, max: 100 }).trim();
 	body('description', 'description must not be too long.').isLength({ max: 500 }).trim();
-	
+
 	sanitizeBody('*').escape();
 
 	const errors = validationResult(req);
@@ -315,7 +300,7 @@ function plan_copy(req, res, next) {
 					copy.save((err, newPlan) => {
 						if (err)
 							next(err);
-						
+
 						const newPlans = user.plans;
 						newPlans.push(newPlan.id);
 						user.plan = newPlans;

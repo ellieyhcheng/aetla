@@ -21,7 +21,7 @@ class Dashboard extends Component {
             copy: false,
             title: '',
             description: '',
-            major: '',
+            major: [],
             error: null,
             copyError: null,
             copyTitle: '',
@@ -45,7 +45,7 @@ class Dashboard extends Component {
             ...this.state,
             title: '',
             description: '',
-            major: '',
+            major: [],
             error: null,
             create: true,
         })
@@ -78,7 +78,7 @@ class Dashboard extends Component {
     }
 
     onSubmit = (e) => {
-        if (this.state.title === '' || this.state.major === '') {
+        if (this.state.title === '' || this.state.major === []) {
             this.setState({
                 ...this.state,
                 error: {
@@ -87,6 +87,10 @@ class Dashboard extends Component {
             })
         }
         else {
+            this.setState({
+                ...this.state,
+                error: null,
+            })
             const newPlan = {
                 title: this.state.title,
                 description: this.state.description,
@@ -261,6 +265,8 @@ class Dashboard extends Component {
                                 required
                                 label="Major"
                                 fluid
+                                multiple
+                                search
                             />
                             <Form.TextArea
                                 name="description"
