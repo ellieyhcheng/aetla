@@ -118,7 +118,8 @@ const majors = [
     { key: 'CS&ENGR', text: 'Computer Science and Engineering', value: 'CS&ENGR' },
     { key: 'COM SCI', text: 'Computer Science', value: 'COM SCI' },
     { key: 'MECHANIC', text: 'Mechanical Engineering', value: 'MECHANIC' },
-
+    { key: 'MAT ENGR S', text: 'Materials Engineering - Straight Option', value: 'MAT ENGR S' },
+    { key: 'MAT ENGR E', text: 'Materials Engineering - Electronic Option', value: 'MAT ENGR E' },
 ]
 
 function ordinalize(i) {

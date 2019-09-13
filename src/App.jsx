@@ -11,6 +11,7 @@ import * as ROUTES from './constants/routes';
 import { setAuthUser, setUserProfile } from "./actions/itemActions";
 import { withFirebase } from "./Firebase";
 import { withApiClient } from "./ApiClient";
+import Navbar from './components/Navbar/Navbar';
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
 	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes
@@ -86,7 +87,9 @@ class App extends Component {
 	render() {
 		return (
 			<Router>
-				<Suspense fallback={<div>Please give me a moment... I'm trying my best</div>}>
+				<Suspense fallback={<div>
+					<Navbar/>
+				</div>}>
 					{this.state.loaded &&
 						<Switch>
 

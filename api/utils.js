@@ -4,6 +4,8 @@ const majorToSchool = {
     "CS&ENGR": "HSSEAS",
     "COM SCI": "HSSEAS",
     "MECHANIC": "HSSEAS",
+    'MAT ENGR S': 'HSSEAS',
+    'MAT ENGR E': 'HSSEAS',
 }
 
 module.exports = {

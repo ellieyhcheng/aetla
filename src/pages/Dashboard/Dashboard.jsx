@@ -267,7 +267,7 @@ class Dashboard extends Component {
                                 onChange={(e, { value }) => this.setState(
                                     {
                                         ...this.state,
-                                        major: value,
+                                        major: value.length < 4 ? value : this.state.major,
                                     }
                                 )}
                                 required
