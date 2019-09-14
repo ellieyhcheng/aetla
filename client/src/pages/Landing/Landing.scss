@@ -1,5 +1,5 @@
-@import '../../constants/colors.scss';
-@import '../../constants/vars.scss';
+@import '../../utils/colors.scss';
+@import '../../utils/vars.scss';
 
 .page {
     overflow-y: scroll;
@@ -54,7 +54,6 @@
 
             .image {
                 height: 450px;
-                // width: 350px;
                 margin-left: 10vw;
                 position: relative;
                 display:flex;

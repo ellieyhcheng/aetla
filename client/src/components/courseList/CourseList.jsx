@@ -3,7 +3,7 @@ import './CourseList.scss';
 import CourseCard from '../../components/courseCard/CourseCard';
 import { Droppable } from 'react-beautiful-dnd';
 import { connect } from 'react-redux';
-import splitList from '../../utils';
+import splitList from '../../utils/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { setSearchWord } from '../../actions/itemActions';
 

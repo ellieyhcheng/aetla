@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import './Toolbar.scss';
 import Button from '../button/Button';
 import { Link } from 'react-router-dom'
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../utils/routes';
 import { withRouter } from "react-router-dom";
 import { withApiClient } from "../../ApiClient";
 import { connect } from "react-redux";
 import SignOut from '../account/SignOut/SignOut';
-import { download } from "../../utils";
+import { download } from "../../utils/utils";
 
 class Toolbar extends Component {
 

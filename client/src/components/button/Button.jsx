@@ -2,29 +2,17 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './Button.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PropTypes from 'prop-types';
 
 class Button extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            type: props.type || 'text', // { icon, text }
-            icon: props.icon || null,
-            text: props.text || '',
-            dark: props.dark ? props.dark : false,
-            onClick: props.onClick,
-            tooltip: props.tooltip || '',
-            direction: props.direction,  // { left, top, right, bottom }
-            fixedWidth: props.fixedWidth,
-        };
-    }
 
     componentDidMount() {
-        if (this.state.tool === '')
+        if (this.props.tool === '')
             return;
         const node = ReactDOM.findDOMNode(this);
         if (node instanceof HTMLElement) {
             const tooltip = node.querySelector('.button-tooltip');
-            switch (this.state.direction) {
+            switch (this.props.direction) {
                 case 'left':
                     tooltip.style.right = '100%';
                     tooltip.style.top = '50%';
@@ -81,29 +69,47 @@ class Button extends Component {
     }
 
     render() {
-        if (this.state.type === 'icon') {
+        if (this.props.type === 'icon') {
             return (
                 <div className="button-icon" onClick={this.onClick} onDoubleClick={(e) => e.stopPropagation()} style={{
-                    color: this.state.dark ? "#544E54" : "#D5BDA4",
+                    color: this.props.dark ? "#544E54" : "#D5BDA4",
                 }}>
-                    <FontAwesomeIcon icon={this.state.icon} fixedWidth className="icon" />
-                    {this.state.tooltip &&
-                        <span className="button-tooltip">{this.state.tooltip}</span>
+                    <FontAwesomeIcon icon={this.props.icon} fixedWidth className="icon" />
+                    {this.props.tooltip &&
+                        <span className="button-tooltip">{this.props.tooltip}</span>
                     }
                 </div>
             )
         } else { // type === 'text'
             return (
-                <div className={this.state.fixedWidth ? "button-text fixed-width" : "button-text"} 
+                <div className={this.props.fixedWidth ? "button-text fixed-width" : "button-text"} 
                     onClick={this.onClick}
                     onMouseDown={this.onMouseDown}
                     onMouseUp={this.onMouseUp}
                 >
-                    {this.state.text}
+                    {this.props.text}
                 </div>
             )
         }
     }
+}
+
+Button.propTypes = {
+    onClick: PropTypes.func.isRequired,
+    type: PropTypes.oneOf(['icon', 'text']).isRequired,
+    icon: PropTypes.string,
+    text: PropTypes.string,
+    dark: PropTypes.bool,
+    tooltip: PropTypes.string,
+    direction: PropTypes.oneOf(['left', 'top', 'right', 'bottom']),
+    fixedWidth: PropTypes.bool,
+}
+
+Button.defaultProps = {
+    icon: '',
+    text: '',
+    dark: false,
+    tooltip: '',
 }
 
 export default Button;

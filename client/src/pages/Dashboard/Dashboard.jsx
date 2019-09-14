@@ -8,10 +8,10 @@ import Modal from "../../components/modal/Modal";
 import { withApiClient } from "../../ApiClient";
 import { withRouter } from "react-router-dom";
 import { Form, Message } from "semantic-ui-react";
-import { majors } from "../../utils";
+import { majors } from "../../utils/utils";
 import Button from '../../components/button/Button'
 import { addPlan, deletePlan } from "../../actions/itemActions";
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../utils/routes';
 
 class Dashboard extends Component {
     constructor(props) {

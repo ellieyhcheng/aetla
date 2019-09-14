@@ -14,7 +14,7 @@ import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList,
 import { withApiClient } from "../../ApiClient";
 import withAuthorization from '../../components/Session/withAuthorization';
 import { Redirect } from "react-router-dom";
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../utils/routes';
 import { Message, Form, List, } from "semantic-ui-react";
 
 class Planner extends Component {

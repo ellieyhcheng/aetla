@@ -3,10 +3,10 @@ import './PlanCard.scss';
 import Button from "../button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { withRouter } from "react-router-dom";
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../utils/routes';
 import { withApiClient } from "../../ApiClient";
 import { connect } from "react-redux";
-import { download } from "../../utils";
+import { download } from "../../utils/utils";
 import { setUserProfile, deletePlan } from "../../actions/itemActions";
 
 class PlanCard extends Component {

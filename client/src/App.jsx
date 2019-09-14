@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux'
-import * as ROUTES from './constants/routes';
+import * as ROUTES from './utils/routes';
 import { setAuthUser, setUserProfile } from "./actions/itemActions";
 import { withFirebase } from "./Firebase";
 import { withApiClient } from "./ApiClient";
@@ -17,7 +17,7 @@ library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle
 	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes
 	, faAngleDown, faAngleUp, faBars, faFile, faPenSquare);
 
-const Planner = lazy(() => import('./pages/planner/Planner'));
+const Planner = lazy(() => import('./pages/Planner/Planner'));
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
 const Landing = lazy(() => import('./pages/Landing/Landing'));
 const SignIn = lazy(() => import('./pages/SignIn/SignIn'));
@@ -92,17 +92,16 @@ class App extends Component {
 	render() {
 		return (
 			<Router>
-					{this.state.loaded &&
+				{this.state.loaded &&
 
-				<Suspense fallback={<div>
-					{this.state.auth ? <Navbar/> : <div>Loading...</div>} 
-				</div>}>
+					<Suspense fallback={<div>
+						{this.state.auth ? <Navbar /> : <div>Loading...</div>}
+					</div>}>
 						<Switch>
 
 							<Route exact path={ROUTES.LANDING} component={Landing} />
 							<Route path={ROUTES.SIGN_IN} component={SignIn} />
 							<Route path={ROUTES.SIGN_UP} component={SignUp} />
-							{/* <Route path={ROUTES.GET_STARTED} component={Landing} /> */}
 							<Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
 							<Route path={ROUTES.CONTACT} component={Contact} />
 
@@ -111,8 +110,8 @@ class App extends Component {
 							<Route path={ROUTES.PLANNER} component={Planner} />
 							<Route path={ROUTES.ACCOUNT} component={Account} />
 						</Switch>
-				</Suspense>
-					}
+					</Suspense>
+				}
 
 
 			</Router>

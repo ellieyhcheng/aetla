@@ -3,7 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 
 import './PasswordForget.scss'
 import logo from '../../assets/aetla-dark.svg';
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../utils/routes';
 import { Form, Message, } from 'semantic-ui-react';
 import { withFirebase } from "../../Firebase";
 

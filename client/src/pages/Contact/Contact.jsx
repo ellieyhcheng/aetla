@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import './Contact.scss';
 import logo from '../../assets/aetla-dark.svg';
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../utils/routes';
 import { Link } from 'react-router-dom';
 
 function Contact() {

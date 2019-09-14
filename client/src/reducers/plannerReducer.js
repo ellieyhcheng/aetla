@@ -1,5 +1,4 @@
 import { STORE_PLAN_DETAILS, SET_ACTIVE_COURSE, SET_HOME_DROPPABLE, SET_COURSELIST, SET_COURSEPLAN, SET_SEARCH_WORD, SET_SELECTIONS } from "../actions/types"
-//Add and Delete plan available for later
 
 const initialState = {
     title: '',
@@ -17,8 +16,6 @@ const initialState = {
 export default function (state = initialState, action) {
     switch (action.type) {
         case STORE_PLAN_DETAILS:
-            // const newList = action.plan.courseList
-            // const lists = splitList(newList, action.plan.courses)
             return {
                 ...state,
                 ...action.plan,

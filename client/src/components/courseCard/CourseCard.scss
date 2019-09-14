@@ -1,5 +1,5 @@
-@import '../../constants/colors.scss';
-@import '../../constants/vars.scss';
+@import '../../utils/colors.scss';
+@import '../../utils/vars.scss';
 
 .course-card {
     width: 7vw;
@@ -19,7 +19,6 @@
     font-size: 0.85rem;
     text-align: center;
     margin: 5px;
-    // z-index: 9;
     transition: border-color ease 0.2s, color ease 0.2s;
     /* Disable text-highlight */
     -webkit-touch-callout: none; /* iOS Safari */
@@ -36,8 +35,6 @@
     }
 
     &:focus {
-        // border-color: $accent;
-        // color: $accent;
         outline: none;
     }
 
@@ -46,9 +43,6 @@
         "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
         font-size: 0.7rem;
         width: 100%;
-        // display: none;
-        // border: none;
-        // height: 100%;
         text-align: center;
     }
 
@@ -68,7 +62,6 @@
         flex-direction: column;
         box-sizing: border-box;
         white-space: nowrap;
-        // border: 1px solid $primary;
     }
 
     .name {
@@ -80,7 +73,6 @@
 }
 
 .course-card.active {
-    // background-color: $primary;
     color: $accent;
     border-color: $accent;
 }
@@ -89,7 +81,6 @@
 @media only screen and (max-width: 970px) {
     .course-card {
         font-size: 1vw;
-        // margin: 5px 0.15vw;
     }
 }
 

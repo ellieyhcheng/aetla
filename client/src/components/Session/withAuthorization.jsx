@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { withFirebase } from '../../Firebase';
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../utils/routes';
 
 const withAuthorization = Component => {
     class WithAuthorization extends React.Component {

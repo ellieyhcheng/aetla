@@ -3,7 +3,7 @@ import './Navbar.scss';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SignOut from '../account/SignOut/SignOut';
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../utils/routes';
 import logo from '../../assets/aetla-light.svg';
 
 

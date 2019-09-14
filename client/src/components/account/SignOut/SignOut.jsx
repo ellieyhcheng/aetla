@@ -2,7 +2,7 @@ import React from "react";
 import { withFirebase } from '../../../Firebase';
 import './SignOut.scss';
 import { withRouter } from "react-router-dom";
-import * as ROUTES from '../../../constants/routes';
+import * as ROUTES from '../../../utils/routes';
 import { connect } from "react-redux";
 import { setUserProfile, setAuthUser } from "../../../actions/itemActions";
 

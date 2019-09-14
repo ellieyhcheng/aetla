@@ -1,5 +1,5 @@
-@import '../../constants/colors.scss';
-@import '../../constants/vars.scss';
+@import '../../utils/colors.scss';
+@import '../../utils/vars.scss';
 
 
 .dropdown {
@@ -7,7 +7,6 @@
     position: relative;
     width: 100%;
     height: 18px;
-    // border: 1px solid $accent;
     box-sizing: border-box;
     white-space: nowrap;
 
@@ -78,7 +77,6 @@
 @media only screen and (max-width: 970px) {
     .list-item {
         font-size: 1vw;
-        // margin: 5px 0.15vw;
     }
 }
 

@@ -8,7 +8,7 @@ import drag from '../../assets/drop.png';
 import darkLogo from '../../assets/aetla-dark.svg';
 import example from '../../assets/example-medium.jpg';
 import { Button } from 'semantic-ui-react';
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../utils/routes';
 import { connect } from 'react-redux';
 import { SignUpForm } from "../SignUp/SignUp";
 

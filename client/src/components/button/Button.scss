@@ -1,4 +1,4 @@
-@import '../../constants/colors.scss';
+@import '../../utils/colors.scss';
 
 .button-text {
     margin: 5px;
@@ -14,7 +14,6 @@
     &.click {
         color: $accent;
         border-color: $accent;
-        // background: $primary;
     }
 }
 

@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Link, withRouter } from 'react-router-dom';
 
 import logo from '../../assets/aetla-dark.svg';
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from '../../utils/routes';
 import './SignUp.scss';
 import { Form, Button, Message } from 'semantic-ui-react';
 import { withFirebase } from "../../Firebase";
 import { withApiClient } from "../../ApiClient";
 import { connect } from 'react-redux';
 import { setUserProfile, setAuthUser } from "../../actions/itemActions";
-import { schools } from "../../utils";
+import { schools } from "../../utils/utils";
 
 function SignUp() {
     useEffect(() => {

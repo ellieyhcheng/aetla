@@ -1,5 +1,5 @@
-@import '../../constants/colors.scss';
-@import '../../constants/vars.scss';
+@import '../../utils/colors.scss';
+@import '../../utils/vars.scss';
 
 .modal-overlay {
     width: 100vw;
@@ -14,11 +14,9 @@
     z-index: 1000;
     visibility: hidden;
     opacity: 0;
-    // transition: ease 1s;
 
     .modal {
         background: white;
-        // border: 1px solid $primary;
         border-radius: 2px;
         min-width: 350px;
         min-height: 200px;
