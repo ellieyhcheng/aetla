@@ -9,7 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CourseDetail from '../../components/courseDetail/CourseDetail';
 import Modal from '../../components/modal/Modal';
 import { connect } from 'react-redux';
-import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, setCoursePlan, addPlan, deletePlan } from '../../actions/itemActions';
+import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, 
+    setCoursePlan, addPlan, deletePlan, updatePlan } from '../../actions/itemActions';
 import { withApiClient } from "../../ApiClient";
 import withAuthorization from '../../components/Session/withAuthorization';
 import { Redirect } from "react-router-dom";
@@ -418,6 +419,7 @@ class Planner extends Component {
                             change: false,
                         })
                         this.props.storePlanDetails(newPlan);
+                        this.props.updatePlan(data);
                     }
                 }, 1000);
             })
@@ -725,6 +727,7 @@ const actionCreators = {
     setCoursePlan,
     addPlan,
     deletePlan,
+    updatePlan,
 }
 
 export default withAuthorization(connect(mapStateToProps, actionCreators)(withApiClient(Planner)));

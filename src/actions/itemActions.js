@@ -1,6 +1,6 @@
 import {ADD_PLAN, DELETE_PLAN, STORE_PLAN_DETAILS, SET_ACTIVE_COURSE, 
     SET_HOME_DROPPABLE, SET_COURSELIST, SET_COURSEPLAN, SET_SEARCH_WORD, SET_SELECTIONS, 
-    SET_AUTH_USER, SET_USER_PROFILE } from "./types"
+    SET_AUTH_USER, SET_USER_PROFILE, UPDATE_PLAN } from "./types"
 
 export const storePlanDetails = (plan) => {
     return {
@@ -76,5 +76,12 @@ export const deletePlan = (planId) => {
     return {
         type: DELETE_PLAN,
         planId,
+    }
+}
+
+export const updatePlan = (plan) => {
+    return {
+        type: UPDATE_PLAN,
+        plan,
     }
 }

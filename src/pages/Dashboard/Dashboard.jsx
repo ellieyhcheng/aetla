@@ -10,7 +10,7 @@ import { withRouter } from "react-router-dom";
 import { Form, Message } from "semantic-ui-react";
 import { majors } from "../../utils";
 import Button from '../../components/button/Button'
-import { addPlan, deletePlan, setAuthUser, setUserProfile } from "../../actions/itemActions";
+import { addPlan, deletePlan } from "../../actions/itemActions";
 import * as ROUTES from '../../constants/routes';
 
 class Dashboard extends Component {
@@ -35,15 +35,6 @@ class Dashboard extends Component {
 
     componentDidMount() {
         document.title = 'Dashboard - Aetla';
-
-        if (this.props.verified)
-            this.props.apiClient.getUserProfile().then(data => {
-                if (data === 'error')
-                    return;
-                else {
-                    this.props.setUserProfile(data);
-                }
-            })
 	}
 
     onClick = () => {
@@ -370,8 +361,6 @@ const mapStateToProps = state => {
 const actionCreators = {
     addPlan,
     deletePlan,
-    setAuthUser,
-    setUserProfile,
 }
 
 export default withRouter(withApiClient(withAuthorization(connect(mapStateToProps, actionCreators)(Dashboard))));

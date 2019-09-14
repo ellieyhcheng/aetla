@@ -262,7 +262,11 @@ function plan_update(req, res, next) {
 
 			plan.save()
 				.then(plan => {
-					res.json('Plan updated!');
+					res.json({
+						title: plan.title,
+						description: plan.description,
+						"_id": plan["_id"],
+					});
 				})
 				.catch(err => {
 					return next(err);
