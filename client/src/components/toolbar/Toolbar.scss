@@ -1,0 +1,56 @@
+@import '../../utils/colors.scss';
+@import '../../utils/vars.scss';
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    padding: 0;
+    margin: 0;
+}
+
+.toolbar {
+    width: $toolbar-width;
+    height: 100vh;
+    font-size: 1.5rem;
+    background-color: $primary;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+
+    .line-v {
+        background-color: $secondary;
+        width: 1px;
+        height: 15vh;
+    }
+
+    .top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        position: absolute;
+        top: 0;
+
+        .line-v {
+            margin-bottom: 8px;
+        }
+    }
+
+    .bot {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+
+        .line-v {
+            margin-top: 8px;
+        }
+    }
+}

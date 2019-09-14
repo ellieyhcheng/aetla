@@ -1,0 +1,9 @@
+export const LANDING = '/';
+export const SIGN_UP = '/signup';
+export const SIGN_IN = '/signin';
+export const DASHBOARD = '/dashboard';
+export const ACCOUNT = '/settings';
+export const ADMIN = '/admin';
+export const PASSWORD_FORGET = '/passwordreset';
+export const PLANNER = '/planner/:id';
+export const CONTACT = '/contact';

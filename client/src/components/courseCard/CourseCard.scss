@@ -1,0 +1,91 @@
+@import '../../utils/colors.scss';
+@import '../../utils/vars.scss';
+
+.course-card {
+    width: 7vw;
+    max-width: $course-width;
+    height: $course-height;
+    min-height: $course-height;
+    position: relative;
+    border: 1px solid $primary;
+    background-color: white;
+    border-radius: 1px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    overflow: visible;
+    justify-content: center;
+    letter-spacing: 0.1rem;
+    font-size: 0.85rem;
+    text-align: center;
+    margin: 5px;
+    transition: border-color ease 0.2s, color ease 0.2s;
+    /* Disable text-highlight */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+    
+    p {
+        padding: 5px 5px;
+        transition: color ease 0.3s;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    select {
+        font-family: 'Muli', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+        "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+        font-size: 0.7rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    .select-selected {
+        border-left: $primary 2px solid;
+    }
+
+    .options {
+        width: 100%;
+        height: 100%;
+        bottom: 0px;
+        position: absolute;
+        letter-spacing: 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-direction: column;
+        box-sizing: border-box;
+        white-space: nowrap;
+    }
+
+    .name {
+        height: 50%;
+        display: flex;
+        align-items: center;
+    }
+    
+}
+
+.course-card.active {
+    color: $accent;
+    border-color: $accent;
+}
+
+
+@media only screen and (max-width: 970px) {
+    .course-card {
+        font-size: 1vw;
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    .course-card {
+        font-size: 1.1vw;
+    }
+}

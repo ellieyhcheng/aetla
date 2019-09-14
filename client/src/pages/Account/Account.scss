@@ -1,0 +1,64 @@
+@import '../../utils/colors.scss';
+@import '../../utils/vars.scss';
+
+.account {
+    margin-left: $navbar-width;
+    padding: 3vh 3vw;
+    overflow-y: scroll;
+    height: 100vh;
+
+    .header {
+        h2 {
+            padding: 0 1vw;
+        }
+
+        hr {
+            background: $primary;
+        }
+    }
+    
+    .grid {
+        display: flex;
+        width: 100%;
+        flex-wrap: wrap;
+        padding: 4vh 0 3vh;
+
+        .change-form {
+            letter-spacing: 0.05rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background: $base;
+            border-radius: 3px;
+            width: max-content;
+            height: max-content;
+            padding: 10px 15px;
+            margin: 0 1vw 5vh;
+            width: 50vw;
+            max-width: 450px;
+        
+            .title {
+                font-size: 1.5rem;
+                padding: 0 0 1vh; 
+            }
+        
+            .form-row {
+                margin: 2vh 0 1vh;
+                display: flex;
+                justify-content: space-between;
+                padding-left: 2px;
+        
+                
+                .submitted {
+                    visibility: hidden;
+                    color: $accent;
+                    text-align: center;
+                    border-radius: 3px;
+                    padding: 1vh 1vw;
+                }
+            }
+
+        }            
+    }
+
+}

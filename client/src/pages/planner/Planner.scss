@@ -1,0 +1,130 @@
+@import '../../utils/colors.scss';
+@import '../../utils/vars.scss';
+
+.center-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.planner {
+    width: 100vw;
+    height: 100vh;
+
+    .line-h {
+        width: 100%;
+        height: 0.9px;
+        background-color: $primary;
+    }
+
+    .load-icon {
+        margin: 2vh 1vw 0;
+        color: $secondary;
+        font-size: 1.8rem;
+    }
+
+    .toolbar-wrapper {
+        width: $toolbar-width;
+        z-index: 50;
+        transition: cubic-bezier(.22,.61,.36,1) 0.5s;
+        position: relative;
+    }
+
+    .toggle-button {
+        z-index: 1;
+        width: 9vh;
+        height: 9vh;
+        font-size: 2rem;
+        transition: cubic-bezier(.22,.61,.36,1) 0.5s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+    
+    .planner-content {
+        overflow: visible;
+        margin-left: $toolbar-width;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 0 1.5vw;
+        z-index: 5;
+    }
+
+    .planner-header {
+        width: 100%;
+        height: 9vh;
+        min-height: 50px;
+        letter-spacing: 0.2rem;
+        color: $primary;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        font-size: 1.2rem;
+        position: relative;
+
+        p {
+            font-size: 1.4rem;
+            margin-right: 5px;
+            text-transform: capitalize;
+        }
+
+        .title-loader {
+            width: 20vw;
+            height: 45%;
+            position: relative;
+        }
+
+        .save-button {
+            padding-top: 3px;
+        }
+    }
+
+    .planner-body {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: stretch;
+        height: 91vh;
+        max-height: calc(100vh - 50px);
+        padding: 3vh 1vw;
+        overflow: hidden;
+        
+
+        
+    }
+
+    .help {
+        height: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+
+        .help-body {
+            
+
+            .ui.list .list > .item .header, .ui.list > .item .header {
+                color: $accent;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 970px) {
+    .search {
+        font-size: 1.25vw !important;
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    .search {
+        font-size: 1.5vw !important;
+    }
+}
