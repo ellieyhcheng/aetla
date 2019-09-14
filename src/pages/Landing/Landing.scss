@@ -43,13 +43,30 @@
         .section {
             width: 100%;
             display: flex;
-            flex-direction: column;
+            // flex-direction: column;
             align-items: center;
-            justify-content: center;
             padding: 6vh 0;
+            position: relative;
 
             &:nth-child(even) {
                 background: whitesmoke;
+            }
+
+            .image {
+                height: 450px;
+                margin: 0 10vw;
+                position: relative;
+
+                img {
+                    height: 100%;
+                }
+            }
+
+            .vertical {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                position: relative;
             }
 
         }
@@ -91,10 +108,50 @@
             }
         }
 
+        .section.two {
+            .vertical {
+                left: 18vw;
+            }
+            
+            .image {
+                left: 20vw;
+            }
+        }
+
+        .section.three {
+            padding: 15vh 0;
+
+            .vertical {
+                left: 18vw;
+            }
+
+            .image {
+                height: auto;
+                width: 18vw;
+                left: 12vw;
+
+                img {
+                    height: auto;
+                    width: 100%;
+                }
+            }
+        }
+
+        .section.four {
+            .vertical {
+                left: 15vw;
+            }
+
+            .image {
+                left: 12vw;
+            }
+        }
+
         .section.five {
             background: $primary;
             color: $secondary;
             text-align: center;
+            justify-content: center;
 
             .signupform {
                 width: 450px;
@@ -105,6 +162,29 @@
                 text-align: left;
             }
             
+        }
+
+        .footer {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4vh 0;
+
+            hr {
+                height: 80%;
+                color: $primary;
+                margin: 2vw;
+            }
+
+            .logo {
+                height: 5vh;
+
+                img {
+                    height: 100%;
+                    position: relative;
+                }                
+            }
         }
         
     }

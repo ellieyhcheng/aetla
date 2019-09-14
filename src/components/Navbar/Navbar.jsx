@@ -42,6 +42,15 @@ class Navbar extends Component {
                     </ul>
                 </div>
                 <div className="bot">
+                    <ul>
+                        
+                        <Link to={ROUTES.CONTACT}>
+                            <div className="navbar-item">
+                                {/* <FontAwesomeIcon icon="pen-square" fixedWidth /> */}
+                                <p>Contact Us</p>
+                            </div>
+                        </Link>
+                    </ul>
                     <div className="line-h" />
                 </div>
             </div>

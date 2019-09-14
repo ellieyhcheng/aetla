@@ -290,6 +290,7 @@ class Planner extends Component {
             loading: true,
         }
         this.props.storePlanDetails(newPlan)
+        window.removeEventListener('resize', this.collapse);
     }
 
     onCopyClick = () => {

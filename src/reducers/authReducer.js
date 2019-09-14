@@ -42,7 +42,7 @@ export default function (state = initialState, action) {
                 userProfile: {
                     ...state.userProfile,
                     plans: state.userProfile.plans.map(plan => {
-                        if (plan["_id"] == action.plan["_id"])
+                        if (plan["_id"] === action.plan["_id"])
                             return action.plan;
                         return plan;
                     })

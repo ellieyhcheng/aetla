@@ -3,7 +3,7 @@ import './App.scss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
 	faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
-	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes, faAngleDown, faAngleUp, faBars, faFile
+	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes, faAngleDown, faAngleUp, faBars, faFile, faPenSquare
 } from '@fortawesome/free-solid-svg-icons';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux'
@@ -12,10 +12,11 @@ import { setAuthUser, setUserProfile } from "./actions/itemActions";
 import { withFirebase } from "./Firebase";
 import { withApiClient } from "./ApiClient";
 import Navbar from './components/Navbar/Navbar';
+import Contact from './pages/Contact/Contact';
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
 	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes
-	, faAngleDown, faAngleUp, faBars, faFile);
+	, faAngleDown, faAngleUp, faBars, faFile, faPenSquare);
 
 const Planner = lazy(() => import('./pages/planner/Planner'));
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
@@ -32,6 +33,7 @@ class App extends Component {
 		this.state = {
 			loaded: false,
 			error: false,
+			auth: false,
 		}
 	}
 	componentDidMount() {
@@ -57,6 +59,7 @@ class App extends Component {
 								this.setState({
 									...this.state,
 									loaded: true,
+									auth: true,
 								})
 							}
 						})
@@ -64,6 +67,7 @@ class App extends Component {
 						this.setState({
 							...this.state,
 							loaded: true,
+							auth: true,
 						})
 					}
 				});
@@ -75,6 +79,7 @@ class App extends Component {
 				this.setState({
 					...this.state,
 					loaded: true,
+					auth: false,
 				})
 			}
 		})
@@ -87,10 +92,11 @@ class App extends Component {
 	render() {
 		return (
 			<Router>
-				<Suspense fallback={<div>
-					<Navbar/>
-				</div>}>
 					{this.state.loaded &&
+
+				<Suspense fallback={<div>
+					{this.state.auth ? <Navbar/> : <div>Loading...</div>} 
+				</div>}>
 						<Switch>
 
 							<Route exact path={ROUTES.LANDING} component={Landing} />
@@ -98,14 +104,15 @@ class App extends Component {
 							<Route path={ROUTES.SIGN_UP} component={SignUp} />
 							{/* <Route path={ROUTES.GET_STARTED} component={Landing} /> */}
 							<Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
+							<Route path={ROUTES.CONTACT} component={Contact} />
 
 							{/* With Authorization Routes */}
 							<Route path={ROUTES.DASHBOARD} component={Dashboard} />
 							<Route path={ROUTES.PLANNER} component={Planner} />
 							<Route path={ROUTES.ACCOUNT} component={Account} />
 						</Switch>
-					}
 				</Suspense>
+					}
 
 
 			</Router>
