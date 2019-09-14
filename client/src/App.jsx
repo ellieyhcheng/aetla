@@ -17,7 +17,7 @@ library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle
 	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes
 	, faAngleDown, faAngleUp, faBars, faFile, faPenSquare);
 
-const Planner = lazy(() => import('./pages/temp/Planner'));
+const Planner = lazy(() => import('./pages/Planner/Planner'));
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
 const Landing = lazy(() => import('./pages/Landing/Landing'));
 const SignIn = lazy(() => import('./pages/SignIn/SignIn'));
