@@ -59,7 +59,7 @@ class APIClient {
             }).then(res => {
                 return res.data ? res.data : {};
             }).catch(e => {
-                console.log(`${method} ${resource} caused:\n ${e}`);
+                // console.log(`${method} ${resource} caused:\n ${e}`);
                 return 'error'
             })
     }

@@ -5,19 +5,12 @@ import rootReducer from './reducers'
 
 const initialState = {};
 
-const middleware = [thunk]
+// const middleware = [thunk]
 
 const store = createStore(rootReducer, initialState, compose(
     applyMiddleware(thunk),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
     // TODO: remove before production
 ))
-
-// // Log the initial state
-// console.log(store.getState().planner)
-
-// // Every time the state changes, log it
-// // Note that subscribe() returns a function for unregistering the listener
-// const unsubscribe = store.subscribe(() => console.log(store.getState().planner))
 
 export default store;

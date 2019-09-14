@@ -95,7 +95,7 @@ class Button extends Component {
 }
 
 Button.propTypes = {
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
     type: PropTypes.oneOf(['icon', 'text']).isRequired,
     icon: PropTypes.string,
     text: PropTypes.string,
