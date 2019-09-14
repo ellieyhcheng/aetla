@@ -43,8 +43,8 @@
         .section {
             width: 100%;
             display: flex;
-            // flex-direction: column;
             align-items: center;
+            justify-content: center;
             padding: 6vh 0;
             position: relative;
 
@@ -54,8 +54,11 @@
 
             .image {
                 height: 450px;
-                margin: 0 10vw;
+                // width: 350px;
+                margin-left: 10vw;
                 position: relative;
+                display:flex;
+                justify-content: center;
 
                 img {
                     height: 100%;
@@ -67,6 +70,8 @@
                 flex-direction: column;
                 align-items: center;
                 position: relative;
+                width: 30vw;
+                text-align: center;
             }
 
         }
@@ -108,27 +113,13 @@
             }
         }
 
-        .section.two {
-            .vertical {
-                left: 18vw;
-            }
-            
-            .image {
-                left: 20vw;
-            }
-        }
-
         .section.three {
             padding: 15vh 0;
 
-            .vertical {
-                left: 18vw;
-            }
-
             .image {
                 height: auto;
-                width: 18vw;
-                left: 12vw;
+                width: 280px;
+                margin-right: 10vw;
 
                 img {
                     height: auto;
@@ -137,21 +128,10 @@
             }
         }
 
-        .section.four {
-            .vertical {
-                left: 15vw;
-            }
-
-            .image {
-                left: 12vw;
-            }
-        }
-
         .section.five {
             background: $primary;
             color: $secondary;
             text-align: center;
-            justify-content: center;
 
             .signupform {
                 width: 450px;
@@ -195,6 +175,10 @@
     .landing {
         .content {
             // padding-top: 4vh;
+            .section, .section.one, .section.five, .section.three {
+                padding-left: 10vw;
+                padding-right: 10vw;
+            }
 
             .section.one {
                 flex-direction: column;
@@ -209,7 +193,7 @@
                     margin: 2%;
                     
                     .example {
-                        width: 60vw;
+                        width: 50vw;
                         min-width: 480px;
                         border: 1px solid $primary;
                         padding: 10px;
@@ -231,6 +215,20 @@
         .content {
             .section, .section.one, .section.five{
                 padding: 5vh 10vw;
+                flex-direction: column;
+
+                .image {
+                    margin: 0;
+                    margin-top: 5vh;
+                }
+
+            }
+
+            .section.three {
+                .image {
+                    margin: 0;
+                    margin-bottom: 5vh;
+                }
             }
         }
     }
