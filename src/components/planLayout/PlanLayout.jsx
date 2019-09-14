@@ -43,12 +43,18 @@ class PlanLayout extends Component {
             return [0, 1, 2, 3, 4, 5];
     }
 
-    componentDidMount() {
-        window.addEventListener('resize', (e) => {
-            this.setState({
-                bins: this.setBins()
-            })
+    setBinHelper = () => {
+        this.setState({
+            bins: this.setBins()
         })
+    }
+
+    componentDidMount() {
+        window.addEventListener('resize', this.setBinHelper )
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.setBinHelper)
     }
 
     addQuarter = (yi) => {

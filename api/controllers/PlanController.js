@@ -4,6 +4,11 @@ const mongoose = require('mongoose');
 var Plan = require('../models/Plan');
 var User = require('../models/User');
 var Catalog = require('../models/Catalog');
+const { body, validationResult } = require('express-validator');
+const { sanitizeBody } = require('express-validator');
+var async = require('async');
+
+var utils = require('../utils');
 
 // Display all plans
 function plan_all(req, res, next) {
@@ -39,13 +44,14 @@ function plan_detail(req, res, next) {
 				return next(error);
 			}
 
-			var newCourses = {};
-			plan.courses.forEach(catalog => {
-				newCourses = catalog.courses.reduce((prev, requirement) => {
-					prev[requirement.content.id] = requirement.content;
-					return prev;
-				}, newCourses);
-			})
+			var newCourses = plan.courses.reduce((prev, catalog) => {
+				var newReduce = catalog.courses.reduce((newPrev, requirement) => {
+					newPrev[requirement.content.id] = requirement.content;
+					return newPrev;
+				}, prev);
+
+				return newReduce;
+			}, {})
 			var newSelections = plan.selections.reduce((prev, obj) => {
 				prev[obj["_id"]] = obj;
 				return prev;
@@ -63,8 +69,8 @@ function plan_create(req, res, next) {
 
 	body('title', 'title must not be empty.').isLength({ min: 1, max: 100 }).trim();
 	body('description', 'description must not be too long.').isLength({ max: 500 }).trim();
-	body('uid', 'uid must not be empty.').isLength({ min: 1}).trim();
-	
+	body('uid', 'uid must not be empty.').isLength({ min: 1 }).trim();
+
 	sanitizeBody('*').escape();
 
 	const errors = validationResult(req);
@@ -82,37 +88,67 @@ function plan_create(req, res, next) {
 			if (user === null) {
 				const error = new Error('User not found');
 				error.status = 404;
-				return next(error);
+				next(error);
 			}
 
-			Catalog.findOne({ name: req.body.major.toUpperCase() })
-				.populate({
-					path: 'courses',
-				})
-				.exec((err, catalog) => {
-					if (err)
-						next(err);
-					if (catalog === null) {
-						const error = new Error('Major catalog not found');
-						error.status = 404;
-						return next(error);
-					}
+			const ges = [];
+			req.body.major.forEach(major => {
+				const school = utils.majorToSchool[major];
+				if (ges.indexOf(school) === -1) {
+					ges.push(school);
+				}
+			})
+			req.body.major = req.body.major.concat(ges);
 
-					const selections = catalog.courses.reduce((prev, requirement) => {
-						if (requirement.contentModel === 'Elective') {
-							prev.push({
-								_id: requirement.content,
-								index: 0,
-							})
+			const selections = [];
+			const courseList = [];
+			const catalogs = [];
+
+			async.each(req.body.major, function(item, cb) {
+				Catalog.findOne({ name: item })
+					.populate({
+						path: 'courses',
+					})
+					.exec((err, catalog) => {
+						if (err)
+							cb(err);
+						if (catalog === null) {
+							const error = new Error('GE catalog not found');
+							error.status = 404;
+							cb(error);
 						}
-						return prev;
-					}, [])
 
-					const courseList = catalog.courses.reduce((prev, requirement) => {
-						prev.push(requirement.content)
-						return prev;
-					}, [])
+						catalog.courses.forEach(requirement => {
+							if (requirement.contentModel === 'Elective') {
+								const selection = {
+									_id: requirement.content,
+									index: 0,
+								}
+								if (selections.indexOf(selection) === -1) {
+									selections.push(selection)
+								}
+							}
+							
+							let found = false;
+							for (let i = 0; i < courseList.length; i++) {
+								if (courseList[i].equals(requirement.content)) {
+									found = true;
+									break;
+								}
+							}
 
+							if (!found)
+								courseList.push(requirement.content);
+						})
+
+						catalogs.push(catalog);
+
+						cb(null);
+					})
+			}, function (err) {
+				if (err)
+					next(err);
+				else {
 					const plan_detail = {
 						u: req.body.uid,
 						title: req.body.title,
@@ -128,10 +164,10 @@ function plan_create(req, res, next) {
 								summer: [],
 							},
 						],
-						courses: catalog,
+						courses: catalogs,
 						selections: selections,
 					}
-
+		
 					var plan = new Plan(plan_detail);
 					plan.save((err, newPlan) => {
 						if (err) {
@@ -140,11 +176,11 @@ function plan_create(req, res, next) {
 						const newPlans = user.plans;
 						newPlans.push(newPlan.id);
 						user.plan = newPlans;
-
+		
 						user.save((err, user) => {
 							if (err)
-								next(err);
-
+								cb(err, null);
+		
 							res.json({
 								"_id": newPlan["_id"],
 								title: newPlan.title,
@@ -152,8 +188,8 @@ function plan_create(req, res, next) {
 							});
 						})
 					})
-
-				})
+				}
+			})
 		})
 }
 
@@ -194,7 +230,7 @@ function plan_update(req, res, next) {
 
 	body('title', 'title must not be empty.').isLength({ min: 1, max: 100 }).trim();
 	body('description', 'description must not be too long.').isLength({ max: 500 }).trim();
-	
+
 	sanitizeBody('*').escape();
 
 	const errors = validationResult(req);
@@ -226,7 +262,11 @@ function plan_update(req, res, next) {
 
 			plan.save()
 				.then(plan => {
-					res.json('Plan updated!');
+					res.json({
+						title: plan.title,
+						description: plan.description,
+						"_id": plan["_id"],
+					});
 				})
 				.catch(err => {
 					return next(err);
@@ -264,7 +304,7 @@ function plan_copy(req, res, next) {
 					copy.save((err, newPlan) => {
 						if (err)
 							next(err);
-						
+
 						const newPlans = user.plans;
 						newPlans.push(newPlan.id);
 						user.plan = newPlans;

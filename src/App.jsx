@@ -3,7 +3,7 @@ import './App.scss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
 	faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
-	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes, faAngleDown, faAngleUp, faBars, faFile
+	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes, faAngleDown, faAngleUp, faBars, faFile, faPenSquare
 } from '@fortawesome/free-solid-svg-icons';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux'
@@ -11,10 +11,12 @@ import * as ROUTES from './constants/routes';
 import { setAuthUser, setUserProfile } from "./actions/itemActions";
 import { withFirebase } from "./Firebase";
 import { withApiClient } from "./ApiClient";
+import Navbar from './components/Navbar/Navbar';
+import Contact from './pages/Contact/Contact';
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
 	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes
-	, faAngleDown, faAngleUp, faBars, faFile);
+	, faAngleDown, faAngleUp, faBars, faFile, faPenSquare);
 
 const Planner = lazy(() => import('./pages/planner/Planner'));
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
@@ -25,6 +27,15 @@ const Account = lazy(() => import('./pages/Account/Account'));
 const SignUp = lazy(() => import('./pages/SignUp/SignUp'));
 
 class App extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			loaded: false,
+			error: false,
+			auth: false,
+		}
+	}
 	componentDidMount() {
 		this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
 			if (authUser) {
@@ -45,14 +56,31 @@ class App extends Component {
 								})
 							else {
 								this.props.setUserProfile(data);
+								this.setState({
+									...this.state,
+									loaded: true,
+									auth: true,
+								})
 							}
 						})
+					else {
+						this.setState({
+							...this.state,
+							loaded: true,
+							auth: true,
+						})
+					}
 				});
 			}
 			else {
 				this.props.apiClient.setToken(null);
 				this.props.setAuthUser(null);
 				this.props.setUserProfile(null);
+				this.setState({
+					...this.state,
+					loaded: true,
+					auth: false,
+				})
 			}
 		})
 	}
@@ -64,22 +92,27 @@ class App extends Component {
 	render() {
 		return (
 			<Router>
-				{/* Please give me a moment... I'm trying my best */}
-				<Suspense fallback={<div></div>}> 
-					<Switch>
+					{this.state.loaded &&
 
-						<Route exact path={ROUTES.LANDING} component={Landing} />
-						<Route path={ROUTES.SIGN_IN} component={SignIn} />
-						<Route path={ROUTES.SIGN_UP} component={SignUp} />
-						{/* <Route path={ROUTES.GET_STARTED} component={Landing} /> */}
-						<Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
+				<Suspense fallback={<div>
+					{this.state.auth ? <Navbar/> : <div>Loading...</div>} 
+				</div>}>
+						<Switch>
 
-						{/* With Authorization Routes */}
-						<Route path={ROUTES.DASHBOARD} component={Dashboard} />
-						<Route path={ROUTES.PLANNER} component={Planner} />
-						<Route path={ROUTES.ACCOUNT} component={Account} />
-					</Switch>
+							<Route exact path={ROUTES.LANDING} component={Landing} />
+							<Route path={ROUTES.SIGN_IN} component={SignIn} />
+							<Route path={ROUTES.SIGN_UP} component={SignUp} />
+							{/* <Route path={ROUTES.GET_STARTED} component={Landing} /> */}
+							<Route path={ROUTES.PASSWORD_FORGET} component={PasswordForget} />
+							<Route path={ROUTES.CONTACT} component={Contact} />
+
+							{/* With Authorization Routes */}
+							<Route path={ROUTES.DASHBOARD} component={Dashboard} />
+							<Route path={ROUTES.PLANNER} component={Planner} />
+							<Route path={ROUTES.ACCOUNT} component={Account} />
+						</Switch>
 				</Suspense>
+					}
 
 
 			</Router>

@@ -79,6 +79,7 @@ class CourseCard extends Component {
             <Draggable
                 draggableId={this.props.course["_id"]}
                 index={this.props.index}
+                key={this.props.course["_id"]}
             >
                 {(provided, snapshot) => {
                     return (

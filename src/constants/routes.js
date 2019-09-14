@@ -6,5 +6,5 @@ export const DASHBOARD = '/dashboard';
 export const ACCOUNT = '/settings';
 export const ADMIN = '/admin';
 export const PASSWORD_FORGET = '/password_reset';
-export const GEN_PLANNER = '/planner';
 export const PLANNER = '/planner/:id';
+export const CONTACT = '/contact';

@@ -10,7 +10,7 @@ import { withRouter } from "react-router-dom";
 import { Form, Message } from "semantic-ui-react";
 import { majors } from "../../utils";
 import Button from '../../components/button/Button'
-import { addPlan, deletePlan, setAuthUser, setUserProfile } from "../../actions/itemActions";
+import { addPlan, deletePlan } from "../../actions/itemActions";
 import * as ROUTES from '../../constants/routes';
 
 class Dashboard extends Component {
@@ -21,7 +21,7 @@ class Dashboard extends Component {
             copy: false,
             title: '',
             description: '',
-            major: '',
+            major: [],
             error: null,
             copyError: null,
             copyTitle: '',
@@ -35,7 +35,6 @@ class Dashboard extends Component {
 
     componentDidMount() {
         document.title = 'Dashboard - Aetla';
-
 	}
 
     onClick = () => {
@@ -45,7 +44,7 @@ class Dashboard extends Component {
             ...this.state,
             title: '',
             description: '',
-            major: '',
+            major: [],
             error: null,
             create: true,
         })
@@ -78,7 +77,7 @@ class Dashboard extends Component {
     }
 
     onSubmit = (e) => {
-        if (this.state.title === '' || this.state.major === '') {
+        if (this.state.title === '' || this.state.major === []) {
             this.setState({
                 ...this.state,
                 error: {
@@ -87,6 +86,10 @@ class Dashboard extends Component {
             })
         }
         else {
+            this.setState({
+                ...this.state,
+                error: null,
+            })
             const newPlan = {
                 title: this.state.title,
                 description: this.state.description,
@@ -255,12 +258,14 @@ class Dashboard extends Component {
                                 onChange={(e, { value }) => this.setState(
                                     {
                                         ...this.state,
-                                        major: value,
+                                        major: value.length < 4 ? value : this.state.major,
                                     }
                                 )}
                                 required
                                 label="Major"
                                 fluid
+                                multiple
+                                search
                             />
                             <Form.TextArea
                                 name="description"
@@ -356,8 +361,6 @@ const mapStateToProps = state => {
 const actionCreators = {
     addPlan,
     deletePlan,
-    setAuthUser,
-    setUserProfile,
 }
 
 export default withRouter(withApiClient(withAuthorization(connect(mapStateToProps, actionCreators)(Dashboard))));
