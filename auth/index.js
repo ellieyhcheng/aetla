@@ -6,13 +6,12 @@ const serviceAccount = config.auth.loc;
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://aetla-3bc05.firebaseio.com" // replace this line with your URL
+  databaseURL: process.env.REACT_APP_DATABASE_URI,
 });
 
 var tokenDecoder = function(req, res, next) {
     if (req.headers.id_token) {
         admin.auth().verifyIdToken(req.headers.id_token).then(function (decodedToken) {
-            // req.decodedToken = decodedToken;
             req.uid = decodedToken.uid;
             next();
         })

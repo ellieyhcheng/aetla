@@ -13,13 +13,13 @@ module.exports = (() => {
 			},
 
 			auth: {
-				loc: "./auth/aetla-firebase.json",
+				loc: process.env.FIREBASE_LOC,
 			},
 
 			// Server settings
 			server: {
-				host: 'localhost',
-				port: 8080
+				// host: 'localhost',
+				port: process.env.PORT || 8080,
 			}
 		};
 	}
