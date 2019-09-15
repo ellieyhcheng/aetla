@@ -11,12 +11,9 @@ module.exports = (() => {
 			database: {
 				uri: process.env.MONGODB_URI
 			},
+			// Firebase authentication settings
 			firebase: {
-				cert: {
-					projectId: process.env.FIREBASE_PROJECT_ID,
-					clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-					privateKey: process.env.FIREBASE_PRIVATE_KEY
-				}
+				cert: JSON.parse(process.env.ADMIN_FIREBASE)
 			},
 			// Server settings
 			server: {

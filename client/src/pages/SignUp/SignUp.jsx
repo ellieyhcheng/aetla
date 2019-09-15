@@ -78,10 +78,9 @@ function SignUpFormBase(props) {
                         uid: credential.user.uid,
                     }).then(res => {
                         if (res === 'error') {
-                            setError({ message: 'School is a required field' })
+                            setError({ message: 'Something went really wrong. Please contact the Aetla Team.' })
                         }
                         else {
-                            // props.setUserProfile(res);
                             props.history.push(ROUTES.DASHBOARD);
                         }
                     })
