@@ -12,11 +12,7 @@ module.exports = (() => {
 				uri: process.env.MONGODB_URI
 			},
 			firebase: {
-				cert: {
-					project_id: process.env.FIREBASE_PROJECT_ID,
-					client_email: process.env.FIREBASE_CLIENT_EMAIL,
-					private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-				}
+				cert: JSON.parse(process.env.ADMIN_FIREBASE)
 			},
 			// Server settings
 			server: {
