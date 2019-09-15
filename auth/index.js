@@ -1,13 +1,7 @@
 'use strict';
 var admin = require("firebase-admin");
-const config = require('../config');
 
-const serviceAccount = config.auth.loc;
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.REACT_APP_DATABASE_URI,
-});
+admin.initializeApp();
 
 var tokenDecoder = function(req, res, next) {
     if (req.headers.id_token) {

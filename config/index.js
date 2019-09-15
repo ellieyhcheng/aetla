@@ -11,14 +11,8 @@ module.exports = (() => {
 			database: {
 				uri: process.env.MONGODB_URI
 			},
-
-			auth: {
-				loc: process.env.FIREBASE_LOC,
-			},
-
 			// Server settings
 			server: {
-				// host: 'localhost',
 				port: process.env.PORT || 8080,
 			}
 		};
