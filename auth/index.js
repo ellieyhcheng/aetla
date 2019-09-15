@@ -10,14 +10,11 @@ admin.initializeApp({
 
 var tokenDecoder = function(req, res, next) {
     if (req.headers.id_token) {
-        console.log(req.headers.id_token);
         admin.auth().verifyIdToken(req.headers.id_token).then(function (decodedToken) {
-            console.log(req.headers.id_token);
             req.uid = decodedToken.uid;
             next();
         })
         .catch(function(error) {
-            console.log(error);
             console.log("User token could not be verified");
             res.sendStatus(403);
         });
