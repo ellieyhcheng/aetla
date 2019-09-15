@@ -1,7 +1,12 @@
 'use strict';
 var admin = require("firebase-admin");
+var config = require("../config");
 
-admin.initializeApp();
+const firebaseCert = config.firebase.cert;
+
+admin.initializeApp({
+    credential: admin.credential.cert(firebaseCert),
+});
 
 var tokenDecoder = function(req, res, next) {
     if (req.headers.id_token) {
