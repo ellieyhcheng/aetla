@@ -1,4 +1,5 @@
 # Aetla
+[![Build Status](https://travis-ci.com/ellieyhcheng/aetla.svg?branch=master)](https://travis-ci.com/ellieyhcheng/aetla)
 
 College planning made simple. Forget pen and paper, plan your college years the modern way with Aetla. With course information, filtered majors, and drag and drop functionality, it is the easy way to make a plan for your curriculum.
 
