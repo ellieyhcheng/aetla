@@ -30,6 +30,14 @@ class APIClient {
         return this.perform('delete', `/api/plan/${planId}/delete`)
     }
 
+    addCourse(planId, courseIds) {
+        return this.perform('put', `/api/plan/${planId}/course-add`, courseIds)
+    }
+
+    removeCourse(planId, courseIds) {
+        return this.perform('put', `/api/plan/${planId}/course-remove`, courseIds)
+    }
+
     copyPlan(planId, plan) {
         return this.perform('post', `/api/plan/${planId}/copy`, plan)
     }

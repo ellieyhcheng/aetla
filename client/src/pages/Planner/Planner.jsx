@@ -32,12 +32,6 @@ class Planner extends Component {
             copyTitle: props.title,
             copyDescription: props.description,
 
-            change: false,
-            changeTitle: props.title,
-            changeDescription: props.description,
-            changeCoursesExempt: props.description, // TODO
-            changeError: null,
-
             delete: false,
             deleteError: null,
 
@@ -377,58 +371,6 @@ class Planner extends Component {
         })
     }
 
-    onChangeClick = () => {
-        this.setState({
-            ...this.state,
-            changeTitle: this.props.title,
-            changeDescription: this.props.description,
-            changeError: null,
-            change: true,
-        })
-    }
-
-    onPlanChange = (e) => {
-        if (this.state.changeTitle === '') {
-            this.setState({
-                ...this.state,
-                changeError: {
-                    message: "Please fill out all required fields"
-                }
-            })
-        }
-        else {
-            // Make post request to update plan
-            const newPlan = {
-                title: this.state.changeTitle,
-                description: this.state.changeDescription,
-                courseList: this.props.courseList,
-                coursePlan: this.props.coursePlan,
-                selections: this.props.selections,
-            }
-
-            this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
-                setTimeout(() => {
-                    if (data === 'error')
-                        this.setState({
-                            ...this.state,
-                            changeError: true,
-                            change: false,
-                        })
-                    else {
-                        this.setState({
-                            ...this.state,
-                            change: false,
-                        })
-                        this.props.storePlanDetails(newPlan);
-                        this.props.updatePlan(data);
-                    }
-                }, 500);
-            })
-        }
-
-        e.preventDefault();
-    }
-
     onDeleteClick = () => {
         this.setState({
             ...this.state,
@@ -476,10 +418,14 @@ class Planner extends Component {
         })
     }
 
+    onSettingsClick = () => {
+        this.props.history.push(`${ROUTES.PLAN_SETTINGS.replace(':id', `${btoa(unescape(encodeURIComponent(this.props.id)))}`)}`)
+    }
+
     render() {
         const toolbar = <Toolbar 
             onCopy={this.onCopyClick} 
-            onSettings={this.onChangeClick} 
+            onSettings={this.onSettingsClick}
             onDelete={this.onDeleteClick} 
             onExit={this.onExitClick} 
             onHelp={this.onHelpClick}
@@ -592,45 +538,6 @@ class Planner extends Component {
                         <div className="modal-button">
                             <Button type="text" text="Cancel" onClick={() => this.onModalClose("copy")}></Button>
                             <Button type="text" text="Submit" onClick={this.onCopy}></Button>
-                        </div>
-                    </Modal>
-                }
-                {this.state.change &&
-                    <Modal open={this.state.change} onClose={() => this.onModalClose("change")}>
-                        <h2>Plan Settings</h2>
-                        <hr />
-                        <Form autoComplete="new-password" error={this.state.copyError ? true : false}>
-                            <Form.Input
-                                type="text"
-                                name="changeTitle"
-                                value={this.state.changeTitle}
-                                onChange={this.onChange}
-                                placeholder="My Plan"
-                                autoComplete="off"
-                                required
-                                fluid
-                                label="Plan Title"
-                                maxLength="100"
-                            />
-                            <Form.TextArea
-                                name="changeDescription"
-                                value={this.state.changeDescription}
-                                onChange={this.onChange}
-                                placeholder="This is my awesome plan"
-                                autoComplete="off"
-                                label="Plan Description"
-                                maxLength="500"
-                            />
-                            <Message
-                                error
-                                content={this.state.changeError ? this.state.changeError.message : ''}
-                                color="yellow"
-                            />
-
-                        </Form>
-                        <div className="modal-button">
-                            <Button type="text" text="Cancel" onClick={() => this.onModalClose("change")}></Button>
-                            <Button type="text" text="Submit" onClick={this.onPlanChange}></Button>
                         </div>
                     </Modal>
                 }
