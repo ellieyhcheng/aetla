@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 var Plan = require('../models/Plan');
 var User = require('../models/User');
 var Catalog = require('../models/Catalog');
+var Course = require('../models/Course');
+var Requirement = require('../models/Requirement');
 const { body, validationResult } = require('express-validator');
 const { sanitizeBody } = require('express-validator');
 var async = require('async');
@@ -26,12 +28,9 @@ function plan_detail(req, res, next) {
 		.populate({
 			path: 'courses',
 			populate: {
-				path: 'courses',
+				path: 'content',
 				populate: {
-					path: 'content',
-					populate: {
-						path: 'options'
-					}
+					path: 'options'
 				}
 			}
 		})
@@ -44,13 +43,9 @@ function plan_detail(req, res, next) {
 				return next(error);
 			}
 
-			var newCourses = plan.courses.reduce((prev, catalog) => {
-				var newReduce = catalog.courses.reduce((newPrev, requirement) => {
-					newPrev[requirement.content.id] = requirement.content;
-					return newPrev;
-				}, prev);
-
-				return newReduce;
+			var newCourses = plan.courses.reduce((prev, requirement) => {
+				prev[requirement.content.id] = requirement.content;
+				return prev;
 			}, {})
 			var newSelections = plan.selections.reduce((prev, obj) => {
 				prev[obj["_id"]] = obj;
@@ -102,7 +97,7 @@ function plan_create(req, res, next) {
 
 			const selections = [];
 			const courseList = [];
-			const catalogs = [];
+			const courses = [];
 
 			async.each(req.body.major, function(item, cb) {
 				Catalog.findOne({ name: item })
@@ -119,6 +114,7 @@ function plan_create(req, res, next) {
 						}
 
 						catalog.courses.forEach(requirement => {
+							courses.push(requirement);
 							if (requirement.contentModel === 'Elective') {
 								const selection = {
 									_id: requirement.content,
@@ -141,8 +137,6 @@ function plan_create(req, res, next) {
 								courseList.push(requirement.content);
 						})
 
-						catalogs.push(catalog);
-
 						cb(null);
 					})
 			}, function (err) {
@@ -164,7 +158,7 @@ function plan_create(req, res, next) {
 								summer: [],
 							},
 						],
-						courses: catalogs,
+						courses: courses,
 						selections: selections,
 					}
 		
@@ -259,7 +253,6 @@ function plan_update(req, res, next) {
 					obj.index = req.body.selections[obj["_id"]].index
 				})
 
-
 			plan.save()
 				.then(plan => {
 					res.json({
@@ -326,6 +319,118 @@ function plan_copy(req, res, next) {
 
 }
 
+function course_add(req, res, next) {
+	const planId = req.params.id;
+	const courseIds = req.body.courses;
+
+	Plan.findById(planId)
+	.exec((err, plan) => {
+		if (err)
+			return next(err);
+		if (plan === null) {
+			const error = new Error('Plan not found');
+			error.status = 404;
+			return next(error);
+		}
+
+		let courses = plan.courses;
+		let courseList = plan.courseList;
+		async.each(courseIds, function(courseId, cb) {
+			Requirement.findOne({content: courseId}, (err, requirement) => {
+				if (err)
+					cb(err);
+				if (requirement === null) {
+					var requirementdetail = {
+						content: courseIds,
+						contentModel: 'Course',
+					}
+				
+					var newRequirement = new Requirement(requirementdetail);
+					newRequirement.save((err, doc) => {
+						if (err) {
+							cb(err);
+						}
+
+						requirement = doc;
+					})
+				}
+
+				courses.push(requirement.id);
+				courseList.push(courseId);
+				cb(null);
+			})
+		}, function (err) {
+			if (err)
+				next(err);
+
+			plan.courses = courses;
+			plan.courseList = courseList;
+
+			plan.save((err, savedPlan) => {
+				if (err)
+					next(err);
+
+				res.json({
+					courses,
+					courseList,
+				});
+			})
+		})
+	})
+}
+
+function course_remove(req, res, next) {
+	const planId = req.params.id;
+	const courseIds = req.body.courses;
+
+	Plan.findById(planId)
+	.exec((err, plan) => {
+		if (err)
+			return next(err);
+		if (plan === null) {
+			const error = new Error('Plan not found');
+			error.status = 404;
+			return next(error);
+		}
+
+		let courses = plan.courses;
+		let courseList = plan.courseList;
+		async.each(courseIds, function(courseId, cb) {
+			Requirement.findOne({content: courseId}, (err, requirement) => {
+				if (err)
+					cb(err);
+				if (requirement === null) {
+					if (requirement === null) {
+						const error = new Error('Requirement not found');
+						error.status = 404;
+						return next(error);
+					}
+				}
+
+				courses.filter(requirementId => requirementId !== requirement.id);
+				courseList.filter(course => course !== courseId);
+				cb(null);
+			})
+		}, function (err) {
+			if (err)
+				next(err);
+
+			plan.courses = courses;
+			plan.courseList = courseList;
+
+			plan.save((err, savedPlan) => {
+				if (err)
+					next(err);
+					
+				res.json({
+					courses,
+					courseList,
+				});
+			})
+		})
+	})
+}
+
 module.exports = {
 	plan_all,
 	plan_detail,
@@ -333,4 +438,6 @@ module.exports = {
 	plan_delete,
 	plan_update,
 	plan_copy,
+	course_add,
+	course_remove,
 }
