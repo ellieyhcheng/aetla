@@ -16,6 +16,7 @@ import withAuthorization from '../../components/Session/withAuthorization';
 import { Redirect } from "react-router-dom";
 import * as ROUTES from '../../utils/routes';
 import { Message, Form, List, } from "semantic-ui-react";
+import { download } from "../../utils/utils";
 
 class Planner extends Component {
     constructor(props) {
@@ -422,10 +423,22 @@ class Planner extends Component {
         this.props.history.push(`${ROUTES.PLAN_SETTINGS.replace(':id', `${btoa(unescape(encodeURIComponent(this.props.id)))}`)}`)
     }
 
+    onDownloadClick = () => {
+        this.props.apiClient.getOnePlan(this.props.id)
+        .then(data => {
+            if (data === 'error')
+                return
+            else {
+                download(data);
+            }
+        })
+    }
+
     render() {
         const toolbar = <Toolbar 
             onCopy={this.onCopyClick} 
             onSettings={this.onSettingsClick}
+            onDownload={this.onDownloadClick}
             onDelete={this.onDeleteClick} 
             onExit={this.onExitClick} 
             onHelp={this.onHelpClick}
