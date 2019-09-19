@@ -65,8 +65,23 @@
         flex-direction: column;
         width: 50%;
         min-width: 500px;
-        // flex-wrap: wrap;
-        padding: 4vh 0 3vh;
-        // backgrou
+        padding: 4vh 1vw 3vh;
+
+        .add-course, .remove-course {
+            margin: 0em -0.5em 1em;
+        }
+
+        .content {
+            .button-icon {
+                display: inline;
+            }
+        }
+        .ui.form {
+            box-sizing: border-box;
+
+            textarea {
+                max-height: 200px;
+            }
+        }
     }
 }

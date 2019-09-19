@@ -2,17 +2,6 @@
 
 var Course = require('../models/Course');
 
-// Display all courses (bad idea)
-function course_all(req, res, next) {
-    Course.find({}, 'subject num')
-    .exec((err, courses) => {
-        if (err)
-            return next(err);
-        res.send(courses);
-    })
-    // res.send('NOT IMPLEMENTED: Course All')
-}
-
 // Display details of a course
 function course_detail(req, res, next) {
     Course.findById(req.params.id)
@@ -26,10 +15,20 @@ function course_detail(req, res, next) {
         }
         res.json(course);
     })
-    // res.send('NOT IMPLEMENTED: Course detail: ' + req.params.id)
+}
+
+function course_by_subject(req, res, next) {
+    const subject = decodeURIComponent(req.params.subject);
+    
+    Course.find({subject: subject})
+    .exec((err, courses) => {
+        if (err)
+            return next(err);
+        res.json({courses});
+    })
 }
 
 module.exports = {
-    course_all,
     course_detail,
+    course_by_subject
 }

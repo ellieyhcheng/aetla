@@ -14,6 +14,10 @@ class APIClient {
         this.token = token;
     }
 
+    getCoursesBySubject(subject) {
+        return this.perform('get', `/api/course/${encodeURIComponent(subject)}`)
+    }
+
     createPlan(plan) {
         return this.perform('post', `/api/plan/create`, plan)
     }

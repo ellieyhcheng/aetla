@@ -12,6 +12,7 @@ import { setAuthUser, setUserProfile } from "./actions/itemActions";
 import { withFirebase } from "./Firebase";
 import { withApiClient } from "./ApiClient";
 import Navbar from './components/Navbar/Navbar';
+import logo from './assets/aetla-dark.svg';
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
 	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes
@@ -96,7 +97,7 @@ class App extends Component {
 				{this.state.loaded &&
 
 					<Suspense fallback={<div>
-						{this.state.auth ? <Navbar /> : <div>Loading...</div>}
+						{/* {this.state.auth ? <Navbar /> : <div>Loading...</div>} */}
 					</div>}>
 						<Switch>
 
