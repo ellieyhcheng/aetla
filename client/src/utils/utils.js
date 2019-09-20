@@ -6,6 +6,9 @@ const schools = [
 ]
 
 const majors = [
+    { key: 'APP MATH', text: 'Applied Mathematics', value: 'APP MATH' },
+    { key: 'BIOCHEM', text: 'Biochemistry', value: 'BIOCHEM' },
+    { key: 'BUS ECON', text: 'Business Economics', value: 'BUS ECON' },
     { key: 'COM SCI', text: 'Computer Science', value: 'COM SCI' },
     { key: 'CS&ENGR', text: 'Computer Science and Engineering', value: 'CS&ENGR' },
     { key: 'ELE ENGR', text: 'Electrical and Computer Engineering', value: 'ELE ENGR' },
