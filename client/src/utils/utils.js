@@ -6,13 +6,14 @@ const schools = [
 ]
 
 const majors = [
+    { key: 'APP MATH', text: 'Applied Mathematics', value: 'APP MATH' },
+    { key: 'BIOCHEM', text: 'Biochemistry', value: 'BIOCHEM' },
     { key: 'COM SCI', text: 'Computer Science', value: 'COM SCI' },
     { key: 'CS&ENGR', text: 'Computer Science and Engineering', value: 'CS&ENGR' },
     { key: 'ELE ENGR', text: 'Electrical and Computer Engineering', value: 'ELE ENGR' },
     { key: 'MAT ENGR E', text: 'Materials Engineering - Electronic Option', value: 'MAT ENGR E' },
     { key: 'MAT ENGR S', text: 'Materials Engineering - Straight Option', value: 'MAT ENGR S' },
     { key: 'MECHANIC', text: 'Mechanical Engineering', value: 'MECHANIC' },
-    { key: 'APP MATH', text: 'Applied Mathematics', value: 'APP MATH' },
 ]
 
 const subjects = [

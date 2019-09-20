@@ -8,6 +8,7 @@ const majorToSchool = {
     'MAT ENGR E': 'HSSEAS',
     'ELE ENGR': 'HSSEAS',
     'APP MATH': 'L&S',
+    'BIOCHEM': 'L&S',
 }
 
 module.exports = {
