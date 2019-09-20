@@ -26,3 +26,4 @@ yarn-error.log*
 
 firebase-admin.json
 addData.js
+migrateData.js

@@ -10,7 +10,7 @@ import { withRouter } from "react-router-dom";
 import { Form, Message } from "semantic-ui-react";
 import { majors } from "../../utils/utils";
 import Button from '../../components/button/Button'
-import { addPlan, deletePlan } from "../../actions/itemActions";
+import { addPlan, deletePlan, setUserProfile } from "../../actions/itemActions";
 import * as ROUTES from '../../utils/routes';
 
 class Dashboard extends Component {
@@ -29,12 +29,30 @@ class Dashboard extends Component {
             copyPlanId: '',
             delete: false,
             deleteId: '',
-            deleteError: null,
+            deleteError: false,
+
+            loadError: null,
         }
     }
 
     componentDidMount() {
         document.title = 'Dashboard - Aetla';
+
+        if (this.props.verified)
+            this.props.apiClient.getUserProfile().then(data => {
+                if (data === 'error')
+                    this.setState({
+                        ...this.state,
+                        loadError: true,
+                    })
+                else {
+                    this.props.setUserProfile(data);
+                    this.setState({
+                        ...this.state,
+                        loadError: false,
+                    })
+                }
+            })
 	}
 
     onClick = () => {
@@ -205,6 +223,13 @@ class Dashboard extends Component {
         })
     }
 
+    onErrorClose = () => {
+        this.setState({
+            ...this.state,
+            loadError: false,
+        })
+    }
+
     render() {
         return (
             <div className="dashboard">
@@ -338,6 +363,15 @@ class Dashboard extends Component {
                         </div>
                     </Modal>
                 }
+
+                {this.state.loadError &&
+                    <Modal open={this.state.loadError} onClose={this.onErrorClose} >
+                        <p>Something went wrong. If the problem persists, please contact us.</p>
+                        <div className="modal-button">
+                            <Button type="text" text="Okay, thanks." onClick={this.onErrorClose}></Button>
+                        </div>
+                    </Modal>
+                }
             </div>
         )
     }
@@ -361,6 +395,7 @@ const mapStateToProps = state => {
 const actionCreators = {
     addPlan,
     deletePlan,
+    setUserProfile,
 }
 
 export default withRouter(withApiClient(withAuthorization(connect(mapStateToProps, actionCreators)(Dashboard))));

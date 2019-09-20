@@ -10,12 +10,13 @@ import CourseDetail from '../../components/courseDetail/CourseDetail';
 import Modal from '../../components/modal/Modal';
 import { connect } from 'react-redux';
 import { storePlanDetails, setActiveCourse, setHomeDroppable, setCourseList, 
-    setCoursePlan, addPlan, deletePlan, updatePlan } from '../../actions/itemActions';
+    setCoursePlan, addPlan, deletePlan } from '../../actions/itemActions';
 import { withApiClient } from "../../ApiClient";
 import withAuthorization from '../../components/Session/withAuthorization';
 import { Redirect } from "react-router-dom";
 import * as ROUTES from '../../utils/routes';
 import { Message, Form, List, } from "semantic-ui-react";
+import { download } from "../../utils/utils";
 
 class Planner extends Component {
     constructor(props) {
@@ -31,12 +32,6 @@ class Planner extends Component {
             copyError: null,
             copyTitle: props.title,
             copyDescription: props.description,
-
-            change: false,
-            changeTitle: props.title,
-            changeDescription: props.description,
-            changeCoursesExempt: props.description, // TODO
-            changeError: null,
 
             delete: false,
             deleteError: null,
@@ -377,58 +372,6 @@ class Planner extends Component {
         })
     }
 
-    onChangeClick = () => {
-        this.setState({
-            ...this.state,
-            changeTitle: this.props.title,
-            changeDescription: this.props.description,
-            changeError: null,
-            change: true,
-        })
-    }
-
-    onPlanChange = (e) => {
-        if (this.state.changeTitle === '') {
-            this.setState({
-                ...this.state,
-                changeError: {
-                    message: "Please fill out all required fields"
-                }
-            })
-        }
-        else {
-            // Make post request to update plan
-            const newPlan = {
-                title: this.state.changeTitle,
-                description: this.state.changeDescription,
-                courseList: this.props.courseList,
-                coursePlan: this.props.coursePlan,
-                selections: this.props.selections,
-            }
-
-            this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
-                setTimeout(() => {
-                    if (data === 'error')
-                        this.setState({
-                            ...this.state,
-                            changeError: true,
-                            change: false,
-                        })
-                    else {
-                        this.setState({
-                            ...this.state,
-                            change: false,
-                        })
-                        this.props.storePlanDetails(newPlan);
-                        this.props.updatePlan(data);
-                    }
-                }, 500);
-            })
-        }
-
-        e.preventDefault();
-    }
-
     onDeleteClick = () => {
         this.setState({
             ...this.state,
@@ -476,10 +419,26 @@ class Planner extends Component {
         })
     }
 
+    onSettingsClick = () => {
+        this.props.history.push(`${ROUTES.PLAN_SETTINGS.replace(':id', `${btoa(unescape(encodeURIComponent(this.props.id)))}`)}`)
+    }
+
+    onDownloadClick = () => {
+        this.props.apiClient.getOnePlan(this.props.id)
+        .then(data => {
+            if (data === 'error')
+                return
+            else {
+                download(data);
+            }
+        })
+    }
+
     render() {
         const toolbar = <Toolbar 
             onCopy={this.onCopyClick} 
-            onSettings={this.onChangeClick} 
+            onSettings={this.onSettingsClick}
+            onDownload={this.onDownloadClick}
             onDelete={this.onDeleteClick} 
             onExit={this.onExitClick} 
             onHelp={this.onHelpClick}
@@ -595,45 +554,6 @@ class Planner extends Component {
                         </div>
                     </Modal>
                 }
-                {this.state.change &&
-                    <Modal open={this.state.change} onClose={() => this.onModalClose("change")}>
-                        <h2>Plan Settings</h2>
-                        <hr />
-                        <Form autoComplete="new-password" error={this.state.copyError ? true : false}>
-                            <Form.Input
-                                type="text"
-                                name="changeTitle"
-                                value={this.state.changeTitle}
-                                onChange={this.onChange}
-                                placeholder="My Plan"
-                                autoComplete="off"
-                                required
-                                fluid
-                                label="Plan Title"
-                                maxLength="100"
-                            />
-                            <Form.TextArea
-                                name="changeDescription"
-                                value={this.state.changeDescription}
-                                onChange={this.onChange}
-                                placeholder="This is my awesome plan"
-                                autoComplete="off"
-                                label="Plan Description"
-                                maxLength="500"
-                            />
-                            <Message
-                                error
-                                content={this.state.changeError ? this.state.changeError.message : ''}
-                                color="yellow"
-                            />
-
-                        </Form>
-                        <div className="modal-button">
-                            <Button type="text" text="Cancel" onClick={() => this.onModalClose("change")}></Button>
-                            <Button type="text" text="Submit" onClick={this.onPlanChange}></Button>
-                        </div>
-                    </Modal>
-                }
                 {this.state.delete &&
                     <Modal open={this.state.delete} onClose={() => this.onModalClose("delete")}>
                         <p>Are you sure you want to delete this plan?</p>
@@ -728,7 +648,6 @@ const actionCreators = {
     setCoursePlan,
     addPlan,
     deletePlan,
-    updatePlan,
 }
 
 export default withAuthorization(connect(mapStateToProps, actionCreators)(withApiClient(Planner)));

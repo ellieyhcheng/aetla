@@ -1,4 +1,4 @@
-import { SET_AUTH_USER, SET_USER_PROFILE, ADD_PLAN, DELETE_PLAN, UPDATE_PLAN } from "../actions/types";
+import { SET_AUTH_USER, SET_USER_PROFILE, ADD_PLAN, DELETE_PLAN } from "../actions/types";
 
 const initialState = {
     authUser: null,
@@ -34,18 +34,6 @@ export default function (state = initialState, action) {
                 userProfile: {
                     ...state.userProfile,
                     plans: newPlans,
-                }
-            }
-        case UPDATE_PLAN:
-            return {
-                ...state,
-                userProfile: {
-                    ...state.userProfile,
-                    plans: state.userProfile.plans.map(plan => {
-                        if (plan["_id"] === action.plan["_id"])
-                            return action.plan;
-                        return plan;
-                    })
                 }
             }
         default:

@@ -118,13 +118,17 @@
 }
 
 @media only screen and (max-width: 970px) {
-    .search {
-        font-size: 1.25vw !important;
+    .planner {
+        .search {
+            font-size: 1.25vw !important;
+        }
     }
 }
 
 @media only screen and (max-width: 650px) {
-    .search {
-        font-size: 1.5vw !important;
+    .planner {
+        .search {
+            font-size: 1.5vw !important;
+        }
     }
 }

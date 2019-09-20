@@ -7,3 +7,4 @@ export const ADMIN = '/admin';
 export const PASSWORD_FORGET = '/passwordreset';
 export const PLANNER = '/planner/:id';
 export const CONTACT = '/contact';
+export const PLAN_SETTINGS = '/planner/:id/settings';

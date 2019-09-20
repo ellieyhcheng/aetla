@@ -1,0 +1,87 @@
+@import '../../utils/colors.scss';
+@import '../../utils/vars.scss';
+
+.plan-settings {
+    margin-left: $toolbar-width;
+    padding: 3vh 3vw;
+    overflow-y: scroll;
+    height: 100vh;
+
+    .toolbar {
+        width: $toolbar-width;
+        height: 100vh;
+        font-size: 1.5rem;
+        background-color: $primary;
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 10;
+    
+        .line-v {
+            background-color: $secondary;
+            width: 1px;
+            height: 15vh;
+        }
+    
+        .top {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: absolute;
+            top: 0;
+    
+            .line-v {
+                margin-bottom: 8px;
+            }
+        }
+    
+        .bot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+    
+            .line-v {
+                margin-top: 8px;
+            }
+        }
+    }
+
+    .header {
+        h2 {
+            padding: 0 1vw;
+        }
+
+        hr {
+            background: $primary;
+        }
+    }
+    
+    .grid {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        min-width: 500px;
+        padding: 4vh 1vw 3vh;
+
+        .add-course, .remove-course {
+            margin: 0em -0.5em 1em;
+        }
+
+        .content {
+            .button-icon {
+                display: inline;
+            }
+        }
+        .ui.form {
+            box-sizing: border-box;
+
+            textarea {
+                max-height: 200px;
+            }
+        }
+    }
+}

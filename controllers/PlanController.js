@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 var Plan = require('../models/Plan');
 var User = require('../models/User');
 var Catalog = require('../models/Catalog');
+var Course = require('../models/Course');
+var Requirement = require('../models/Requirement');
 const { body, validationResult } = require('express-validator');
 const { sanitizeBody } = require('express-validator');
 var async = require('async');
@@ -26,12 +28,9 @@ function plan_detail(req, res, next) {
 		.populate({
 			path: 'courses',
 			populate: {
-				path: 'courses',
+				path: 'content',
 				populate: {
-					path: 'content',
-					populate: {
-						path: 'options'
-					}
+					path: 'options'
 				}
 			}
 		})
@@ -44,13 +43,9 @@ function plan_detail(req, res, next) {
 				return next(error);
 			}
 
-			var newCourses = plan.courses.reduce((prev, catalog) => {
-				var newReduce = catalog.courses.reduce((newPrev, requirement) => {
-					newPrev[requirement.content.id] = requirement.content;
-					return newPrev;
-				}, prev);
-
-				return newReduce;
+			var newCourses = plan.courses.reduce((prev, requirement) => {
+				prev[requirement.content.id] = requirement.content;
+				return prev;
 			}, {})
 			var newSelections = plan.selections.reduce((prev, obj) => {
 				prev[obj["_id"]] = obj;
@@ -102,7 +97,7 @@ function plan_create(req, res, next) {
 
 			const selections = [];
 			const courseList = [];
-			const catalogs = [];
+			const courses = [];
 
 			async.each(req.body.major, function(item, cb) {
 				Catalog.findOne({ name: item })
@@ -119,6 +114,7 @@ function plan_create(req, res, next) {
 						}
 
 						catalog.courses.forEach(requirement => {
+							courses.push(requirement);
 							if (requirement.contentModel === 'Elective') {
 								const selection = {
 									_id: requirement.content,
@@ -141,8 +137,6 @@ function plan_create(req, res, next) {
 								courseList.push(requirement.content);
 						})
 
-						catalogs.push(catalog);
-
 						cb(null);
 					})
 			}, function (err) {
@@ -164,7 +158,7 @@ function plan_create(req, res, next) {
 								summer: [],
 							},
 						],
-						courses: catalogs,
+						courses: courses,
 						selections: selections,
 					}
 		
@@ -254,11 +248,12 @@ function plan_update(req, res, next) {
 			plan.description = req.body.description;
 			plan.courseList = req.body.courseList;
 			plan.coursePlan = req.body.coursePlan;
+			plan.markModified('coursePlan');
+			
 			if (plan.selections)
 				plan.selections.forEach(obj => {
 					obj.index = req.body.selections[obj["_id"]].index
 				})
-
 
 			plan.save()
 				.then(plan => {
@@ -326,6 +321,136 @@ function plan_copy(req, res, next) {
 
 }
 
+function plan_settings(req, res, next) {
+	const planId = req.params.id;
+	const {add, remove} = req.body;
+
+	body('title', 'title must not be empty.').isLength({ min: 1, max: 100 }).trim();
+	body('description', 'description must not be too long.').isLength({ max: 500 }).trim();
+
+	sanitizeBody('*').escape();
+
+	const errors = validationResult(req);
+
+	if (!errors.isEmpty()) {
+		const error = new Error('Error creating plan because bad inputs');
+		error.status = 404;
+		return next(error);
+	}
+
+	Plan.findById(planId)
+		.exec((err, plan) => {
+			if (err)
+				return next(err);
+			if (plan === null) {
+				const error = new Error('Plan not found');
+				error.status = 404;
+				return next(error);
+			}
+
+			// add courses
+			let courses = plan.courses;
+			let courseList = plan.courseList;
+			let coursePlan = plan.coursePlan;
+
+			async.series([
+				function(cb) {
+					async.each(remove, function(courseId, cb) {
+						Requirement.findOne({content: courseId}, (err, requirement) => {
+							if (err)
+								cb(err);
+							if (requirement === null) {
+								const error = new Error('Requirement not found');
+								error.status = 404;
+								return next(error);
+							}
+			
+							courses = courses.filter(requirementId => !requirementId.equals(requirement.id));
+							courseList = courseList.filter(course => course.toString() !== courseId);
+							coursePlan.forEach(year => {
+								year.quarters.forEach(quarterId => {
+									year[quarterId] = year[quarterId].filter(course => course.toString() !== courseId);
+								})
+							})
+
+							cb(null);
+						})
+					}, cb)
+				},
+				function(cb) {
+					async.each(add, function(courseId, cb) {
+						Requirement.findOne({content: courseId}, (err, requirement) => {
+							if (err)
+								cb(err);
+							if (requirement === null) {
+								var requirementdetail = {
+									content: courseId,
+									contentModel: 'Course',
+								}
+							
+								var newRequirement = new Requirement(requirementdetail);
+								newRequirement.save((err, doc) => {
+									if (err) {
+										cb(err);
+									}
+			
+									courses.push(doc.id);
+									courseList.push(courseId);
+									cb(null);
+									return;
+								})
+							}
+							else {
+								courses.push(requirement.id);
+								courseList.push(courseId);
+								cb(null);
+							}
+						})
+					}, cb)
+				}
+			], function (err) {
+				if (err)
+					next(err);
+	
+				plan.title = req.body.title;
+				plan.description = req.body.description;
+				plan.courses = courses;
+				plan.courseList = courseList;
+				plan.coursePlan = coursePlan;
+				plan.markModified('coursePlan');
+	
+				plan.save((err, savedPlan) => {
+					if (err)
+						next(err);
+
+					savedPlan
+					.populate({
+						path: 'courses',
+						populate: {
+							path: 'content',
+							populate: {
+								path: 'options'
+							}
+						}
+					})
+					.execPopulate()
+						.then(popPlan => {
+							var newCourses = popPlan.courses.reduce((prev, requirement) => {
+								prev[requirement.content.id] = requirement.content;
+								return prev;
+							}, {})
+
+							res.json({
+								courses: newCourses,
+								title: popPlan.title,
+								description: popPlan.description,
+							});
+						})
+				})
+			})
+		})
+}
+
 module.exports = {
 	plan_all,
 	plan_detail,
@@ -333,4 +458,5 @@ module.exports = {
 	plan_delete,
 	plan_update,
 	plan_copy,
+	plan_settings,
 }
