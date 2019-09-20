@@ -12,6 +12,7 @@ const majors = [
     { key: 'MAT ENGR E', text: 'Materials Engineering - Electronic Option', value: 'MAT ENGR E' },
     { key: 'MAT ENGR S', text: 'Materials Engineering - Straight Option', value: 'MAT ENGR S' },
     { key: 'MECHANIC', text: 'Mechanical Engineering', value: 'MECHANIC' },
+    { key: 'APP MATH', text: 'Applied Mathematics', value: 'APP MATH' },
 ]
 
 const subjects = [
