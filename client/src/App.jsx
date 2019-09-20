@@ -3,7 +3,7 @@ import './App.scss';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
 	faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
-	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes, faAngleDown, faAngleUp, faBars, faFile, faPenSquare, faBackward, faArrowLeft
+	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes, faAngleDown, faAngleUp, faBars, faFile, faPenSquare, faArrowLeft
 } from '@fortawesome/free-solid-svg-icons';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux'
@@ -11,8 +11,6 @@ import * as ROUTES from './utils/routes';
 import { setAuthUser, setUserProfile } from "./actions/itemActions";
 import { withFirebase } from "./Firebase";
 import { withApiClient } from "./ApiClient";
-import Navbar from './components/Navbar/Navbar';
-import logo from './assets/aetla-dark.svg';
 
 library.add(faHome, faCopy, faTrashAlt, faDownload, faSlidersH, faQuestionCircle,
 	faCog, faPowerOff, faSave, faSearch, faPlusCircle, faMinusCircle, faSpinner, faTimes
@@ -34,7 +32,6 @@ class App extends Component {
 
 		this.state = {
 			loaded: false,
-			error: false,
 			auth: false,
 		}
 	}
@@ -49,29 +46,11 @@ class App extends Component {
 						email: authUser.email,
 						emailVerified: authUser.emailVerified,
 					}); // save only needed data
-					if (authUser.emailVerified)
-						this.props.apiClient.getUserProfile().then(data => {
-							if (data === 'error')
-								this.setState({
-									...this.state,
-									error: true,
-								})
-							else {
-								this.props.setUserProfile(data);
-								this.setState({
-									...this.state,
-									loaded: true,
-									auth: true,
-								})
-							}
-						})
-					else {
-						this.setState({
-							...this.state,
-							loaded: true,
-							auth: true,
-						})
-					}
+					this.setState({
+						...this.state,
+						loaded: true,
+						auth: true,
+					})
 				});
 			}
 			else {
@@ -97,7 +76,6 @@ class App extends Component {
 				{this.state.loaded &&
 
 					<Suspense fallback={<div>
-						{/* {this.state.auth ? <Navbar /> : <div>Loading...</div>} */}
 					</div>}>
 						<Switch>
 

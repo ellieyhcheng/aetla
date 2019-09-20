@@ -34,12 +34,8 @@ class APIClient {
         return this.perform('delete', `/api/plan/${planId}/delete`)
     }
 
-    addCourse(planId, courseIds) {
-        return this.perform('put', `/api/plan/${planId}/course-add`, courseIds)
-    }
-
-    removeCourse(planId, courseIds) {
-        return this.perform('put', `/api/plan/${planId}/course-remove`, courseIds)
+    saveSettings(planId, settings) {
+        return this.perform('put', `/api/plan/${planId}/settings`, settings)
     }
 
     copyPlan(planId, plan) {
@@ -70,7 +66,7 @@ class APIClient {
             }).then(res => {
                 return res.data ? res.data : {};
             }).catch(e => {
-                // console.log(`${method} ${resource} caused:\n ${e}`);
+                console.log(`${method} ${resource} caused:\n ${e}`);
                 return 'error'
             })
     }

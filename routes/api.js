@@ -20,7 +20,6 @@ router.delete('/plan/:id/delete', planController.plan_delete);
 router.put('/plan/:id/update', planController.plan_update);
 router.post('/plan/:id/copy', planController.plan_copy);
 router.get('/plan/:id', planController.plan_detail);
-router.put('/plan/:id/course-add', planController.course_add);
-router.put('/plan/:id/course-remove', planController.course_remove);
+router.put('/plan/:id/settings', planController.plan_settings);
 
 module.exports = router;

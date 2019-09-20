@@ -248,6 +248,8 @@ function plan_update(req, res, next) {
 			plan.description = req.body.description;
 			plan.courseList = req.body.courseList;
 			plan.coursePlan = req.body.coursePlan;
+			plan.markModified('coursePlan');
+			
 			if (plan.selections)
 				plan.selections.forEach(obj => {
 					obj.index = req.body.selections[obj["_id"]].index
@@ -319,116 +321,134 @@ function plan_copy(req, res, next) {
 
 }
 
-function course_add(req, res, next) {
+function plan_settings(req, res, next) {
 	const planId = req.params.id;
-	const courseIds = req.body.courses;
+	const {add, remove} = req.body;
+
+	body('title', 'title must not be empty.').isLength({ min: 1, max: 100 }).trim();
+	body('description', 'description must not be too long.').isLength({ max: 500 }).trim();
+
+	sanitizeBody('*').escape();
+
+	const errors = validationResult(req);
+
+	if (!errors.isEmpty()) {
+		const error = new Error('Error creating plan because bad inputs');
+		error.status = 404;
+		return next(error);
+	}
 
 	Plan.findById(planId)
-	.exec((err, plan) => {
-		if (err)
-			return next(err);
-		if (plan === null) {
-			const error = new Error('Plan not found');
-			error.status = 404;
-			return next(error);
-		}
+		.exec((err, plan) => {
+			if (err)
+				return next(err);
+			if (plan === null) {
+				const error = new Error('Plan not found');
+				error.status = 404;
+				return next(error);
+			}
 
-		let courses = plan.courses;
-		let courseList = plan.courseList;
-		async.each(courseIds, function(courseId, cb) {
-			Requirement.findOne({content: courseId}, (err, requirement) => {
+			// add courses
+			let courses = plan.courses;
+			let courseList = plan.courseList;
+			let coursePlan = plan.coursePlan;
+
+			async.series([
+				function(cb) {
+					async.each(remove, function(courseId, cb) {
+						Requirement.findOne({content: courseId}, (err, requirement) => {
+							if (err)
+								cb(err);
+							if (requirement === null) {
+								const error = new Error('Requirement not found');
+								error.status = 404;
+								return next(error);
+							}
+			
+							courses = courses.filter(requirementId => !requirementId.equals(requirement.id));
+							courseList = courseList.filter(course => course.toString() !== courseId);
+							coursePlan.forEach(year => {
+								year.quarters.forEach(quarterId => {
+									year[quarterId] = year[quarterId].filter(course => course.toString() !== courseId);
+								})
+							})
+
+							cb(null);
+						})
+					}, cb)
+				},
+				function(cb) {
+					async.each(add, function(courseId, cb) {
+						Requirement.findOne({content: courseId}, (err, requirement) => {
+							if (err)
+								cb(err);
+							if (requirement === null) {
+								var requirementdetail = {
+									content: courseId,
+									contentModel: 'Course',
+								}
+							
+								var newRequirement = new Requirement(requirementdetail);
+								newRequirement.save((err, doc) => {
+									if (err) {
+										cb(err);
+									}
+			
+									courses.push(doc.id);
+									courseList.push(courseId);
+									cb(null);
+									return;
+								})
+							}
+							else {
+								courses.push(requirement.id);
+								courseList.push(courseId);
+								cb(null);
+							}
+						})
+					}, cb)
+				}
+			], function (err) {
 				if (err)
-					cb(err);
-				if (requirement === null) {
-					var requirementdetail = {
-						content: courseIds,
-						contentModel: 'Course',
-					}
-				
-					var newRequirement = new Requirement(requirementdetail);
-					newRequirement.save((err, doc) => {
-						if (err) {
-							cb(err);
+					next(err);
+	
+				plan.title = req.body.title;
+				plan.description = req.body.description;
+				plan.courses = courses;
+				plan.courseList = courseList;
+				plan.coursePlan = coursePlan;
+				plan.markModified('coursePlan');
+	
+				plan.save((err, savedPlan) => {
+					if (err)
+						next(err);
+
+					savedPlan
+					.populate({
+						path: 'courses',
+						populate: {
+							path: 'content',
+							populate: {
+								path: 'options'
+							}
 						}
-
-						requirement = doc;
 					})
-				}
+					.execPopulate()
+						.then(popPlan => {
+							var newCourses = popPlan.courses.reduce((prev, requirement) => {
+								prev[requirement.content.id] = requirement.content;
+								return prev;
+							}, {})
 
-				courses.push(requirement.id);
-				courseList.push(courseId);
-				cb(null);
-			})
-		}, function (err) {
-			if (err)
-				next(err);
-
-			plan.courses = courses;
-			plan.courseList = courseList;
-
-			plan.save((err, savedPlan) => {
-				if (err)
-					next(err);
-
-				res.json({
-					courses,
-					courseList,
-				});
+							res.json({
+								courses: newCourses,
+								title: popPlan.title,
+								description: popPlan.description,
+							});
+						})
+				})
 			})
 		})
-	})
-}
-
-function course_remove(req, res, next) {
-	const planId = req.params.id;
-	const courseIds = req.body.courses;
-
-	Plan.findById(planId)
-	.exec((err, plan) => {
-		if (err)
-			return next(err);
-		if (plan === null) {
-			const error = new Error('Plan not found');
-			error.status = 404;
-			return next(error);
-		}
-
-		let courses = plan.courses;
-		let courseList = plan.courseList;
-		async.each(courseIds, function(courseId, cb) {
-			Requirement.findOne({content: courseId}, (err, requirement) => {
-				if (err)
-					cb(err);
-				if (requirement === null) {
-					if (requirement === null) {
-						const error = new Error('Requirement not found');
-						error.status = 404;
-						return next(error);
-					}
-				}
-
-				courses.filter(requirementId => requirementId !== requirement.id);
-				courseList.filter(course => course !== courseId);
-				cb(null);
-			})
-		}, function (err) {
-			if (err)
-				next(err);
-
-			plan.courses = courses;
-			plan.courseList = courseList;
-
-			plan.save((err, savedPlan) => {
-				if (err)
-					next(err);
-					
-				res.json({
-					courses,
-					courseList,
-				});
-			})
-		})
-	})
 }
 
 module.exports = {
@@ -438,6 +458,5 @@ module.exports = {
 	plan_delete,
 	plan_update,
 	plan_copy,
-	course_add,
-	course_remove,
+	plan_settings,
 }

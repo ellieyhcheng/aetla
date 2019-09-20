@@ -1,21 +1,25 @@
-import React, { useEffect, useState, Component} from "react";
+import React, { Component} from "react";
 import './PlanSettings.scss';
 import withAuthorization from "../../components/Session/withAuthorization";
 import * as ROUTES from '../../utils/routes';
 import { Link } from "react-router-dom";
-import { Message, Form, Header, Button as FormButton, Segment, List, Dropdown } from "semantic-ui-react";
+import { Message, Form, Header, Button as FormButton, Segment, List } from "semantic-ui-react";
 import Button from '../../components/button/Button';
+import Modal from '../../components/modal/Modal';
 import SignOut from '../../components/account/SignOut/SignOut';
 import { subjects } from "../../utils/utils";
 import { withApiClient } from "../../ApiClient";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class PlanSettings extends Component{
     constructor(props) {
         super(props);
 
         this.state = {
+            id: '',
             error: null,
             loading: true,
+            saving: false,
 
             title: '',
             description: '',
@@ -98,6 +102,7 @@ class PlanSettings extends Component{
 
                     this.setState({
                         ...this.state,
+                        id: decodedId,
                         title: data.title,
                         description: data.description,
                         courses: courses,
@@ -143,7 +148,6 @@ class PlanSettings extends Component{
                         error: "Can't fetch courses of this department",
                     })
                 else {
-                    console.log(data);
                     const courses = data.courses.reduce((prev, course) => {
                         if (this.state.courses.findIndex(courseItem => courseItem.key === course["_id"]) === -1)
                             prev.push({
@@ -202,46 +206,114 @@ class PlanSettings extends Component{
         }
     }
 
+    onClickXAdd = (e, item) => {
+        const newAdd = this.state.addCourses.filter(value => value !== item);
+        this.setState({
+            ...this.state,
+            addCourses: newAdd,
+        })
+    }
+
+    onClickXRemove = (e, item) => {
+        const newAdd = this.state.removeCourses.filter(value => value !== item);
+        this.setState({
+            ...this.state,
+            removeCourses: newAdd,
+        })
+    }
+
     onSubmit = (e) => {
-        // if (this.state.changeTitle === '') {
-        //     this.setState({
-        //         ...this.state,
-        //         changeError: {
-        //             message: "Please fill out all required fields"
-        //         }
-        //     })
-        // }
-        // else {
-        //     // Make post request to update plan
-        //     const newPlan = {
-        //         title: this.state.changeTitle,
-        //         description: this.state.changeDescription,
-        //         courseList: this.props.courseList,
-        //         coursePlan: this.props.coursePlan,
-        //         selections: this.props.selections,
-        //     }
+        if (this.state.changeTitle === '') {
+            this.setState({
+                ...this.state,
+                changeError: {
+                    message: "Please fill out all required fields"
+                }
+            })
+        }
+        else {
+            this.setState({
+                ...this.state,
+                saving: true,
+            })
+            // Make post request to update plan settings
+            const add = this.state.addCourses.map(item => item.split('-')[0]);
+            const remove = this.state.removeCourses.map(item => item.split('-')[0]);
+            const settings = {
+                title: this.state.title,
+                description: this.state.description,
+                add,
+                remove,
+            }
 
-        //     this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
-        //         setTimeout(() => {
-        //             if (data === 'error')
-        //                 this.setState({
-        //                     ...this.state,
-        //                     changeError: true,
-        //                     change: false,
-        //                 })
-        //             else {
-        //                 this.setState({
-        //                     ...this.state,
-        //                     change: false,
-        //                 })
-        //                 this.props.storePlanDetails(newPlan);
-        //                 this.props.updatePlan(data);
-        //             }
-        //         }, 500);
-        //     })
-        // }
+            this.props.apiClient.saveSettings(this.state.id, settings).then(data => {
+                setTimeout(() => {
+                    if (data === 'error')
+                        this.setState({
+                            ...this.state,
+                            error: 'Something went wrong while saving.'
+                        })
+                    else {
+                        const courses = Object.entries(data.courses).reduce((prev, [key, course]) => {
+                            if ('options' in course)
+                                return prev;
+                            prev.push({
+                                key: key, text: `${course.subject} ${course.num}`, value: `${key}-${course.subject} ${course.num}`,
+                            })
+                            return prev;
+                        }, [])
+    
+                        courses.sort((course1, course2) => {
+                            const subjectCourse1 = course1.text.split(' ');
+                            const subjectCourse2 = course2.text.split(' ');
+    
+                            const subject1 = subjectCourse1.slice(0, subjectCourse1.length - 1).join();
+                            const courseNum1 = subjectCourse1[subjectCourse1.length - 1];
+    
+                            const subject2 = subjectCourse2.slice(0, subjectCourse2.length - 1).join();
+                            const courseNum2 = subjectCourse2[subjectCourse2.length - 1];
+    
+                            if (subject1 > subject2) {
+                                return true;
+                            }
+                            else if (subject1 < subject2) {
+                                return false;
+                            }
+                            else {
+                                const num1 = parseInt(courseNum1.match(/\d+/g));
+                                const num2 = parseInt(courseNum2.match(/\d+/g));
+    
+                                if (num1 > num2) {
+                                    return true; 
+                                }
+                                else if (num1 < num2) {
+                                    return false;
+                                }
+                                else {
+                                    return courseNum1 > courseNum2;
+                                }
+                            }
+                        })
 
-        // e.preventDefault();
+                        this.setState({
+                            ...this.state,
+                            saving: false,
+                            subject: '',
+                            subjectCourses: [],
+                            courseAdd: '',
+                            courseRemove: '',
+                            addCourses: [],
+                            removeCourses: [],
+                            courses: courses,
+                            title: data.title,
+                            description: data.description
+                        })
+                    }
+                }, 500);
+            })
+        }
+
+        e.preventDefault();
     }
 
     render() {
@@ -322,6 +394,7 @@ class PlanSettings extends Component{
                                 onChange={this.onSelectAdd}
                                 value={this.state.courseAdd}
                                 options={this.state.subjectCourses}
+                                loading={this.state.subjectCourses === []}
                             />
                             <FormButton
                                 basic
@@ -337,10 +410,10 @@ class PlanSettings extends Component{
                                 {this.state.addCourses.map(info => {
                                     const [id, name] = info.split('-');
                                     return (
-                                        <List.Item as="li" value="-">
+                                        <List.Item as="li" value="-" key={id}>
                                             <List.Content>
                                                 {name}
-                                                <Button type="icon" icon="times" dark></Button>
+                                                <Button type="icon" icon="times" dark onClick={(e) => this.onClickXAdd(e, info)}></Button>
                                             </List.Content>
                                         </List.Item>
                                     )
@@ -373,10 +446,10 @@ class PlanSettings extends Component{
                                 {this.state.removeCourses.map(info => {
                                     const [id, name] = info.split('-');
                                     return (
-                                        <List.Item as="li" value="-">
+                                        <List.Item as="li" value="-" key={id}>
                                             <List.Content>
                                                 {name}
-                                                <Button type="icon" icon="times" dark></Button>
+                                                <Button type="icon" icon="times" dark onClick={(e) => this.onClickXRemove(e, info)}></Button>
                                             </List.Content>
                                         </List.Item>
                                     )
@@ -387,6 +460,7 @@ class PlanSettings extends Component{
                         <Form.Button
                             content="Save"
                             primary
+                            onClick={this.onSubmit}
                         />
                         <Message
                             error
@@ -396,6 +470,16 @@ class PlanSettings extends Component{
     
                     </Form>
                 </div>
+            
+                {this.state.saving &&
+                    <Modal open={this.state.saving} centered>
+                        Saving your plan settings... Please wait...
+                        <div className="load-icon">
+                            <FontAwesomeIcon icon="spinner" pulse />
+                        </div>
+                    </Modal>
+                }
+
             </div>
         )
     }
