@@ -169,7 +169,7 @@ class PlanLayout extends Component {
                             <div className="year-section" key={i}>
                                 <div className="plan-year">Year {i + 1} </div>
                                 {year.quarters.map((quarterId, i) => (
-                                    <div className="plan-quarter" key={i}>{quarterId.charAt(0).toUpperCase() + quarterId.slice(1)}</div>
+                                    <div className="plan-quarter" key={i}><p>{quarterId.charAt(0).toUpperCase() + quarterId.slice(1)}</p></div>
                                 ))}
                             </div>
                         ))

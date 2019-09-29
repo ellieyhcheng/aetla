@@ -38,30 +38,7 @@ body {
       padding: 0;
       margin: 0;
   }
-}
 
-* {
-    /* Scrollbar for Firefox */
-  // scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: $light-grey white;
-}
-
-
-
-/* Scrollbar for Webkit browsers */
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: $light-grey;
-  border-radius: 20px;
-}
-
-::-webkit-scrollbar-track {
-  background: white;
-  border-radius: 20px;
 }
 
 @-webkit-keyframes loading {
