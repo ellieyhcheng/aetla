@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import logo from '../../assets/aetla-dark.svg';
 import * as ROUTES from '../../utils/routes';
 import './SignUp.scss';
-import { Form, Button, Message } from 'semantic-ui-react';
+import { Form, Button, Message, Header } from 'semantic-ui-react';
 import { withFirebase } from "../../Firebase";
 import { withApiClient } from "../../ApiClient";
 import { connect } from 'react-redux';
@@ -71,7 +71,7 @@ function SignUpFormBase(props) {
                         })
 
                     props.firebase.doSendEmailVerification();
-                    
+
                     props.apiClient.createUser({
                         school,
                         plans: [],
@@ -85,7 +85,7 @@ function SignUpFormBase(props) {
                         }
                     })
                 });
-                
+
 
             })
             .catch(error => {
@@ -111,13 +111,13 @@ function SignUpFormBase(props) {
                 header='Create Account Error'
                 content={error ? error.message : ''}
             />
-            <Form.Input 
-                type="text" 
-                name="name" 
-                value={formValues.name} 
-                onChange={onChange} 
-                placeholder="Name" 
-                autoComplete="off" 
+            <Form.Input
+                type="text"
+                name="name"
+                value={formValues.name}
+                onChange={onChange}
+                placeholder="Name"
+                autoComplete="off"
                 label="Your Name"
             />
             <Form.Select
@@ -143,14 +143,14 @@ function SignUpFormBase(props) {
                 required
                 label="Email"
             />
-            <Form.Input 
-                type="password" 
-                name="password" 
-                value={formValues.password} 
-                onChange={onChange} 
-                placeholder="Password" 
-                autoComplete="new-password" 
-                required 
+            <Form.Input
+                type="password"
+                name="password"
+                value={formValues.password}
+                onChange={onChange}
+                placeholder="Password"
+                autoComplete="new-password"
+                required
                 label="Password"
             />
             <Form.Input
@@ -162,16 +162,25 @@ function SignUpFormBase(props) {
                 autoComplete="new-password"
                 error={formValues.password2 !== '' && formValues.password !== formValues.password2 ? {
                     content: "Passwords must match",
-                    // pointing: "left",
                 } : null}
                 required
                 label="Confirm Password"
             />
 
+            <Header as="h5" content="Disclaimer" textAlign="center" />
+            <p style={{
+                textAlign: "center",
+            }}>
+                Aetla is meant as a tool to assist in course planning. It is not meant to replace actual counseling. Please refer
+                to the official catalogs and university resources to get the most accurate information. By clicking "Sign Up", you
+                are acknowledging this disclaimer.
+            </p>
 
             <div className="signup-button">
                 <Button disabled={isInvalid} fluid primary onClick={onSubmit}>Sign Up</Button>
             </div>
+
+
         </Form>
     )
 }

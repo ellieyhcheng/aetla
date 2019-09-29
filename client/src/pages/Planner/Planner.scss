@@ -94,9 +94,6 @@
         max-height: calc(100vh - 50px);
         padding: 3vh 1vw;
         overflow: hidden;
-        
-
-        
     }
 
     .help {
@@ -108,7 +105,6 @@
         flex-direction: column;
 
         .help-body {
-            
 
             .ui.list .list > .item .header, .ui.list > .item .header {
                 color: $accent;
