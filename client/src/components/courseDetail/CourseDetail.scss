@@ -8,12 +8,13 @@
     justify-content: center;
 }
 
-.course-detail > .body, .empty > .body {
-    margin-left: 1.5vw;
-    width: 95%;
+.course-detail > .body {
+    margin: 0 1vw;
+    width: 88%;
+    position: relative;
     height: max-content;
     max-height: 100%;
-    border: 1px $accent solid;
+    border: 0.8px $accent solid;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -50,20 +51,19 @@
             margin-bottom: 2vh;
         }
     }
-
     
 }
 
 .empty {
     height: 70%;
-    width: 95%;
+    width: 88%;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    margin-left: 1.5vw;
-    border: 1px $accent solid;
+    margin: 0 1vw;
+    border: 0.8px $accent solid;
     letter-spacing: 0.1em;
     padding: 0 0.5vw;
 }

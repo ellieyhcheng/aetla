@@ -7,7 +7,7 @@
     height: $course-height;
     min-height: $course-height;
     position: relative;
-    border: 1px solid $primary;
+    border: 0.8px solid $primary;
     background-color: white;
     border-radius: 1px;
     box-sizing: border-box;
@@ -20,6 +20,7 @@
     text-align: center;
     margin: 5px;
     transition: border-color ease 0.2s, color ease 0.2s;
+    padding: 0.5px;
     /* Disable text-highlight */
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -31,7 +32,7 @@
     
     p {
         padding: 5px 5px;
-        transition: color ease 0.3s;
+        transition: color ease 0.2s;
     }
 
     &:focus {

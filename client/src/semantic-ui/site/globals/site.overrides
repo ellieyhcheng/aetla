@@ -14,3 +14,24 @@ h1, h2, h3, h4, h5, h6 {
   background: @yellow; /* Gecko Browsers */
   color: @primaryColor;
 }
+
+* {
+  /* Scrollbar for Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #BDBDBD white;
+}
+
+/* Scrollbar for Webkit browsers */
+::-webkit-scrollbar {
+  width: 5px !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #BDBDBD !important;
+  border-radius: 20px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: white !important;
+  border-radius: 20px !important;
+}

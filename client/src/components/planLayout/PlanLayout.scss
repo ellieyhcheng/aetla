@@ -7,7 +7,7 @@
     overflow-y: scroll;
     overflow-x: hidden;
     transition: height ease 0.5s;
-    margin-left: 10px;
+    // margin-left: 10px;
 
     .plan-sidebar {
         width: 10%;
@@ -44,8 +44,7 @@
             .plan-year {
                 color: $ternary;
                 font-weight: bold;
-                justify-content: right;
-
+                justify-content: flex-end;
             }
 
             .plan-quarter {
@@ -53,7 +52,7 @@
                 font-weight: 100;
                 font-size: 0.9em;
                 text-align: right;
-                justify-content: right;
+                justify-content: flex-end;
             }
 
             .sidebar-loader {
