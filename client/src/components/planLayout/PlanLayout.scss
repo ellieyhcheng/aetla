@@ -7,6 +7,7 @@
     overflow-y: scroll;
     overflow-x: hidden;
     transition: height ease 0.5s;
+    margin-left: 10px;
 
     .plan-sidebar {
         width: 10%;
@@ -210,7 +211,7 @@
             .year-section {
                 padding-right: 0.2vw;
                 div {
-                    font-size: 1.2vw;
+                    font-size: 0.75em;
                 }
                 .plan-quarter {
                     font-size: 0.75em;
