@@ -20,7 +20,7 @@ class Toolbar extends Component {
                             <Button type="icon" icon="copy" tooltip="Copy" direction="right" onClick={this.props.onCopy} />
                         </li>
                         <li>
-                            <Button type="icon" icon="download" tooltip="Export Plan" direction="right" onClick={this.props.onDownload}/>
+                            <Button type="icon" icon="download" tooltip="Export Plan as PDF" direction="right" onClick={this.props.onDownload}/>
                         </li>
                         <li>
                             <Button type="icon" icon="sliders-h" tooltip="Plan Settings" direction="right" onClick={this.props.onSettings}/>
