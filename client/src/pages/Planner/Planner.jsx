@@ -25,7 +25,6 @@ class Planner extends Component {
         super(props)
         this.state = {
             error: false,
-            saving: false,
             isOpen: true,
             collapse: window.innerWidth < 970,
             saveError: false,
@@ -83,7 +82,6 @@ class Planner extends Component {
                         searchWord: '',
                         homeDroppable: '',
                         activeCourse: null,
-                        saving: false,
                         loading: false,
                     }
                     this.props.storePlanDetails(newPlan)
@@ -254,6 +252,10 @@ class Planner extends Component {
                 }
             })
         }
+        else {
+            if (cb)
+                cb();
+        }
     }
 
     onClickSave = (redirect = false) => {
@@ -261,37 +263,12 @@ class Planner extends Component {
 
         this.setState({
             ...this.state,
-            saving: true,
             exit: false,
         })
-        // Make post request to update plan
-        const newPlan = {
-            title: this.props.title,
-            description: this.props.description,
-            courseList: this.props.courseList,
-            coursePlan: this.props.coursePlan,
-            selections: this.props.selections,
-        }
 
-        this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
-
-            setTimeout(() => {
-                if (data === 'error')
-                    this.setState({
-                        ...this.state,
-                        saveError: true,
-                        saving: false,
-                    })
-                else {
-                    this.setState({
-                        ...this.state,
-                        saving: false,
-                        changesMade: false
-                    })
-                    if (redirect)
-                        this.props.history.push(ROUTES.DASHBOARD);
-                }
-            }, 500);
+        this.autosave(() => {
+            if (redirect)
+                this.props.history.push(ROUTES.DASHBOARD);
         })
     }
 
@@ -340,7 +317,6 @@ class Planner extends Component {
             searchWord: '',
             homeDroppable: '',
             activeCourse: null,
-            saving: false,
             loading: true,
         }
         this.props.storePlanDetails(newPlan)
@@ -348,17 +324,18 @@ class Planner extends Component {
     }
 
     onCopyClick = () => {
-        this.setState({
-            ...this.state,
-            copyTitle: this.props.title,
-            copyDescription: this.props.description,
-            copyError: null,
-            copy: true,
-        })
+        this.autosave(() => {
+            this.setState({
+                ...this.state,
+                copyTitle: this.props.title,
+                copyDescription: this.props.description,
+                copyError: null,
+                copy: true,
+            })
+        });
     }
 
     onCopy = (e) => {
-        this.autosave();
         if (this.state.copyTitle === '') {
             this.setState({
                 ...this.state,
@@ -400,7 +377,6 @@ class Planner extends Component {
                                     searchWord: '',
                                     homeDroppable: '',
                                     activeCourse: null,
-                                    saving: false,
                                     loading: false,
                                 }
                                 this.props.storePlanDetails(copyPlan)
@@ -557,15 +533,6 @@ class Planner extends Component {
                         )}
                     </DragDropContext>
                 </div>
-
-                {this.state.saving &&
-                    <Modal open={this.state.saving} centered>
-                        Saving your plan... Please wait...
-                        <div className="load-icon">
-                            <FontAwesomeIcon icon="spinner" pulse />
-                        </div>
-                    </Modal>
-                }
                 {this.state.error &&
                     <Modal open={this.state.error} centered>
                         Something went wrong... Redirecting you to Dashboard.
