@@ -18,15 +18,19 @@ import * as ROUTES from '../../utils/routes';
 import { Message, Form, List, } from "semantic-ui-react";
 import { download } from "../../utils/utils";
 
+const AUTOSAVE_INTERVAL = 60000;
+
 class Planner extends Component {
     constructor(props) {
         super(props)
         this.state = {
             error: false,
-            saving: false,
             isOpen: true,
             collapse: window.innerWidth < 970,
             saveError: false,
+
+            autosaving: false,
+            autosaved: false,
 
             copy: false,
             copyError: null,
@@ -78,7 +82,6 @@ class Planner extends Component {
                         searchWord: '',
                         homeDroppable: '',
                         activeCourse: null,
-                        saving: false,
                         loading: false,
                     }
                     this.props.storePlanDetails(newPlan)
@@ -89,6 +92,8 @@ class Planner extends Component {
         window.addEventListener('resize', this.collapse);
         if (this.state.collapse)
             this.toggle();
+
+        setInterval(this.autosave, AUTOSAVE_INTERVAL); // save every minute
     }
 
     onDragStart = (info) => {
@@ -197,42 +202,73 @@ class Planner extends Component {
         }
     }
 
+    autosave = (cb) => {
+        if (this.state.changesMade) {
+            this.setState({
+                ...this.state,
+                autosaving: true,
+                autosaved: false,
+            })
+
+            const newPlan = {
+                title: this.props.title,
+                description: this.props.description,
+                courseList: this.props.courseList,
+                coursePlan: this.props.coursePlan,
+                selections: this.props.selections,
+            }
+    
+            this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
+                if (data === 'error')
+                    this.setState({
+                        ...this.state,
+                        saveError: true,
+                        autosaving: false,
+                        autosaved: false,
+                    })
+                else {
+                    if (cb)
+                        cb();
+                    this.setState({
+                        ...this.state,
+                        changesMade: false,
+                    })
+
+                    setTimeout(() => {
+                        this.setState({
+                            ...this.state,
+                            autosaving: false,
+                            autosaved: true,
+                        })
+
+                        setTimeout(() => {
+                            this.setState({
+                                ...this.state,
+                                autosaved: false,
+                            })
+                        }, 10000);
+                    }, 1000);
+                    
+                }
+            })
+        }
+        else {
+            if (cb)
+                cb();
+        }
+    }
+
     onClickSave = (redirect = false) => {
         if (this.props.loading) return;
 
         this.setState({
             ...this.state,
-            saving: true,
             exit: false,
         })
-        // Make post request to update plan
-        const newPlan = {
-            title: this.props.title,
-            description: this.props.description,
-            courseList: this.props.courseList,
-            coursePlan: this.props.coursePlan,
-            selections: this.props.selections,
-        }
 
-        this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
-
-            setTimeout(() => {
-                if (data === 'error')
-                    this.setState({
-                        ...this.state,
-                        saveError: true,
-                        saving: false,
-                    })
-                else {
-                    this.setState({
-                        ...this.state,
-                        saving: false,
-                        changesMade: false
-                    })
-                    if (redirect)
-                        this.props.history.push(ROUTES.DASHBOARD);
-                }
-            }, 500);
+        this.autosave(() => {
+            if (redirect)
+                this.props.history.push(ROUTES.DASHBOARD);
         })
     }
 
@@ -281,7 +317,6 @@ class Planner extends Component {
             searchWord: '',
             homeDroppable: '',
             activeCourse: null,
-            saving: false,
             loading: true,
         }
         this.props.storePlanDetails(newPlan)
@@ -289,13 +324,15 @@ class Planner extends Component {
     }
 
     onCopyClick = () => {
-        this.setState({
-            ...this.state,
-            copyTitle: this.props.title,
-            copyDescription: this.props.description,
-            copyError: null,
-            copy: true,
-        })
+        this.autosave(() => {
+            this.setState({
+                ...this.state,
+                copyTitle: this.props.title,
+                copyDescription: this.props.description,
+                copyError: null,
+                copy: true,
+            })
+        });
     }
 
     onCopy = (e) => {
@@ -340,7 +377,6 @@ class Planner extends Component {
                                     searchWord: '',
                                     homeDroppable: '',
                                     activeCourse: null,
-                                    saving: false,
                                     loading: false,
                                 }
                                 this.props.storePlanDetails(copyPlan)
@@ -420,18 +456,24 @@ class Planner extends Component {
     }
 
     onSettingsClick = () => {
-        this.props.history.push(`${ROUTES.PLAN_SETTINGS.replace(':id', `${btoa(unescape(encodeURIComponent(this.props.id)))}`)}`)
+        this.autosave(() => {
+            this.props.history.push(`${ROUTES.PLAN_SETTINGS.replace(':id', `${btoa(unescape(encodeURIComponent(this.props.id)))}`)}`)
+        })
     }
 
     onDownloadClick = () => {
-        this.props.apiClient.getOnePlan(this.props.id)
-        .then(data => {
-            if (data === 'error')
-                return
-            else {
-                download(data);
-            }
-        })
+        this.autosave(() => {
+            this.props.apiClient.getOnePlan(this.props.id)
+            .then(data => {
+                if (data === 'error')
+                    return
+                else {
+                    download(data);
+                }
+            })
+        });
+        
+        
     }
 
     render() {
@@ -470,6 +512,10 @@ class Planner extends Component {
                             <div className="save-button">
                                 <Button type="icon" icon="save" tooltip="Save" direction="right" onClick={() => this.onClickSave(false)} />
                             </div>
+                            <p className="saving-text">
+                                {this.state.autosaving && 'Saving...'}
+                                {this.state.autosaved && 'Saved!'}
+                            </p>
                         </div>
                         <div className="line-h" />
                     </div>
@@ -488,15 +534,6 @@ class Planner extends Component {
                         )}
                     </DragDropContext>
                 </div>
-
-                {this.state.saving &&
-                    <Modal open={this.state.saving} centered>
-                        Saving your plan... Please wait...
-                        <div className="load-icon">
-                            <FontAwesomeIcon icon="spinner" pulse />
-                        </div>
-                    </Modal>
-                }
                 {this.state.error &&
                     <Modal open={this.state.error} centered>
                         Something went wrong... Redirecting you to Dashboard.
@@ -516,7 +553,7 @@ class Planner extends Component {
                     </Modal>
                 }
                 {this.state.copy &&
-                    <Modal open={this.state.copy} onClose={() => this.onModalClose("copy")}>
+                    <Modal open={this.state.copy} onClose={() => this.onModalClose("copy")} dimmerDismiss={false}>
                         <h2>Make a Copy</h2>
                         <hr />
                         <Form autoComplete="new-password" error={this.state.copyError ? true : false}>

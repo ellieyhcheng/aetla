@@ -34,7 +34,7 @@ class PlanCard extends Component {
         e.currentTarget.querySelector('.button').style.filter = "brightness(1)";
     }
 
-    onDoubleClick = (e) => {
+    onClick = (e) => {
         this.props.history.push(ROUTES.PLANNER.replace(':id', `${btoa(unescape(encodeURIComponent(this.props["_id"])))}`))
     }
 
@@ -66,16 +66,16 @@ class PlanCard extends Component {
             </div>
             
         ) : (
-            <div className="plancard" onMouseOver={this.onMouseOver} onMouseLeave={this.onMouseLeave} onDoubleClick={this.onDoubleClick}>
+            <div className="plancard" onMouseOver={this.onMouseOver} onMouseLeave={this.onMouseLeave} onClick={this.onClick}>
                 <div className="title">{this.props.title}</div>
                 <div className="description">{this.props.description}</div>
-                <div className="buttons">
+                <div className="buttons" onClick={(e) => e.stopPropagation()}>
                     <Button type="icon" icon="copy" dark fixedWidth tooltip="Copy" direction="top" onClick={() => this.props.onCopyClick({
                         title: this.props.title,
                         description: this.props.description,
                         id: this.props["_id"],
                     })} />
-                    <Button type="icon" icon="download" dark fixedWidth tooltip="Export Plan" direction="top" onClick={this.onDownload}/>
+                    <Button type="icon" icon="download" dark fixedWidth tooltip="Export Plan as PDF" direction="top" onClick={this.onDownload}/>
                     <Button type="icon" icon="trash-alt" dark fixedWidth tooltip="Delete" direction="top" onClick={() => this.props.onDeleteClick(this.props["_id"])}/>
                 </div>
             </div>

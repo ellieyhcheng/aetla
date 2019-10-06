@@ -475,7 +475,8 @@ function download(plan) {
         }); y += tableHeight;
     })
     
-    window.open(doc.output('bloburl'), `${title}.pdf`);
+    doc.save(`courseplan-${title}.pdf`);
+    // window.open(doc.output('datauri'), `${title}.pdf`);
 }
 
 export { schools, majors, subjects, download };
