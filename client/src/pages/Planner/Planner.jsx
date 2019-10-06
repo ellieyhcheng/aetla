@@ -18,6 +18,8 @@ import * as ROUTES from '../../utils/routes';
 import { Message, Form, List, } from "semantic-ui-react";
 import { download } from "../../utils/utils";
 
+const AUTOSAVE_INTERVAL = 60000;
+
 class Planner extends Component {
     constructor(props) {
         super(props)
@@ -27,6 +29,9 @@ class Planner extends Component {
             isOpen: true,
             collapse: window.innerWidth < 970,
             saveError: false,
+
+            autosaving: false,
+            autosaved: false,
 
             copy: false,
             copyError: null,
@@ -89,6 +94,8 @@ class Planner extends Component {
         window.addEventListener('resize', this.collapse);
         if (this.state.collapse)
             this.toggle();
+
+        setInterval(this.autosave, AUTOSAVE_INTERVAL); // save every minute
     }
 
     onDragStart = (info) => {
@@ -194,6 +201,56 @@ class Planner extends Component {
             }
 
             this.props.setCoursePlan(newCoursePlan)
+        }
+    }
+
+    autosave = () => {
+        if (this.state.changesMade) {
+            this.setState({
+                ...this.state,
+                autosaving: true,
+                autosaved: false,
+            })
+
+            const newPlan = {
+                title: this.props.title,
+                description: this.props.description,
+                courseList: this.props.courseList,
+                coursePlan: this.props.coursePlan,
+                selections: this.props.selections,
+            }
+    
+            this.props.apiClient.savePlan(this.props.id, newPlan).then(data => {
+                if (data === 'error')
+                    this.setState({
+                        ...this.state,
+                        saveError: true,
+                        autosaving: false,
+                        autosaved: false,
+                    })
+                else {
+                    this.setState({
+                        ...this.state,
+                        changesMade: false,
+                    })
+
+                    setTimeout(() => {
+                        this.setState({
+                            ...this.state,
+                            autosaving: false,
+                            autosaved: true,
+                        })
+
+                        setTimeout(() => {
+                            this.setState({
+                                ...this.state,
+                                autosaved: false,
+                            })
+                        }, 10000);
+                    }, 1000);
+                    
+                }
+            })
         }
     }
 
@@ -420,18 +477,19 @@ class Planner extends Component {
     }
 
     onSettingsClick = () => {
+        this.onClickSave();
         this.props.history.push(`${ROUTES.PLAN_SETTINGS.replace(':id', `${btoa(unescape(encodeURIComponent(this.props.id)))}`)}`)
     }
 
     onDownloadClick = () => {
-        this.props.apiClient.getOnePlan(this.props.id)
-        .then(data => {
-            if (data === 'error')
-                return
-            else {
-                download(data);
-            }
-        })
+        const currentPlan = {
+            coursePlan: this.props.coursePlan,
+            courses: this.props.courses,
+            description: this.props.description,
+            title: this.props.title,
+            selections: this.props.selections,
+        }
+        download(currentPlan)
     }
 
     render() {
@@ -470,6 +528,10 @@ class Planner extends Component {
                             <div className="save-button">
                                 <Button type="icon" icon="save" tooltip="Save" direction="right" onClick={() => this.onClickSave(false)} />
                             </div>
+                            <p className="saving-text">
+                                {this.state.autosaving && 'Saving...'}
+                                {this.state.autosaved && 'Saved!'}
+                            </p>
                         </div>
                         <div className="line-h" />
                     </div>
@@ -632,6 +694,7 @@ const mapStateToProps = (state) => {
         title: state.planner.title,
         description: state.planner.description,
         loading: state.planner.loading,
+        courses: state.planner.courses,
         courseList: state.planner.courseList,
         coursePlan: state.planner.coursePlan,
         selections: state.planner.selections,
