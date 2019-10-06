@@ -204,7 +204,7 @@ class Planner extends Component {
         }
     }
 
-    autosave = () => {
+    autosave = (cb) => {
         if (this.state.changesMade) {
             this.setState({
                 ...this.state,
@@ -229,6 +229,8 @@ class Planner extends Component {
                         autosaved: false,
                     })
                 else {
+                    if (cb)
+                        cb();
                     this.setState({
                         ...this.state,
                         changesMade: false,
@@ -356,6 +358,7 @@ class Planner extends Component {
     }
 
     onCopy = (e) => {
+        this.autosave();
         if (this.state.copyTitle === '') {
             this.setState({
                 ...this.state,
@@ -482,14 +485,18 @@ class Planner extends Component {
     }
 
     onDownloadClick = () => {
-        const currentPlan = {
-            coursePlan: this.props.coursePlan,
-            courses: this.props.courses,
-            description: this.props.description,
-            title: this.props.title,
-            selections: this.props.selections,
-        }
-        download(currentPlan)
+        this.autosave(() => {
+            this.props.apiClient.getOnePlan(this.props.id)
+            .then(data => {
+                if (data === 'error')
+                    return
+                else {
+                    download(data);
+                }
+            })
+        });
+        
+        
     }
 
     render() {
@@ -694,7 +701,6 @@ const mapStateToProps = (state) => {
         title: state.planner.title,
         description: state.planner.description,
         loading: state.planner.loading,
-        courses: state.planner.courses,
         courseList: state.planner.courseList,
         coursePlan: state.planner.coursePlan,
         selections: state.planner.selections,
