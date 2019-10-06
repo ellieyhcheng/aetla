@@ -578,7 +578,7 @@ class Planner extends Component {
                     </Modal>
                 }
                 {this.state.copy &&
-                    <Modal open={this.state.copy} onClose={() => this.onModalClose("copy")}>
+                    <Modal open={this.state.copy} onClose={() => this.onModalClose("copy")} dimmerDismiss={false}>
                         <h2>Make a Copy</h2>
                         <hr />
                         <Form autoComplete="new-password" error={this.state.copyError ? true : false}>
