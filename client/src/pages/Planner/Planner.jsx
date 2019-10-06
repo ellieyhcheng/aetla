@@ -456,8 +456,9 @@ class Planner extends Component {
     }
 
     onSettingsClick = () => {
-        this.onClickSave();
-        this.props.history.push(`${ROUTES.PLAN_SETTINGS.replace(':id', `${btoa(unescape(encodeURIComponent(this.props.id)))}`)}`)
+        this.autosave(() => {
+            this.props.history.push(`${ROUTES.PLAN_SETTINGS.replace(':id', `${btoa(unescape(encodeURIComponent(this.props.id)))}`)}`)
+        })
     }
 
     onDownloadClick = () => {
