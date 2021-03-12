@@ -10,7 +10,7 @@
     "axios": "^0.19.0",
     "concurrently": "^4.1.1",
     "firebase": "^6.4.2",
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.2.4",
     "lodash": "^4.17.14",
     "prop-types": "^15.7.2",
