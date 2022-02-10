@@ -51,7 +51,7 @@
   "devDependencies": {
     "@craco/craco": "^5.4.0",
     "@semantic-ui-react/craco-less": "^1.1.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "semantic-ui-less": "^2.4.1"
   }
 }
